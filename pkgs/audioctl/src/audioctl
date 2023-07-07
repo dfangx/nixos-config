@@ -1,0 +1,7 @@
+#!/bin/sh
+
+dir="$1"
+([ "$dir" = "x" ] && amixer -q sset Master toggle -c0) || 
+    (amixer -q sset Master on -c0 && amixer -q sset Master 2"$dir" -c0)
+amixer sget Master -c0 | awk -F"[][]" '/Mono:/ {print $2}' | grep -o "[0-9]*%" | head -n1 | sed 's/[^0-9]*//g'
+amixer sget Master -c0 | awk -F"[][]" '/Mono:/ {print $4}'

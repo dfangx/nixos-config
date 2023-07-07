@@ -1,0 +1,48 @@
+#!/bin/sh
+
+notifyAudioMute() {
+    # msg=$1
+    notify-send -h string:x-dunst-stack-tag:volume System "Volume muted"
+    # dunstify -h string:x-dunst-stack-tag:volume -h int:value:0 "System" "Volume $msg"
+}
+
+notifyAudio() {
+    in=$1
+    mute=$2
+    echo $mute
+    ([ "$mute" = "off" ] && notifyAudioMute "muted") || 
+        notify-send -h string:x-dunst-stack-tag:volume -h int:value:"$in" System "Volume: $in%"
+    # exec pkill -RTMIN+1 bar
+}
+
+notifyBacklight() {
+    in=$1
+    notify-send -h string:x-dunst-stack-tag:backlight -h int:value:"$in" System Brightness
+    # dunstify -h string:x-dunst-stack-tag:backlight -h int:value:"$in" "System" "Brightness"
+    exec pkill -RTMIN+2 bar
+}
+
+notifyReminders() {
+    in=$1
+    remind -k"dunstify -h string:x-dunst-tag:reminders Reminders %s" remind.rem
+}
+
+t=$1
+in=$(cat /dev/stdin)
+
+case "$t" in
+    audio) 
+        set -- "$in"
+        v=$1
+        mute=$2
+        notifyAudio $in
+        ;;
+    backlight)
+        notifyBacklight "$in"
+        ;;
+    rem)
+        notifyReminders "$in"
+        ;;
+    default)
+        ;;
+esac

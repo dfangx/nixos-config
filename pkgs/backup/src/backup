@@ -1,0 +1,18 @@
+#!/bin/bash
+
+dir="$HOME/dev $HOME/employment $HOME/finances $HOME/sheet_music $HOME/misc"
+#excludes="--exclude=$HOME/documents/kvm"
+excludes=""
+
+os="$(grep '^ID' /etc/os-release | cut -d '=' -f2 | tr -d '"')"
+[ -f "/usr/lib/os-release" ] && os="$(grep '^ID' /usr/lib/os-release | cut -f2 -d '=' | tr -d '"')"
+
+date=$(date +%Y%m%d%H%M%S)
+out="$HOME/backup/$os-backup-$date.tar.gz"
+
+tool="tar"
+opts="-cvpzf"
+
+notify-send -h string:x-dunst-stack-tag:backup "System Backup" "System is being backed up into ~/backup/$os-backup-$date.tgz"
+
+$tool $excludes $opts $out $dir

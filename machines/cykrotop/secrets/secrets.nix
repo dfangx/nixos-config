@@ -1,0 +1,8 @@
+let
+  cyrusng = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCIVrmQ8M4QP7WKZg5GMaHBF/0fbirq4n5MBLhfUUdZEYVnAcQS2g80GNMBSmaK/tZsgmz8Jj9iyrMeac2ip8onwdMkfgDh2sXZAWXRDSTdMaOoEsx07+/d3jOeza+AAZgd42cLLSD9l7NJmjFz8StHDCjkDduAfj0bSFzUhmILbAK4lWMtAit5PmVypmASw37dw15QKJQsWvXbgdFcX2/nBZlyjuCL+PwjrFj2WbjWP8adAwBNjbAmYQnosj1Ul0aNz0uSjQdAFPlUrUq63RDHgLkFcboY6hKgEtNkNHIe8fdeTjKmrhxRqpqb36/FY7BZtByskHY647DAfCdfxpk0eR6QsU905PHBOEHQzE7SKg4Bh62YHO3xtTrC8tFXiUlNKC6DcFvz2Y9Y9yiMnCoLJoacciId8kVaYSyL1W1z+GA+DJC+LKOl2INVoc0zCHfvaJhjCtJHeytgbj9bzoQFjD1Me+y8wKbVc2B29gUgrqvg83pFZ/zYkj3Z0GfCtZCIaB8Oh4/uORqMuZRvKayt1edOEhoQvVfJVSfp2yVTsXESfKcxPKOWmU4mseNUud7spKto+SIO314YpIbfUwwR1u2GEV/KKPTesP8nDpHEkf8I8baW0vpbr3X3ABhcIzjqctZ696Dbv2ysn+RhzRBc8VrlsWKuS9UFakjXQCkVAQ==";
+  system = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdhUgWlOL2VGSIFDyFO87oM9msgnTdPX58A4PLfytt3";
+in
+  {
+    "wgPrivate.age".publicKeys = [ cyrusng system ];
+    "wgPsk.age".publicKeys = [ cyrusng system ];
+  }
