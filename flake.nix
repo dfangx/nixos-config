@@ -13,6 +13,10 @@
     nbfc-linux.url = "github:nbfc-linux/nbfc-linux";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-contrib.url = "github:hyprwm/contrib";
+    birdos = {
+      url = "github:spikespaz/dotfiles/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     agenix.url = "github:ryantm/agenix";
     firefly = {
       url = "github:timhae/firefly";
@@ -98,6 +102,7 @@
       };
       images.slothpi = nixosConfigurations.slothpi.config.system.build.sdImage;
       homeConfigurations.cyrusng = let
+        lib = nixpkgs.lib.extend (import "${inputs.birdos}/lib");
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
         myOverlay = (final: prev: {
@@ -114,7 +119,9 @@
         });
       in 
       home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+        inherit lib pkgs;
+
+        extraSpecialArgs = { inherit inputs; };
 
         modules = [
           {
@@ -128,7 +135,8 @@
               inputs.hyprland-contrib.overlays.default
             ];
           }
-          inputs.hyprland.homeManagerModules.default
+          # inputs.hyprland.homeManagerModules.default
+          inputs.birdos.homeManagerModules.hyprland 
           ./users/cyrusng/home.nix 
         ];
       };
