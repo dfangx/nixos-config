@@ -46,6 +46,14 @@
     };
   };
 
+  programs.git = {
+    enable = true;
+    config.user = {
+      name = "dfangx";
+      email = "github.oxfrj2ct@bged98.anonaddy.com";
+    };
+  };
+
   environment = {
     systemPackages = with pkgs; [
       wget
