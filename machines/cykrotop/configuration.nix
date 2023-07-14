@@ -39,11 +39,11 @@
     driSupport32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver
-      vaapiIntel
+      intel-vaapi-driver
     ];
     extraPackages32 = with pkgs.driversi686Linux; [
       intel-media-driver
-      vaapiIntel
+      intel-vaapi-driver
     ];
   };
 

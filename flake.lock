@@ -1155,18 +1155,18 @@
         "type": "github"
       }
     },
-    "nixpkgs2211": {
+    "nixpkgsStable": {
       "locked": {
-        "lastModified": 1688392541,
-        "narHash": "sha256-lHrKvEkCPTUO+7tPfjIcb7Trk6k31rz18vkyqmkeJfY=",
+        "lastModified": 1689209875,
+        "narHash": "sha256-8AVcBV1DiszaZzHFd5iLc8HSLfxRAuqcU0QdfBEF3Ag=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "ea4c80b39be4c09702b0cb3b42eab59e2ba4f24b",
+        "rev": "fcc147b1e9358a8386b2c4368bd928e1f63a7df2",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-22.11",
+        "ref": "nixos-23.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -1607,7 +1607,7 @@
         "nixos": "nixos",
         "nixpkgs": "nixpkgs_17",
         "nixpkgs-wayland": "nixpkgs-wayland",
-        "nixpkgs2211": "nixpkgs2211"
+        "nixpkgsStable": "nixpkgsStable"
       }
     },
     "rust-overlay": {

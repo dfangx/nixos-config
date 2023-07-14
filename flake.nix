@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs2211.url = "github:nixos/nixpkgs/nixos-22.11";
+    nixpkgsStable.url = "github:nixos/nixpkgs/nixos-23.05";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,7 +25,7 @@
     nixos.url = "github:NixOS/nixpkgs/nixos-22.11";
   };
 
-  outputs = { nixpkgs, nixpkgs2211, home-manager, ... }@inputs:
+  outputs = { nixpkgs, nixpkgsStable, home-manager, ... }@inputs:
   let
     riverOverlay = (final: prev: {
       river = prev.river.overrideAttrs (oldAttrs: {
@@ -60,7 +60,7 @@
                     extraPkgs = pkgs: with pkgs; [ 
                     ]; 
                   }; 
-                  nbfc-linux = inputs.nbfc-linux.packages.${system}.nbfc-client-c;
+                  nbfc-linux = inputs.nbfc-linux.packages.${system}.nbfc;
                   agenix = inputs.agenix.packages.${system}.default;
                 })
                 riverOverlay
@@ -102,8 +102,8 @@
       };
       images.slothpi = nixosConfigurations.slothpi.config.system.build.sdImage;
       homeConfigurations.cyrusng = let
-        lib = nixpkgs.lib.extend (import "${inputs.birdos}/lib");
         system = "x86_64-linux";
+        lib = nixpkgs.lib.extend (import "${inputs.birdos}/lib");
         pkgs = nixpkgs.legacyPackages.${system};
         myOverlay = (final: prev: {
           freetube = prev.freetube.overrideAttrs (oldAttrs: {
@@ -115,7 +115,7 @@
             --add-flags --ozone-platform=wayland
             '';
           });
-          pkgs2211 = nixpkgs2211.legacyPackages.${prev.system};
+          pkgsStable = nixpkgsStable.legacyPackages.${prev.system};
         });
       in 
       home-manager.lib.homeManagerConfiguration {

@@ -101,7 +101,7 @@
       imv
       wlr-randr
       powerline-fonts
-      pkgs2211.libreoffice
+      pkgsStable.libreoffice
       wl-clipboard
       tridactyl-native
       xorg.xeyes
