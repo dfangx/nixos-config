@@ -11,18 +11,20 @@
     };
     neovim-nix.url = "github:dfangx/nvim-flake";
     nbfc-linux.url = "github:nbfc-linux/nbfc-linux";
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland-package.url = "github:hyprwm/Hyprland";
     hyprland-contrib.url = "github:hyprwm/contrib";
-    birdos = {
-      url = "github:spikespaz/dotfiles/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+    hyprland = {
+      url = "github:spikespaz/hyprland-flake";
+      inputs.hyprland.follows = "hyprland-package";
     };
+    spikespaz.url = "github:spikespaz/dotfiles";
     agenix.url = "github:ryantm/agenix";
     firefly = {
       url = "github:timhae/firefly";
       inputs.nixpkgs.follows = "nixos";
     };
     nixos.url = "github:NixOS/nixpkgs/nixos-22.11";
+    # nixneovim.url = "github:nixneovim/nixneovim";
   };
 
   outputs = { nixpkgs, nixpkgsStable, home-manager, ... }@inputs:
@@ -67,7 +69,7 @@
               ];
             }
             inputs.agenix.nixosModules.default
-            inputs.hyprland.nixosModules.default
+            inputs.hyprland-package.nixosModules.default
             ./machines/cykrotop/configuration.nix
           ];
         };
@@ -103,7 +105,7 @@
       images.slothpi = nixosConfigurations.slothpi.config.system.build.sdImage;
       homeConfigurations.cyrusng = let
         system = "x86_64-linux";
-        lib = nixpkgs.lib.extend (import "${inputs.birdos}/lib");
+        lib = nixpkgs.lib.extend (import "${inputs.spikespaz}/lib");
         pkgs = nixpkgs.legacyPackages.${system};
         myOverlay = (final: prev: {
           freetube = prev.freetube.overrideAttrs (oldAttrs: {
@@ -131,12 +133,14 @@
               riverOverlay
               myOverlay
               inputs.neovim-nix.overlays.${system}.default
-              inputs.hyprland.overlays.default
+              inputs.hyprland-package.overlays.default
               inputs.hyprland-contrib.overlays.default
+              #inputs.nixneovim.overlays.default
             ];
           }
           # inputs.hyprland.homeManagerModules.default
-          inputs.birdos.homeManagerModules.hyprland 
+          inputs.hyprland.homeManagerModules.default
+          #inputs.nixneovim.nixosModules.default
           ./users/cyrusng/home.nix 
         ];
       };

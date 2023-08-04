@@ -17,6 +17,7 @@
     ./programs/tmux.nix
     ./programs/firefox.nix
     ./programs/fuzzel.nix
+    #./programs/nixneovim.nix
     ./services/swayidle.nix
     ./services/kanshi.nix
     ./services/gammastep.nix
@@ -107,7 +108,7 @@
       xorg.xeyes
       adwaita-icon-theme-without-gnome
       brightnessctl
-      freetube
+      sonixd
       runelite
       backup
       neovim-nix
