@@ -24,7 +24,7 @@
       inputs.nixpkgs.follows = "nixos";
     };
     nixos.url = "github:NixOS/nixpkgs/nixos-22.11";
-    # nixneovim.url = "github:nixneovim/nixneovim";
+    nixneovim.url = "github:nixneovim/nixneovim";
   };
 
   outputs = { nixpkgs, nixpkgsStable, home-manager, ... }@inputs:

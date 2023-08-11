@@ -6,6 +6,12 @@ notifyAudioMute() {
     # dunstify -h string:x-dunst-stack-tag:volume -h int:value:0 "System" "Volume $msg"
 }
 
+notifyMPRIS() {
+    title="$1"
+    artist="$2"
+    notify-send -h string:x-dunst-stack-tag:player "$title" "$artist"
+}
+
 notifyAudio() {
     in=$1
     mute=$2
@@ -39,6 +45,12 @@ case "$t" in
         ;;
     backlight)
         notifyBacklight "$in"
+        ;;
+    mpris)
+        set -- "$in"
+        title="$(echo $in | cut -d ',' -f1)"
+        artist="$(echo $in | cut -d ',' -f2)"
+        notifyMPRIS "$title" "$artist"
         ;;
     rem)
         notifyReminders "$in"

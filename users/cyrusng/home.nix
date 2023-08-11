@@ -17,7 +17,7 @@
     ./programs/tmux.nix
     ./programs/firefox.nix
     ./programs/fuzzel.nix
-    #./programs/nixneovim.nix
+    # ./programs/nixneovim.nix
     ./services/swayidle.nix
     ./services/kanshi.nix
     ./services/gammastep.nix

@@ -9,6 +9,7 @@
       mainMod = "SUPER";
       notifyctl = pkgs.callPackage ../../../pkgs/notifyctl { };
       audioctl = pkgs.callPackage ../../../pkgs/audioctl { };
+      playerctl = "${pkgs.playerctl}/bin/playerctl";
     in
     {
       bind = {
@@ -36,10 +37,10 @@
         ", xF86AudioMute" = "exec, ${audioctl}/bin/audioctl x | ${notifyctl}/bin/notifyctl audio";
         ", xF86MonBrightnessUp" = "exec, brightnessctl -m s +2% | cut -d, -f4 | ${notifyctl}/bin/notifyctl backlight";
         ", xF86MonBrightnessdown" = "exec, brightnessctl -m s 2%- | cut -d, -f4 | ${notifyctl}/bin/notifyctl backlight";
-        ", xF86AudioPlay" = "exec, playerctl play-pause";
-        ", xF86AudioNext" = "exec, playerctl next";
-        ", xF86AudioPrev" = "exec, playerctl previous";
-        ", xF86AudioStop" = "exec, playerctl stop";
+        ", xF86AudioPlay" = "exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
+        ", xF86AudioNext" = "exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
+        ", xF86AudioPrev" = "exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
+        ", xF86AudioStop" = "exec, ${playerctl} stop && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
 
         # move focus with mainMod + arrow keys
         "${mainMod}, h" = "movefocus, l";
