@@ -11,12 +11,14 @@
     };
     neovim-nix.url = "github:dfangx/nvim-flake";
     nbfc-linux.url = "github:nbfc-linux/nbfc-linux";
-    hyprland-package.url = "github:hyprwm/Hyprland";
+    # hyprland-package.url = "github:hyprwm/Hyprland";
     hyprland-contrib.url = "github:hyprwm/contrib";
-    hyprland = {
-      url = "github:spikespaz/hyprland-flake";
-      inputs.hyprland.follows = "hyprland-package";
-    };
+    # hyprland = {
+    #   url = "github:spikespaz/hyprland-nix";
+    #   inputs.hyprland.follows = "hyprland-package";
+    # };
+    hyprland-git.url = "github:hyprwm/Hyprland";
+    hyprland.url = "github:spikespaz/hyprland-nix";
     spikespaz.url = "github:spikespaz/dotfiles";
     agenix.url = "github:ryantm/agenix";
     firefly = {
@@ -26,27 +28,11 @@
     nixos.url = "github:NixOS/nixpkgs/nixos-22.11";
     nixneovim.url = "github:nixneovim/nixneovim";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nur.url = "github:nix-community/NUR";
+    hyprgrass.url = "github:horriblename/hyprgrass";
   };
 
   outputs = { nixpkgs, nixpkgsStable, home-manager, ... }@inputs:
-  let
-    riverOverlay = (final: prev: {
-      river = prev.river.overrideAttrs (oldAttrs: {
-        nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ prev.makeWrapper ];
-
-        postInstall = ''
-        wrapProgram $out/bin/river \
-        --set XDG_SESSION_TYPE wayland \
-        --set XDG_SESSION_DESKTOP river \
-        --set XDG_CURRENT_DESKTOP river \
-        --set MOZ_ENABLE_WAYLAND 1 \
-        --set QT_QPA_PLATFORM wayland \
-        --set SDL_VIDEODRIVER wayland \
-        --set _JAVA_AWT_WM_NONREPARENTING 1
-        '';
-      });
-    });
-  in 
   rec {
     nixosConfigurations = {
       cykrotop = let
@@ -61,12 +47,12 @@
               (final: prev: { 
                 steam = prev.steam.override { 
                   extraPkgs = pkgs: with pkgs; [ 
+                    # stdenv.cc.cc.lib
                   ]; 
                 }; 
                 nbfc-linux = inputs.nbfc-linux.packages.${system}.nbfc;
                 agenix = inputs.agenix.packages.${system}.default;
               })
-              riverOverlay
             ];
           }
           inputs.agenix.nixosModules.default
@@ -91,13 +77,12 @@
                 nbfc-linux = inputs.nbfc-linux.packages.${system}.nbfc;
                 agenix = inputs.agenix.packages.${system}.default;
               })
-              riverOverlay
             ];
           }
           inputs.agenix.nixosModules.default
-          inputs.hyprland-package.nixosModules.default
+          inputs.hyprland-git.nixosModules.default
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-yoga
-          ./machines/cykrotop/configuration.nix
+          ./machines/cykrotop-thinkpad/configuration.nix
         ];
       };
       slothpi = let
@@ -145,6 +130,8 @@
           '';
         });
         pkgsStable = nixpkgsStable.legacyPackages.${prev.system};
+        rsgain = pkgs.callPackage pkgs/rsgain.nix { };
+        hyprgrass = inputs.hyprgrass.packages.${prev.system}.default;
       });
     in 
     home-manager.lib.homeManagerConfiguration {
@@ -157,16 +144,16 @@
           nixpkgs.overlays = [
             (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.overrideAttrs (oldAttrs: { passthru = null; }); })
             (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
-            riverOverlay
             myOverlay
             inputs.neovim-nix.overlays.${system}.default
-            inputs.hyprland-package.overlays.default
+            # inputs.hyprland-package.overlays.default
             inputs.hyprland-contrib.overlays.default
             #inputs.nixneovim.overlays.default
           ];
         }
         # inputs.hyprland.homeManagerModules.default
         inputs.hyprland.homeManagerModules.default
+        inputs.nur.nixosModules.nur
         #inputs.nixneovim.nixosModules.default
         ./users/cyrusng/home.nix 
       ];

@@ -15,9 +15,11 @@ notifyMPRIS() {
 notifyAudio() {
     in=$1
     mute=$2
-    echo $mute
-    ([ "$mute" = "off" ] && notifyAudioMute "muted") || 
+    if [ $mute = "[MUTED]" ]; then
+        notifyAudioMute "muted"
+    else
         notify-send -h string:x-dunst-stack-tag:volume -h int:value:"$in" System "Volume: $in%"
+    fi
     # exec pkill -RTMIN+1 bar
 }
 
@@ -38,10 +40,10 @@ in=$(cat /dev/stdin)
 
 case "$t" in
     audio) 
-        set -- "$in"
+        set -- $in
         v=$1
         mute=$2
-        notifyAudio $in
+        notifyAudio $v $mute
         ;;
     backlight)
         notifyBacklight "$in"

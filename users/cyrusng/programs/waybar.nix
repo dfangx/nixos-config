@@ -2,26 +2,32 @@
 {
   programs.waybar = {
     enable = true;
-    package = pkgs.waybar-hyprland;
+    package = pkgs.waybar;
     settings.bar = {
       layer = "top";
       modules-left = [
         # "river/tags"
-        "wlr/workspaces"
+        "hyprland/workspaces"
       ];
       modules-center = [
         # "river/window"
-        "hyprland/window"
+        # "hyprland/window"
+        "clock"
       ];
       modules-right = [
         "tray"
-        # "mpris"
-        "cpu"
-        "memory"
+        # "bluetooth"
+        "wireplumber"
         "network"
         "battery"
-        "clock"
+        "cpu"
+        "memory"
       ];
+      wireplumber = {
+        format-icons = [ "󰕿" "󰖀" "󰕾" ];
+        format-muted = "󰝟";
+        format = "{icon}";
+      };
       battery = {
         format = "{icon}";
         format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂂" "󰂁" "󰂂" "󰁹" ];
@@ -48,15 +54,26 @@
       memory = {
         interval = 2.5;
         format = "RAM: {percentage}%";
+        tooltip-format = ''
+        RAM: {used:0.1f}GiB / {total:0.1f}GiB
+        Swap: {swapUsed:0.1f}GiB / {swapTotal:0.1f}GiB'';
       };
       cpu = {
         interval = 2.5;
         format = "CPU: {usage}%";
       };
+      bluetooth = {
+        format-disabled = "󰂲";
+        format-off = "󰂲";
+        format-connected = "󰂱";
+        format-on = "󰂯";
+        format = "󰂯";
+        tooltip-format = "Bluetooth {status}";
+      };
       "river/window" = {
         max-length = 80;
       };
-      "wlr/workspaces" = {
+      "hyprland/workspaces" = {
         format = "{name}";
         disable-scroll = true;
         all-outputs = true;
@@ -75,10 +92,20 @@
         font-size: 15px;
       }
 
+      .modules-left {
+        margin-left: ${toString config.wayland.windowManager.hyprland.config.general.gaps_out}px;
+      }
+
+      .modules-right {
+        margin-right: ${toString config.wayland.windowManager.hyprland.config.general.gaps_out}px;
+      }
+
       #clock,
       #battery,
       #cpu,
       #memory,
+      #tray,
+      #bluetooth,
       #network {
         padding-top: 3px;
         padding-bottom: 3px;

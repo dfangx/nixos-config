@@ -28,7 +28,7 @@
       } 
       { 
         timeout = 1200; 
-        command = "${pkgs.systemd}/bin/systemctl suspend"; 
+        command = "${pkgs.systemd}/bin/systemctl suspend-then-hibernate"; 
         resumeCommand = if config.home.sessionVariables.XDG_CURRENT_DESKTOP == "hyprland" then
           "${pkgs.hyprland}/bin/hyprctl dispatch dpms on" 
           else

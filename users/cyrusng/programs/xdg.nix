@@ -6,6 +6,7 @@
     configHome = "${config.home.homeDirectory}/.config";
     dataHome = "${config.home.homeDirectory}/.local/share";
     userDirs = {
+      enable = true;
       desktop = "${config.home.homeDirectory}/dt";
       documents = "${config.home.homeDirectory}/docs";
       download = "${config.home.homeDirectory}/dls";

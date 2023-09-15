@@ -2,9 +2,7 @@
 {
   imports = [
     ./programs/hyprland.nix
-    ./programs/xdg.nix
     ./programs/waybar.nix
-    ./programs/river.nix
     ./programs/fzf.nix
     ./programs/mako.nix
     ./programs/swaylock.nix
@@ -17,6 +15,7 @@
     ./programs/tmux.nix
     ./programs/firefox.nix
     ./programs/fuzzel.nix
+    ./programs/xdg.nix
     # ./programs/nixneovim.nix
     ./services/swayidle.nix
     ./services/kanshi.nix
@@ -43,7 +42,7 @@
       XDG_SESSION_DESKTOP = "hyprland";
       XDG_CURRENT_DESKTOP = "hyprland";
       MOZ_ENABLE_WAYLAND = 1;
-      QT_QPA_PLATFORM = "wayland;xcb";
+      QT_QPA_PLATFORM = "wayland";
       SDL_VIDEODRIVER = "wayland";
       GDK_BACKEND = "wayland,x11";
       CLUTTER_BACKEND = "wayland";
@@ -102,6 +101,7 @@
       imv
       wlr-randr
       powerline-fonts
+      material-design-icons
       pkgsStable.libreoffice
       wl-clipboard
       tridactyl-native
@@ -122,16 +122,19 @@
       xdg-user-dirs
       spotify-player
       zoom-us
-      r128gain
+      rsgain
       yt-dlp
       spotdl
       unzip
       powershell
+      xournalpp
     ];
 
     file.".mozilla/native-messaging-hosts/tridactyl.json".source = "${pkgs.tridactyl-native}/lib/mozilla/native-messaging-hosts/tridactyl.json";
   };
   
+  fonts.fontconfig.enable = true;
+
   programs = {
     home-manager.enable = true;
   };
@@ -144,19 +147,34 @@
   '';
 
   systemd = {
-    user.services.polkit-gnome-authentication-agent-1 = {
-      Unit = {
-        description = "polkit-gnome-authentication-agent-1";
-        Wants = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
+    user.services = {
+      polkit-gnome-authentication-agent-1 = {
+        Unit = {
+          Description = "polkit-gnome-authentication-agent-1";
+          Wants = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
+        };
       };
-      Install.wantedBy = [ "graphical-session.target" ];
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-        Restart = "on-failure";
-        RestartSec = 1;
-        TimeoutStopSec = 10;
+
+      keepassxc = {
+        Unit = {
+          Description = "Launch KeePassXC at startup";
+          After = [ "graphical-session-pre.target" ];
+          PartOf=[ "graphical-session.target" ];
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.keepassxc}/bin/keepassxc";
+        };
       };
     };
   };
@@ -165,4 +183,10 @@
     enable = true;
     startInBackground = true;
   };
+
+  services.blueman-applet.enable = true;
+  # services.easyeffects = {
+  #   enable = true;
+  #   preset = "Laptop";
+  # };
 }

@@ -34,13 +34,16 @@
         "${mainMod} ALT, s" = "moveintogroup, d";
         "${mainMod} ALT, d" = "moveintogroup, r";
         "${mainMod} ALT, g" = "moveoutofgroup, ";
-        ", xF86AudioMute" = "exec, ${audioctl}/bin/audioctl x | ${notifyctl}/bin/notifyctl audio";
+        ", xF86AudioMute" = "exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl}/bin/notifyctl audio";
         ", xF86MonBrightnessUp" = "exec, brightnessctl -m s +2% | cut -d, -f4 | ${notifyctl}/bin/notifyctl backlight";
         ", xF86MonBrightnessdown" = "exec, brightnessctl -m s 2%- | cut -d, -f4 | ${notifyctl}/bin/notifyctl backlight";
         ", xF86AudioPlay" = "exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
         ", xF86AudioNext" = "exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
         ", xF86AudioPrev" = "exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
         ", xF86AudioStop" = "exec, ${playerctl} stop && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
+        "${mainMod}, xF86AudioMute" = "exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
+        "${mainMod}, xF86AudioRaiseVolume" = "exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
+        "${mainMod}, xF86AudioLowerVolume" = "exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
 
         # move focus with mainMod + arrow keys
         "${mainMod}, h" = "movefocus, l";
@@ -92,8 +95,8 @@
         "${mainMod}, mouse_up" = "workspace, e-1";
       };
       bindel = {
-        ", xF86AudioRaiseVolume" = "exec, ${audioctl}/bin/audioctl + | ${notifyctl}/bin/notifyctl audio";
-        ", xF86AudioLowerVolume" = "exec, ${audioctl}/bin/audioctl - | ${notifyctl}/bin/notifyctl audio";
+        ", xF86AudioRaiseVolume" = "exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 2%+ && ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl}/bin/notifyctl audio";
+        ", xF86AudioLowerVolume" = "exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%- && ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl}/bin/notifyctl audio";
       };
       bindm = {
         # move/resize windows with mainMod + lmb/rmb and dragging
@@ -147,7 +150,6 @@
     config = {
       exec_once = [
         "${pkgs.swaybg}/bin/swaybg -i \"$(find ${config.xdg.userDirs.pictures}/wallpapers/ -type f | shuf -n 1)\" -m fill"
-        "${pkgs.keepassxc}/bin/keepassxc"
       ];
 
       decoration = {
@@ -162,6 +164,15 @@
         shadow_range = 4;
         shadow_render_power = 3;
         "col.shadow" = "rgba(1a1a1aee)";
+      };
+
+      gestures = {
+        workspace_swipe = true;
+      };
+
+      plugin.touch_gestures = {
+        sensitivity = 4.0;
+        workspace_swipe_fingers = 3;
       };
 
       input = {
@@ -226,7 +237,7 @@
         "XDG_SESSION_TYPE,wayland"
         "XDG_SESSION_DESKTOP,Hyprland"
         "MOZ_ENABLE_WAYLAND,1"
-        "QT_QPA_PLATFORM,wayland;xcb"
+        "QT_QPA_PLATFORM,wayland"
         "SDL_VIDEODRIVER,wayland"
         "GDK_BACKEND,wayland,x11"
         "CLUTTER_BACKEND,wayland"
@@ -234,5 +245,9 @@
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
       ];
     };
+
+    # extraConfig = ''
+    #   plugin = ${pkgs.hyprgrass}/lib/libhyprgrass.so
+    # '';
   };
 }
