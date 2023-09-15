@@ -9,16 +9,28 @@ in
       file = ../secrets/wireguard.age;
       mode = "400";
     };
+
+    # oneplus 8T
     wgPskPeer0 = {
       file = ../secrets/wgPskPeer0.age;
       mode = "400";
     };
+
+    # Asus Zenbook
     wgPskPeer1 = {
       file = ../secrets/wgPskPeer1.age;
       mode = "400";
     };
+
+    # iPhone 8
     wgPskPeer2 = {
-      file = ../secrets/wgPskPeer1.age;
+      file = ../secrets/wgPskPeer2.age;
+      mode = "400";
+    };
+
+    # Thinkpad X1 Yoga
+    wgPskPeer3 = {
+      file = ../secrets/wgPskPeer3.age;
       mode = "400";
     };
   };
@@ -65,6 +77,11 @@ in
           publicKey = "Ka+n3OpeGDjqVUa6Hwal4KOfZVx39SVJ1aPqcTe4t3s=";
           # presharedKeyFile = config.age.secrets.wgPskPeer2.path;
           allowedIPs = [ "10.200.200.4/32" ];
+        }
+        {
+          publicKey = "pEDH9TULaafSfuRKB24pTXRAs99tmR2fAmAxwV2lp3o=";
+          presharedKeyFile = config.age.secrets.wgPskPeer3.path;
+          allowedIPs = [ "10.200.200.5/32" ];
         }
       ];
     };
