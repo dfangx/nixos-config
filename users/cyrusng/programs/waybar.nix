@@ -124,6 +124,7 @@
         margin: 6px;
       }
 
+      #workspaces button.hover,
       #tags button:hover {
         background: #434c5e;
         box-shadow: inherit;

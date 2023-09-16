@@ -95,8 +95,8 @@
         "${mainMod}, mouse_up" = "workspace, e-1";
       };
       bindel = {
-        ", xF86AudioRaiseVolume" = "exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 2%+ && ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl}/bin/notifyctl audio";
-        ", xF86AudioLowerVolume" = "exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%- && ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl}/bin/notifyctl audio";
+        ", xF86AudioRaiseVolume" = "exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%+ && printf \"%.0f\" $(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl}/bin/notifyctl audio";
+        ", xF86AudioLowerVolume" = "exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%- && printf \"%.0f\" $(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl}/bin/notifyctl audio";
       };
       bindm = {
         # move/resize windows with mainMod + lmb/rmb and dragging
