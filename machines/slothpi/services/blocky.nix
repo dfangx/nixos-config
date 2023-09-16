@@ -35,7 +35,7 @@
         prometheus.enable = true;
         httpPort = "127.0.0.1:4000";
         port = 53;
-        # logLevel = "info";
+        logLevel = "warn";
         upstream.default = [
           "${config.services.unbound.settings.server.interface}:${toString config.services.unbound.settings.server.port}"
         ];
