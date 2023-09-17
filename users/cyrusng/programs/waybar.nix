@@ -2,7 +2,6 @@
 {
   programs.waybar = {
     enable = true;
-    package = pkgs.waybar;
     settings.bar = {
       layer = "top";
       modules-left = [
@@ -27,6 +26,7 @@
         format-icons = [ "󰕿" "󰖀" "󰕾" ];
         format-muted = "󰝟";
         format = "{icon}";
+        max-colume = 150;
       };
       battery = {
         format = "{icon}";
@@ -77,6 +77,7 @@
         format = "{name}";
         disable-scroll = true;
         all-outputs = true;
+        on-click = "activate";
       };
       tray = {
         show-passive-items = true;
@@ -124,9 +125,10 @@
         margin: 6px;
       }
 
-      #workspaces button.hover,
+      #workspaces button:hover,
       #tags button:hover {
-        background: #434c5e;
+        background-color: #4c566a;
+        border-color: #4c566a;
         box-shadow: inherit;
         text-shadow: inherit;
       }
