@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   imports = [
     ./programs/hyprland.nix
@@ -39,8 +39,6 @@
       PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
       GOPATH = "${config.xdg.dataHome}/go";
       XDG_SESSION_TYPE = "wayland";
-      XDG_SESSION_DESKTOP = "hyprland";
-      XDG_CURRENT_DESKTOP = "hyprland";
       MOZ_ENABLE_WAYLAND = 1;
       QT_QPA_PLATFORM = "wayland";
       SDL_VIDEODRIVER = "wayland";
@@ -97,16 +95,13 @@
       signal-desktop
       fd
       bat
-      swaybg
       imv
-      wlr-randr
       powerline-fonts
       material-design-icons
       pkgsStable.libreoffice
       wl-clipboard
       tridactyl-native
       xorg.xeyes
-      adwaita-icon-theme-without-gnome
       brightnessctl
       sonixd
       runelite
@@ -114,7 +109,6 @@
       neovim-nix
       youtube-dl
       gparted
-      nextcloud-client
       picard
       exiftool
       playerctl
@@ -176,6 +170,19 @@
           ExecStart = "${pkgs.keepassxc}/bin/keepassxc";
         };
       };
+
+      wvkbd = {
+        Unit = {
+          Description = "Virtual Keyboard";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+        Service = {
+          Type = "simple";
+          ExecStart = "${lib.getExe' pkgs.wvkbd "wvkbd-mobintl"} -L 480 --hidden";
+        };
+      };
     };
   };
 
@@ -184,7 +191,15 @@
     startInBackground = true;
   };
 
-  services.blueman-applet.enable = true;
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Nordic";
+      package = pkgs.nordic;
+    };
+  };
+
+  # services.blueman-applet.enable = true;
   # services.easyeffects = {
   #   enable = true;
   #   preset = "Laptop";

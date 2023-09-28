@@ -137,7 +137,7 @@
   };
 
   systemd.sleep.extraConfig = ''
-    HibernateDelaySec=1h
+    HibernateDelaySec=2h
   '';
 
   services = {

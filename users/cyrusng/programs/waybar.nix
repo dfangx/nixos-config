@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   programs.waybar = {
     enable = true;
@@ -15,18 +15,23 @@
       ];
       modules-right = [
         "tray"
-        # "bluetooth"
+        "bluetooth"
+        "custom/osk"
         "wireplumber"
         "network"
         "battery"
         "cpu"
         "memory"
       ];
+      "custom/osk" = {
+        on-click = "${lib.getExe' pkgs.procps "pkill"} -SIGRTMIN wvkbd";
+        format = "󰌌";
+      };
       wireplumber = {
         format-icons = [ "󰕿" "󰖀" "󰕾" ];
         format-muted = "󰝟";
         format = "{icon}";
-        max-colume = 150;
+        max-volume = 150;
       };
       battery = {
         format = "{icon}";
@@ -69,6 +74,7 @@
         format-on = "󰂯";
         format = "󰂯";
         tooltip-format = "Bluetooth {status}";
+        on-click = "${lib.getExe' pkgs.blueberry "blueberry"}";
       };
       "river/window" = {
         max-length = 80;
@@ -101,12 +107,14 @@
         margin-right: ${toString config.wayland.windowManager.hyprland.config.general.gaps_out}px;
       }
 
+      #custom-osk,
       #clock,
       #battery,
       #cpu,
       #memory,
       #tray,
       #bluetooth,
+      #wireplumber,
       #network {
         padding-top: 3px;
         padding-bottom: 3px;

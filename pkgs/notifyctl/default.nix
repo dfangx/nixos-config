@@ -12,4 +12,6 @@ stdenv.mkDerivation {
       install -t $out/bin ./notifyctl
       wrapProgram $out/bin/notifyctl --prefix PATH : ${lib.makeBinPath [ pkgs.libnotify ]}
     '';   
+
+    meta.mainProgram = "notifyctl";
 }

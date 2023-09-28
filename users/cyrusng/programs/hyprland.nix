@@ -1,15 +1,29 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 {
+  imports = [
+    inputs.hyprland.homeManagerModules.default
+  ];
+
+  nixpkgs.overlays = [
+    inputs.hyprland-contrib.overlays.default
+  ];
+
+  home.sessionVariables = {
+    XDG_SESSION_DESKTOP = "hyprland";
+    XDG_CURRENT_DESKTOP = "hyprland";
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
+    package = pkgs.hyprland;
     systemdIntegration = true;
     reloadConfig = true;
     recommendedEnvironment = true;
     keyBinds = let
       mainMod = "SUPER";
-      notifyctl = pkgs.callPackage ../../../pkgs/notifyctl { };
-      audioctl = pkgs.callPackage ../../../pkgs/audioctl { };
-      playerctl = "${pkgs.playerctl}/bin/playerctl";
+      notifyctl = "${lib.getExe (pkgs.callPackage ../../../pkgs/notifyctl { })}";
+      playerctl = "${lib.getExe pkgs.playerctl}";
+      wpctl = "${lib.getExe' pkgs.wireplumber "wpctl"}";
     in
     {
       bind = {
@@ -34,16 +48,16 @@
         "${mainMod} ALT, s" = "moveintogroup, d";
         "${mainMod} ALT, d" = "moveintogroup, r";
         "${mainMod} ALT, g" = "moveoutofgroup, ";
-        ", xF86AudioMute" = "exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl}/bin/notifyctl audio";
-        ", xF86MonBrightnessUp" = "exec, brightnessctl -m s +2% | cut -d, -f4 | ${notifyctl}/bin/notifyctl backlight";
-        ", xF86MonBrightnessdown" = "exec, brightnessctl -m s 2%- | cut -d, -f4 | ${notifyctl}/bin/notifyctl backlight";
-        ", xF86AudioPlay" = "exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
-        ", xF86AudioNext" = "exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
-        ", xF86AudioPrev" = "exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
-        ", xF86AudioStop" = "exec, ${playerctl} stop && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
-        "${mainMod}, xF86AudioMute" = "exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
-        "${mainMod}, xF86AudioRaiseVolume" = "exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
-        "${mainMod}, xF86AudioLowerVolume" = "exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl}/bin/notifyctl mpris";
+        ", xF86AudioMute" = "exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle && ${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl} audio";
+        ", xF86MonBrightnessUp" = "exec, brightnessctl -m s +2% | cut -d, -f4 | ${notifyctl} backlight";
+        ", xF86MonBrightnessdown" = "exec, brightnessctl -m s 2%- | cut -d, -f4 | ${notifyctl} backlight";
+        ", xF86AudioPlay" = "exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris";
+        ", xF86AudioNext" = "exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris";
+        ", xF86AudioPrev" = "exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris";
+        ", xF86AudioStop" = "exec, ${playerctl} stop && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris";
+        "${mainMod}, xF86AudioMute" = "exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris";
+        "${mainMod}, xF86AudioRaiseVolume" = "exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris";
+        "${mainMod}, xF86AudioLowerVolume" = "exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris";
 
         # move focus with mainMod + arrow keys
         "${mainMod}, h" = "movefocus, l";
@@ -95,8 +109,8 @@
         "${mainMod}, mouse_up" = "workspace, e-1";
       };
       bindel = {
-        ", xF86AudioRaiseVolume" = "exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%+ && printf \"%.0f\" $(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl}/bin/notifyctl audio";
-        ", xF86AudioLowerVolume" = "exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%- && printf \"%.0f\" $(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl}/bin/notifyctl audio";
+        ", xF86AudioRaiseVolume" = "exec, ${wpctl} set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%+ && printf \"%.0f\" $(${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl} audio";
+        ", xF86AudioLowerVolume" = "exec, ${wpctl} set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%- && printf \"%.0f\" $(${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl} audio";
       };
       bindm = {
         # move/resize windows with mainMod + lmb/rmb and dragging
@@ -109,6 +123,14 @@
       {
         class = [ "^(Alacritty)$" ];
         rules = [ "opacity 0.9 0.8" ];
+      }
+      {
+        class = [ "^(blueberry.py)$" ];
+        rules = [ "float" ];
+      }
+      {
+        class = [ "^(org.keepassxc.KeePassXC)$" ];
+        rules = [ "float" ];
       }
     ];
 
@@ -149,7 +171,7 @@
 
     config = {
       exec_once = [
-        "${pkgs.swaybg}/bin/swaybg -i \"$(find ${config.xdg.userDirs.pictures}/wallpapers/ -type f | shuf -n 1)\" -m fill"
+        "${lib.getExe pkgs.swaybg} -i \"$(find ${config.xdg.userDirs.pictures}/wallpapers/ -type f | shuf -n 1)\" -m fill"
       ];
 
       decoration = {
@@ -168,6 +190,7 @@
 
       gestures = {
         workspace_swipe = true;
+        workspace_swipe_cancel_ratio = 0.15;
       };
 
       plugin.touch_gestures = {
@@ -233,9 +256,9 @@
       ];
 
       env = [
-        "XDG_CURRENT_DESKTOP,Hyprland"
+        "XDG_CURRENT_DESKTOP,${config.home.sessionVariables.XDG_CURRENT_DESKTOP}"
         "XDG_SESSION_TYPE,wayland"
-        "XDG_SESSION_DESKTOP,Hyprland"
+        "XDG_SESSION_DESKTOP,${config.home.sessionVariables.XDG_SESSION_DESKTOP}"
         "MOZ_ENABLE_WAYLAND,1"
         "QT_QPA_PLATFORM,wayland"
         "SDL_VIDEODRIVER,wayland"
@@ -246,8 +269,8 @@
       ];
     };
 
-    # extraConfig = ''
-    #   plugin = ${pkgs.hyprgrass}/lib/libhyprgrass.so
-    # '';
+    extraConfig = ''
+      plugin = ${pkgs.hyprgrass}/lib/libhyprgrass.so
+    '';
   };
 }
