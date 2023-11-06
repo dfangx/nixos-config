@@ -1,5 +1,17 @@
-{ ... }:
+{ inputs, pkgs, ... }:
 {
+  imports = [
+    inputs.nixneovim.nixosModules.default
+  ];
+
+  nixpkgs.overlays = [
+    inputs.nixneovim.overlays.default
+  ];
+
+  home.packages = with pkgs; [
+    nano
+  ];
+
   programs.nixneovim = {
     enable = true;
     viAlias = true;
@@ -47,11 +59,11 @@
         #     ":FzfLua fzf.files({ actions = { [\\\"default\\\"] = fzfActions.file_tabedit } })<cr>"
         #   else
         #     ":tabfind";
-        # "S" = "'a<cr><cr>'";
-        # "<leader>O" = "'O<esc>'";
-        # "<leader>o" = "'o<esc>'";
-        # "]b" = "':bn<cr>'";
-        # "[b" = "':bp<cr>'";
+        "S" = "'a<cr><cr>'";
+        "<leader>O" = "'O<esc>'";
+        "<leader>o" = "'o<esc>'";
+        "]b" = "':bn<cr>'";
+        "[b" = "':bp<cr>'";
         # "<leader>bb" = 
         #   if fzf.enable then
         #     ":FzfLua buffers<cr>"
@@ -62,42 +74,42 @@
           silent = true; 
           action = "'<c-w>H'"; 
         };
-        # "<leader>l" = { 
-        #   silent = true; 
-        #   action = "'<c-w>L'"; 
-        # };
-        # "<leader>j" = { 
-        #   silent = true;
-        #   action = "'<c-w>J'";
-        # };
-        # "<leader>k" = { 
-        #   silent = true; 
-        #   action = "'<c-w>K'"; 
-        # };
-        # "<leader>s" = "'<c-w>s'";
-        # "<leader>v" = "'<c-w>v'";
-        # "<leader><" = { 
-        #   silent = true; 
-        #   action = "10<c-w><"; 
-        # };
-        # "<leader>>" = { 
-        #   silent = true;
-        #   action = "10<c-w>>";
-        # };
-        # "<leader>+" = { 
-        #   silent = true; 
-        #   action = "10<c-w>+";
-        # };
-        # "<leader>-" = { 
-        #   silent = true; 
-        #   action = "10<c-w>-"; 
-        # };
-        # "<c-j>" = "'<c-w>j'";
-        # "<c-k>" = "'<c-w>k'";
-        # "<c-l>" = "'<c-w>l'";
-        # "<c-h>" = "'<c-w>h'";
-        # "<space>" = "'<noop>'";
-        # "<leader>e" = "'<cmd>Lexplore<cr>'";
+        "<leader>l" = { 
+          silent = true; 
+          action = "'<c-w>L'"; 
+        };
+        "<leader>j" = { 
+          silent = true;
+          action = "'<c-w>J'";
+        };
+        "<leader>k" = { 
+          silent = true; 
+          action = "'<c-w>K'"; 
+        };
+        "<leader>s" = "'<c-w>s'";
+        "<leader>v" = "'<c-w>v'";
+        "<leader><" = { 
+          silent = true; 
+          action = "10<c-w><"; 
+        };
+        "<leader>>" = { 
+          silent = true;
+          action = "10<c-w>>";
+        };
+        "<leader>+" = { 
+          silent = true; 
+          action = "10<c-w>+";
+        };
+        "<leader>-" = { 
+          silent = true; 
+          action = "10<c-w>-"; 
+        };
+        "<c-j>" = "'<c-w>j'";
+        "<c-k>" = "'<c-w>k'";
+        "<c-l>" = "'<c-w>l'";
+        "<c-h>" = "'<c-w>h'";
+        "<space>" = "'<noop>'";
+        "<leader>e" = "'<cmd>Lexplore<cr>'";
       };
     };
 

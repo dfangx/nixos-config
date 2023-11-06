@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports = [
@@ -10,7 +10,7 @@
   ];
 
   boot.resumeDevice = "/dev/disk/by-uuid/a9aa5ab2-ea77-4b71-8986-805313638e97";
-  boot.kernelParams = [ "resume_offset=4231168" ];
+  boot.kernelParams = [ "resume_offset=5081088" ];
 
   nixpkgs.config.allowUnfreePredicate = (pkg: true);
   nix = {
@@ -20,12 +20,12 @@
     '';
     settings = {
       substituters = [
-        "https://hyprland.cachix.org"
         "https://nix-community.cachix.org"
+        "https://hyprland.cachix.org"
       ];
       trusted-public-keys = [
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
       auto-optimise-store = true;
     };
@@ -123,7 +123,10 @@
   ];
 
   programs = {
-    hyprland.enable = true;
+    hyprland = {
+      enable = true;
+      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    };
     steam.enable = true;
     dconf.enable = true;
   };
@@ -166,7 +169,7 @@
     greetd = {
       enable = true;
       settings.default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --issue --cmd Hyprland";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --issue --cmd ${lib.getExe' config.programs.hyprland.package "Hyprland"}";
       };
     };
     tlp = {

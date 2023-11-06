@@ -74,7 +74,8 @@
         format-on = "󰂯";
         format = "󰂯";
         tooltip-format = "Bluetooth {status}";
-        on-click = "${lib.getExe' pkgs.blueberry "blueberry"}";
+        on-click = "${lib.getExe' pkgs.util-linux "rfkill"} unblock bluetooth && ${lib.getExe' pkgs.blueberry "blueberry"}";
+        on-right-click = "${lib.getExe' pkgs.util-linux "rfkill"} block bluetooth";
       };
       "river/window" = {
         max-length = 80;
@@ -100,11 +101,11 @@
       }
 
       .modules-left {
-        margin-left: ${toString config.wayland.windowManager.hyprland.config.general.gaps_out}px;
+        margin-left: 20px;
       }
 
       .modules-right {
-        margin-right: ${toString config.wayland.windowManager.hyprland.config.general.gaps_out}px;
+        margin-right: 20px;
       }
 
       #custom-osk,

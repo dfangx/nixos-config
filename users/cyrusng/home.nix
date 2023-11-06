@@ -1,7 +1,10 @@
 { config, pkgs, lib, ... }:
+let
+  terminal = "${lib.getExe pkgs.alacritty}";
+in
 {
   imports = [
-    ./programs/hyprland.nix
+    ./programs/wayland.nix
     ./programs/waybar.nix
     ./programs/fzf.nix
     ./programs/mako.nix
@@ -16,11 +19,13 @@
     ./programs/firefox.nix
     ./programs/fuzzel.nix
     ./programs/xdg.nix
+    ./programs/fonts.nix
     # ./programs/nixneovim.nix
     ./services/swayidle.nix
     ./services/kanshi.nix
     ./services/gammastep.nix
-    ./services/backup.nix
+    ./services/password_manager.nix
+    # ./services/backup.nix
   ];
 
   home = rec {
@@ -28,29 +33,10 @@
     homeDirectory = "/home/${username}";
     sessionVariables = {
       EDITOR = "nvim";
-      BROWSER = "firefox";
-      TERM = "alacritty";
-      PSWD_MGR = "keepassxc";
-      XDG_BIN_HOME = "${config.home.homeDirectory}/.local/bin";
+      TERM = "${terminal}";
       PROMPT_DIRTRIM = 3;
-      GNUPGHOME = "${config.xdg.dataHome}/gnupg";
-      RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
-      CARGO_HOME = "${config.xdg.dataHome}/cargo";
-      PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
-      GOPATH = "${config.xdg.dataHome}/go";
-      XDG_SESSION_TYPE = "wayland";
-      MOZ_ENABLE_WAYLAND = 1;
-      QT_QPA_PLATFORM = "wayland";
-      SDL_VIDEODRIVER = "wayland";
-      GDK_BACKEND = "wayland,x11";
-      CLUTTER_BACKEND = "wayland";
       QT_AUTO_SCREEN_SCALE_FACTOR = 1;
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
-      _JAVA_AWT_WM_NONREPARENTING = 1;
     };
-    sessionPath = [
-      config.home.sessionVariables."XDG_BIN_HOME"
-    ];
     shellAliases = {
       po = "poweroff";
       rb = "reboot";
@@ -87,59 +73,79 @@
       rpi = "ssh -4 ${username}@slothpi.duckdns.org";
     };
     stateVersion = "22.11";
-    packages = let
-      backup = pkgs.callPackage ../../pkgs/backup { };
-    in
-    with pkgs; [
-      keepassxc
-      signal-desktop
+    packages = with pkgs; [
+      adwaita-icon-theme-without-gnome
       fd
       bat
       imv
-      powerline-fonts
-      material-design-icons
-      pkgsStable.libreoffice
+      libreoffice
       wl-clipboard
       tridactyl-native
       xorg.xeyes
-      brightnessctl
-      sonixd
       runelite
-      backup
       neovim-nix
-      youtube-dl
       gparted
-      picard
+      xorg.xhost
       exiftool
-      playerctl
       wev
       xdg-user-dirs
-      spotify-player
       zoom-us
       rsgain
       yt-dlp
-      spotdl
       unzip
-      powershell
       xournalpp
+      picard
     ];
-
-    file.".mozilla/native-messaging-hosts/tridactyl.json".source = "${pkgs.tridactyl-native}/lib/mozilla/native-messaging-hosts/tridactyl.json";
   };
-  
-  fonts.fontconfig.enable = true;
 
-  programs = {
-    home-manager.enable = true;
+  nix = {
+    package = pkgs.nix;
+    checkConfig = true;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+      min-free = ${toString (1024 * 1024 * 1024)}
+    '';
+    settings = {
+      substituters = [
+        "https://nix-community.cachix.org"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+      auto-optimise-store = true;
+    };
   };
   
   nixpkgs.config.allowUnfreePredicate = (pkg: true);
-  
-  xdg.configFile."electron-flags.conf".text = ''
-    --enable-features=WaylandWindowDecorations
-    --ozone-platform-hint=auto
-  '';
 
+  programs.home-manager.enable = true;
+
+  programs.beets = {
+    enable = true;
+    package = pkgs.beets.override {
+      pluginOverrides = {
+        chroma.enable = true;
+        replaygain.enable = true;
+        edit.enable = true;
+        unimported.enable = true;
+        duplicates.enable = true;
+        fetchart.enable = true;
+        embedart.enable = true;
+      };
+    };
+    settings = {
+      threaded = "no";
+      directory = config.xdg.userDirs.music;
+      library = "${config.xdg.userDirs.music}/.beets.db";
+      plugins = "chroma replaygain edit unimported duplicates embedart fetchart";
+      chroma = {
+        auto = "yes";
+      };
+      replygain.backend = "ffmpeg";
+      unimported.ignore_subdirectories = "tmp";
+    };
+  };
+  
   systemd = {
     user.services = {
       polkit-gnome-authentication-agent-1 = {
@@ -155,19 +161,6 @@
           Restart = "on-failure";
           RestartSec = 1;
           TimeoutStopSec = 10;
-        };
-      };
-
-      keepassxc = {
-        Unit = {
-          Description = "Launch KeePassXC at startup";
-          After = [ "graphical-session-pre.target" ];
-          PartOf=[ "graphical-session.target" ];
-        };
-        Install.WantedBy = [ "graphical-session.target" ];
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.keepassxc}/bin/keepassxc";
         };
       };
 
@@ -191,6 +184,57 @@
     startInBackground = true;
   };
 
+  home.file."${config.xdg.configHome}/Nextcloud/sync-exclude.lst".text = ''
+    # This file contains fixed global exclude patterns
+    
+    ~$*
+    .~lock.*
+    ~*.tmp
+    ]*.~*
+    ]Icon\r*
+    ].DS_Store
+    ].ds_store
+    *.textClipping
+    ._*
+    ]Thumbs.db
+    ]photothumb.db
+    System Volume Information
+    
+    .*.sw?
+    .*.*sw?
+    
+    ].TemporaryItems
+    ].Trashes
+    ].DocumentRevisions-V100
+    ].Trash-*
+    .fseventd
+    .apdisk
+    .Spotlight-V100
+    
+    .directory
+    
+    *.part
+    *.filepart
+    *.crdownload
+    
+    *.kate-swp
+    *.gnucash.tmp-*
+    
+    .synkron.*
+    .sync.ffs_db
+    .symform
+    .symform-store
+    .fuse_hidden*
+    *.unison
+    .nfs*
+    
+    My Saved Places.
+    
+    \#*#
+    
+    *.sb-*
+  '';
+
   gtk = {
     enable = true;
     theme = {
@@ -198,10 +242,5 @@
       package = pkgs.nordic;
     };
   };
-
-  # services.blueman-applet.enable = true;
-  # services.easyeffects = {
-  #   enable = true;
-  #   preset = "Laptop";
-  # };
 }
+

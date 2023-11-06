@@ -15,7 +15,7 @@
           style = "Regular";
         };
         bold = {
-          family = "Source Code Pro for POwerline";
+          family = "Source Code Pro for Powerline";
           style = "Bold";
         };
         italic = {

@@ -1,5 +1,7 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
+  home.sessionVariables.BROWSER = "${lib.getExe' config.programs.firefox.package "firefox"}";
+
   programs.firefox = {
     enable = true;
     package = pkgs.firefox-wayland;
@@ -13,7 +15,7 @@
           multi-account-containers
           temporary-containers
           enhanced-github
-          enhancer-for-youtube
+          # enhancer-for-youtube
           old-reddit-redirect
           reddit-enhancement-suite
           ublock-origin
@@ -302,4 +304,6 @@
       };
     };
   };
+
+  home.file.".mozilla/native-messaging-hosts/tridactyl.json".source = "${pkgs.tridactyl-native}/lib/mozilla/native-messaging-hosts/tridactyl.json";
 }

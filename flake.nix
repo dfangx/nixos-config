@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/fdd898f8f79e8d2f99ed2ab6b3751811ef683242";
     nixpkgsStable.url = "github:nixos/nixpkgs/nixos-23.05";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -11,9 +11,6 @@
     };
     neovim-nix.url = "github:dfangx/nvim-flake";
     nbfc-linux.url = "github:nbfc-linux/nbfc-linux";
-    hyprland-contrib.url = "github:hyprwm/contrib";
-    hyprland-git.url = "github:hyprwm/Hyprland";
-    hyprland.url = "github:spikespaz/hyprland-nix";
     agenix.url = "github:ryantm/agenix";
     firefly = {
       url = "github:timhae/firefly";
@@ -23,7 +20,11 @@
     nixneovim.url = "github:nixneovim/nixneovim";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nur.url = "github:nix-community/NUR";
+    hyprland-contrib.url = "github:hyprwm/contrib";
     hyprgrass.url = "github:horriblename/hyprgrass";
+    hyprland.url = "github:hyprwm/Hyprland/v0.31.0";
+    hyprland-nix.url = "github:spikespaz/hyprland-nix";
+    # hyprland-nix.inputs.hyprland.follows = "hyprland-git";
   };
 
   outputs = { nixpkgs, nixpkgsStable, home-manager, ... }@inputs:
@@ -50,7 +51,7 @@
             ];
           }
           inputs.agenix.nixosModules.default
-          inputs.hyprland-package.nixosModules.default
+          inputs.hyprland.nixosModules.default
           ./machines/cykrotop/configuration.nix
         ];
       };
@@ -60,6 +61,7 @@
       in
       nixpkgs.lib.nixosSystem {
         # inherit system;
+        specialArgs = { inherit inputs; };
         modules = [
           {
             nixpkgs.overlays = [
@@ -74,7 +76,7 @@
             ];
           }
           inputs.agenix.nixosModules.default
-          inputs.hyprland-git.nixosModules.default
+          inputs.hyprland.nixosModules.default
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-yoga
           ./machines/cykrotop-thinkpad/configuration.nix
         ];
@@ -125,7 +127,6 @@
         });
         pkgsStable = nixpkgsStable.legacyPackages.${prev.system};
         rsgain = pkgs.callPackage pkgs/rsgain.nix { };
-        hyprgrass = inputs.hyprgrass.packages.${prev.system}.default;
       });
     in 
     home-manager.lib.homeManagerConfiguration {
@@ -136,16 +137,13 @@
       modules = [
         {
           nixpkgs.overlays = [
-            # (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.overrideAttrs (oldAttrs: { passthru = null; }); })
-            # (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
+            (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.overrideAttrs (oldAttrs: { passthru = null; }); })
+            (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
             myOverlay
             inputs.neovim-nix.overlays.${system}.default
-            # inputs.hyprland-package.overlays.default
-            #inputs.nixneovim.overlays.default
           ];
         }
         inputs.nur.nixosModules.nur
-        #inputs.nixneovim.nixosModules.default
         ./users/cyrusng/home.nix 
       ];
     };
