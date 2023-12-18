@@ -42,11 +42,10 @@
     driSupport32Bit = true;
     extraPackages = with pkgs; [
       intel-media-driver
-      intel-vaapi-driver
+      intel-compute-runtime
     ];
     extraPackages32 = with pkgs.driversi686Linux; [
       intel-media-driver
-      intel-vaapi-driver
     ];
   };
 
@@ -120,6 +119,7 @@
     wget
     agenix
     lm_sensors
+    alacritty
   ];
 
   programs = {
@@ -131,7 +131,10 @@
     dconf.enable = true;
   };
 
-  xdg.portal.enable = true;
+  xdg.portal = {
+    enable = true;
+    config.common.default = "*";
+  };
 
   security = {
     rtkit.enable = true;

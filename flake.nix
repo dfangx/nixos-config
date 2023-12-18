@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
-    nixpkgs.url = "github:nixos/nixpkgs/fdd898f8f79e8d2f99ed2ab6b3751811ef683242";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgsStable.url = "github:nixos/nixpkgs/nixos-23.05";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -17,12 +17,20 @@
       inputs.nixpkgs.follows = "nixos";
     };
     nixos.url = "github:NixOS/nixpkgs/nixos-22.11";
-    nixneovim.url = "github:nixneovim/nixneovim";
+    nixneovimplugins.url = "github:jooooscha/nixpkgs-vim-extra-plugins";
+    nixneovim = {
+      url = "github:nixneovim/nixneovim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # nixvim = {
+    #   url = "github:nix-community/nixvim";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nur.url = "github:nix-community/NUR";
     hyprland-contrib.url = "github:hyprwm/contrib";
     hyprgrass.url = "github:horriblename/hyprgrass";
-    hyprland.url = "github:hyprwm/Hyprland/v0.31.0";
+    hyprland.url = "github:hyprwm/Hyprland";
     hyprland-nix.url = "github:spikespaz/hyprland-nix";
     # hyprland-nix.inputs.hyprland.follows = "hyprland-git";
   };

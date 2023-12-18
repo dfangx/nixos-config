@@ -3,7 +3,7 @@
   services.swayidle = let 
     hyprctl = "${lib.getExe' pkgs.hyprland "hyprctl"}";
     wlr-randr = "${lib.getExe pkgs.wlr-randr}";
-    swaylock = "${lib.getExe' pkgs.swaylock-effects "swaylock"}";
+    swaylock = "${lib.getExe config.programs.swaylock.package}";
   in 
   {
     enable = true;

@@ -40,5 +40,9 @@ stdenv.mkDerivation rec {
   mesonFlags = [
     "-Dpam=enabled" "-Dgdk-pixbuf=enabled" "-Dman-pages=enabled"
   ];
+
+  meta = {
+    mainProgram = "swaylock";
+  };
 }
 

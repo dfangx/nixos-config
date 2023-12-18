@@ -20,7 +20,7 @@ in
     ./programs/fuzzel.nix
     ./programs/xdg.nix
     ./programs/fonts.nix
-    # ./programs/nixneovim.nix
+    ./programs/nixneovim.nix
     ./services/swayidle.nix
     ./services/kanshi.nix
     ./services/gammastep.nix
@@ -74,7 +74,7 @@ in
     };
     stateVersion = "22.11";
     packages = with pkgs; [
-      adwaita-icon-theme-without-gnome
+      gnome.adwaita-icon-theme
       fd
       bat
       imv
@@ -83,10 +83,7 @@ in
       tridactyl-native
       xorg.xeyes
       runelite
-      neovim-nix
-      gparted
-      xorg.xhost
-      exiftool
+      # neovim-nix
       wev
       xdg-user-dirs
       zoom-us
@@ -95,6 +92,8 @@ in
       unzip
       xournalpp
       picard
+      zettlr
+      obsidian
     ];
   };
 
@@ -107,9 +106,11 @@ in
     '';
     settings = {
       substituters = [
+        "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
       ];
       trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
       auto-optimise-store = true;
