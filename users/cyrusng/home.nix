@@ -93,7 +93,12 @@ in
       xournalpp
       picard
       zettlr
-      obsidian
+      pavucontrol
+      lutris
+      heroic
+      protonup-qt
+      wine
+      # obsidian
     ];
   };
 
@@ -122,7 +127,7 @@ in
   programs.home-manager.enable = true;
 
   programs.beets = {
-    enable = true;
+    enable = false;
     package = pkgs.beets.override {
       pluginOverrides = {
         chroma.enable = true;
@@ -147,6 +152,12 @@ in
     };
   };
   
+  dconf.settings = {
+    "org/virt-manager/virt-manager/connections" = {
+      autoconnect = ["qemu:///system"];
+      uris = ["qemu:///system"];
+    };
+  };
   systemd = {
     user.services = {
       polkit-gnome-authentication-agent-1 = {

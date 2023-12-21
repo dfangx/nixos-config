@@ -3,11 +3,10 @@ let
 in
 {
   programs.swaylock = {
-    package = pkgs.callPackage ../../../pkgs/swaylock-fprintd { };
+    package = pkgs.swaylock-effects;
     settings = {
-      # clock = true;
-      # indicator = true;
-      fingerprint=true;
+      clock = true;
+      indicator = true;
       daemonize = true;
       image = "${config.xdg.userDirs.pictures}/wallpapers/bluewater.png";
       indicator-thickness = 5;

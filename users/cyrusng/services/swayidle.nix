@@ -20,20 +20,20 @@
     ];
     timeouts = [
       { timeout = 600;  command = "${swaylock}"; } 
-      { 
-        timeout = 900;  
-        command = if config.home.sessionVariables.XDG_CURRENT_DESKTOP == "hyprland" then
-          "${hyprctl} dispatch dpms off"
-          else
-          "${wlr-randr} --output eDP-1 --off --output DP-1 --off --output HDMI-A-2 --off";
-        resumeCommand = if config.home.sessionVariables.XDG_CURRENT_DESKTOP == "hyprland" then
-          "${hyprctl} dispatch dpms on" 
-          else
-          "${wlr-randr} --output eDP-1 --on --output --on DP-1 --output HDMI-A-2 --on";
-      } 
+      # { 
+      #   timeout = 900;  
+      #   command = if config.home.sessionVariables.XDG_CURRENT_DESKTOP == "hyprland" then
+      #     "${hyprctl} dispatch dpms off"
+      #     else
+      #     "${wlr-randr} --output eDP-1 --off --output DP-1 --off --output HDMI-A-2 --off";
+      #   resumeCommand = if config.home.sessionVariables.XDG_CURRENT_DESKTOP == "hyprland" then
+      #     "${hyprctl} dispatch dpms on" 
+      #     else
+      #     "${wlr-randr} --output eDP-1 --on --output --on DP-1 --output HDMI-A-2 --on";
+      # } 
       { 
         timeout = 1200; 
-        command = "${lib.getExe' pkgs.systemd "systemctl"} suspend-then-hibernate"; 
+        command = "${lib.getExe' pkgs.systemd "systemctl"} suspend"; 
         resumeCommand = if config.home.sessionVariables.XDG_CURRENT_DESKTOP == "hyprland" then
           "${hyprctl} dispatch dpms on" 
           else

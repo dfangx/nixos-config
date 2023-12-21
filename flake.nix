@@ -89,6 +89,32 @@
           ./machines/cykrotop-thinkpad/configuration.nix
         ];
       };
+      cyruspc = let
+        system = "x86_64-linux";
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      nixpkgs.lib.nixosSystem {
+        # inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
+          {
+            nixpkgs.overlays = [
+              (final: prev: { 
+                steam = prev.steam.override { 
+                  extraPkgs = pkgs: with pkgs; [ 
+                    openssl              
+                  ]; 
+                }; 
+                agenix = inputs.agenix.packages.${system}.default;
+              })
+            ];
+          }
+          inputs.agenix.nixosModules.default
+          inputs.hyprland.nixosModules.default
+          # inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-yoga
+          ./machines/cyruspc/configuration.nix
+        ];
+      };
       slothpi = let
         system = "aarch64-linux";
         pkgs = nixpkgs.legacyPackages.${system};

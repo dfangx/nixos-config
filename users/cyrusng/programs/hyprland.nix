@@ -26,9 +26,9 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    systemdIntegration = true;
+    systemd.enable = true;
     # reloadConfig = true;
-    recommendedEnvironment = true;
+    # recommendedEnvironment = true;
     extraConfig = let
       mainMod = "SUPER";
       notifyctl = "${lib.getExe (pkgs.callPackage ../../../pkgs/notifyctl { })}";
@@ -133,7 +133,7 @@
       env = XDG_SESSION_DESKTOP,${config.home.sessionVariables.XDG_SESSION_DESKTOP}
       env = MOZ_ENABLE_WAYLAND,1
       env = QT_QPA_PLATFORM,wayland
-      env = SDL_VIDEODRIVER,wayland
+      # env = SDL_VIDEODRIVER,wayland
       env = GDK_BACKEND,wayland,x11
       env = CLUTTER_BACKEND,wayland
       env = QT_AUTO_SCREEN_SCALE_FACTOR,1
@@ -141,15 +141,20 @@
 
       exec-once = ${lib.getExe pkgs.swaybg} -i "$(find ${config.xdg.userDirs.pictures}/wallpapers/ -type f | shuf -n 1)" -m fill
 
-      monitor = eDP-1,preferred,0x0,1
-      monitor = DP-3,preferred,1920x0,1
-      monitor = DP-4,preferred,3840x0,1
-      monitor = DP-5,preferred,1920x0,1
-      monitor = DP-6,preferred,3840x0,1
+      monitor = DP-3,preferred,0x0,1
+      monitor = DP-2,preferred,2560x0,1
+      workspace = 1, monitor:DP-3
+      workspace = 2, monitor:DP-2
 
-      workspace = 1, monitor:eDP-1
-      workspace = 2, monitor:DP-3
-      workspace = 3, monitor:DP-4
+      # monitor = eDP-1,preferred,0x0,1
+      # monitor = DP-3,preferred,1920x0,1
+      # monitor = DP-4,preferred,3840x0,1
+      # monitor = DP-5,preferred,1920x0,1
+      # monitor = DP-6,preferred,3840x0,1
+
+      # workspace = 1, monitor:eDP-1
+      # workspace = 2, monitor:DP-3
+      # workspace = 3, monitor:DP-4
 
       dwindle {
         preserve_split = yes
@@ -174,10 +179,10 @@
       input {
         follow_mouse = 2
         kb_layout = us
-        natural_scroll = true
         repeat_delay = 250
         repeat_rate = 50
-        sensitivity = 0
+        sensitivity = 0.5
+        scroll_button = 13;
 
         touchpad {
           clickfinger_behavior = true
