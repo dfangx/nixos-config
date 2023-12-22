@@ -120,13 +120,6 @@
       bindm = ${mainMod}, mouse:272, movewindow
       bindm = ${mainMod}, mouse:273, resizewindow
 
-      plugin {
-        touch_gestures {
-          sensitivity = 4.000000
-          workspace_swipe_fingers = 3
-        }
-      }
-
       env = NIXOS_OZONE_WL,1
       env = XDG_CURRENT_DESKTOP,${config.home.sessionVariables.XDG_CURRENT_DESKTOP}
       env = XDG_SESSION_TYPE,wayland
@@ -263,8 +256,6 @@
         swallow_regex = ^(Alacritty)$
         vrr = 1
       }
-
-      plugin = ${inputs.hyprgrass.packages.${pkgs.system}.default}/lib/libhyprgrass.so
     '';
     # keyBinds = let
     #   mainMod = "SUPER";
