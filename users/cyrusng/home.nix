@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   terminal = "${lib.getExe pkgs.alacritty}";
 in
@@ -8,7 +8,6 @@ in
     ./programs/waybar.nix
     ./programs/fzf.nix
     ./programs/mako.nix
-    ./programs/swaylock.nix
     ./programs/alacritty.nix
     ./programs/zathura.nix
     ./programs/git.nix
@@ -21,7 +20,6 @@ in
     ./programs/xdg.nix
     ./programs/fonts.nix
     ./programs/nixneovim.nix
-    ./services/swayidle.nix
     ./services/kanshi.nix
     ./services/gammastep.nix
     ./services/password_manager.nix
@@ -73,7 +71,16 @@ in
       rpi = "ssh -4 ${username}@slothpi.duckdns.org";
     };
     stateVersion = "22.11";
-    packages = with pkgs; [
+    packages = let 
+      feishin = pkgs.callPackage ../../pkgs/feishin { };
+      obsidian = pkgs.obsidian.override {
+          electron = pkgs.electron_25.overrideAttrs (_: {
+            preFixup = "patchelf --add-needed ${pkgs.libglvnd}/lib/libEGL.so.1 $out/bin/electron"; # NixOS/nixpkgs#272912
+            meta.knownVulnerabilities = [ ]; # NixOS/nixpkgs#273611
+          });
+        };
+    in
+    with pkgs; [
       gnome.adwaita-icon-theme
       fd
       bat
@@ -93,8 +100,23 @@ in
       xournalpp
       picard
       zettlr
+      # wlvncc
       obsidian
+      feishin
+      pavucontrol
     ];
+  };
+
+  xdg.desktopEntries = {
+    feishin = {
+      name = "Feishin";
+      exec = "feishin %u";
+      icon = "feishin";
+      comment = "Full-featured Subsonic/Jellyfin compatible desktop music player";
+      genericName = "Subsonic Client";
+      categories = [ "Audio" "AudioVideo" ];
+      mimeType = [ "x-scheme-handler/feishin" ];
+    };
   };
 
   nix = {
@@ -108,15 +130,21 @@ in
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
+        "https://nixpkgs-wayland.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
       ];
       auto-optimise-store = true;
     };
   };
   
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-25.9.0"
+  ];
+
   nixpkgs.config.allowUnfreePredicate = (pkg: true);
 
   programs.home-manager.enable = true;

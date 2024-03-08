@@ -2,26 +2,27 @@
   description = "NixOS Configuration";
 
   inputs = {
-    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/b98a4e1746acceb92c509bc496ef3d0e5ad8d4aa";
     nixpkgsStable.url = "github:nixos/nixpkgs/nixos-23.05";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    neovim-nix.url = "github:dfangx/nvim-flake";
     nbfc-linux.url = "github:nbfc-linux/nbfc-linux";
     agenix.url = "github:ryantm/agenix";
+
     firefly = {
       url = "github:timhae/firefly";
       inputs.nixpkgs.follows = "nixos";
     };
     nixos.url = "github:NixOS/nixpkgs/nixos-22.11";
-    nixneovimplugins.url = "github:jooooscha/nixpkgs-vim-extra-plugins";
+
+    neovim-nix.url = "github:dfangx/nvim-flake";
     nixneovim = {
       url = "github:nixneovim/nixneovim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixneovimplugins.url = "github:jooooscha/nixpkgs-vim-extra-plugins";
     # nixvim = {
     #   url = "github:nix-community/nixvim";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -29,9 +30,15 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nur.url = "github:nix-community/NUR";
     hyprland-contrib.url = "github:hyprwm/contrib";
-    hyprgrass.url = "github:horriblename/hyprgrass";
     hyprland.url = "github:hyprwm/Hyprland";
+    hypridle.url = "github:hyprwm/hypridle";
+    hyprlock.url = "github:hyprwm/hyprlock";
     hyprland-nix.url = "github:spikespaz/hyprland-nix";
+    hyprgrass.url = "github:horriblename/hyprgrass";
+    nixpkgs-wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
+      follows = "nixpkgs";
+    };
     # hyprland-nix.inputs.hyprland.follows = "hyprland-git";
   };
 
@@ -149,6 +156,7 @@
             (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
             myOverlay
             inputs.neovim-nix.overlays.${system}.default
+            # inputs.nixpkgs-wayland.overlays.${system}.default
           ];
         }
         inputs.nur.nixosModules.nur

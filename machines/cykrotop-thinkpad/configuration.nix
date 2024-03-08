@@ -49,7 +49,9 @@
     ];
   };
 
-  hardware.bluetooth.enable = true;
+  hardware.bluetooth = {
+    enable = true;
+  };
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
@@ -65,6 +67,10 @@
   networking = {
     hostName = "cykrotop"; # Define your hostname.
     wireless.iwd.enable = true;
+    networkmanager = {
+      enable = true;
+      wifi.backend = "iwd";
+    };
     wg-quick.interfaces = {
       wg0 = {
         address = [ "10.200.200.5/32" ] ;
@@ -84,6 +90,13 @@
         ];
       };
     };
+  };
+
+  system.activationScripts.rfkillUnblockAll = {
+    text = ''
+      rfkill unblock all
+    '';
+    deps = [];
   };
 
   # Set your time zone.
@@ -139,6 +152,7 @@
   security = {
     rtkit.enable = true;
     pam.services.swaylock = { };
+    pam.services.hyprlock = { };
     polkit.enable = true;
   };
 
@@ -188,6 +202,76 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
+      extraConfig = {
+        pipewire = {
+          sink-dolby-surround.conf = {
+            context.modules = [
+              {
+                name = "libpipewire-module-filter-chain";
+                args = {
+                  node.description = "Dolby Surround Sink";
+                  media.name = "Dolby Surround Sink";
+                  filter.graph = {
+                    nodes = [ 
+                      {
+                        type  = "builtin";
+                        name  = "mixer";
+                        label = "mixer";
+                        control = { 
+                          "Gain 1" = 0.5;
+                          "Gain 2" = 0.5;
+                        };
+                      }
+                      {
+                        type = "ladspa";
+                        name = "enc";
+                        plugin = "surround_encoder_1401";
+                        label = "surroundEncoder";
+                      }
+                    ];
+                    links = [
+                      { 
+                        output = "mixer:Out"; 
+                        input = "enc:S";
+                      }
+                    ];
+                    inputs  = [ "enc:L" "enc:R" "enc:C" "null" "mixer:In 1" "mixer:In 2" ];
+                    outputs = [ "enc:Lt" "enc:Rt" ];
+                  };
+                  capture.props = {
+                    node.name      = "effect_input.dolby_surround";
+                    media.class    = "Audio/Sink";
+                    audio.channels = 6;
+                    audio.position = [ "FL" "FR" "FC" "LFE" "SL" "SR" ];
+                  };
+                  playback.props = {
+                    node.name      = "effect_output.dolby_surround";
+                    node.passive   = true;
+                    audio.channels = 2;
+                    audio.position = [ "FL" "FR" ];
+                  };
+                };
+              }
+            ];
+          };
+
+        };
+        pipewire-pulse = {
+          switch-on-connect = {
+            pulse.cmd = [
+              {
+                cmd = "load-module";
+                args = "module-always-sink";
+                flags = [ ];
+              }
+              {
+                cmd = "load-module";
+                args = "module-switch-on-connect";
+              }
+            ];
+          };
+        };
+      };
     };
     interception-tools = {
       enable = true;
@@ -203,69 +287,6 @@
   environment.etc = let
     json = pkgs.formats.json {};
   in {
-    "pipewire/pipewire-pulse.conf.d/switch-on-connect.conf".source = json.generate "switch-on-connect.conf" {
-      pulse.cmd = [
-        {
-          cmd = "load-module";
-          args = "module-always-sink";
-          flags = [ ];
-        }
-        {
-          cmd = "load-module";
-          args = "module-switch-on-connect";
-        }
-      ];
-    };
-    "pipewire/pipewire.conf.d/sink-dolby-surround.conf".source = json.generate "sink-dolby-surround.conf" {
-      context.modules = [
-        {
-          name = "libpipewire-module-filter-chain";
-          args = {
-            node.description = "Dolby Surround Sink";
-            media.name = "Dolby Surround Sink";
-            filter.graph = {
-              nodes = [ 
-                {
-                  type  = "builtin";
-                  name  = "mixer";
-                  label = "mixer";
-                  control = { 
-                    "Gain 1" = 0.5;
-                    "Gain 2" = 0.5;
-                  };
-                }
-                {
-                  type = "ladspa";
-                  name = "enc";
-                  plugin = "surround_encoder_1401";
-                  label = "surroundEncoder";
-                }
-              ];
-              links = [
-                { 
-                  output = "mixer:Out"; 
-                  input = "enc:S";
-                }
-              ];
-              inputs  = [ "enc:L" "enc:R" "enc:C" "null" "mixer:In 1" "mixer:In 2" ];
-              outputs = [ "enc:Lt" "enc:Rt" ];
-            };
-            capture.props = {
-              node.name      = "effect_input.dolby_surround";
-              media.class    = "Audio/Sink";
-              audio.channels = 6;
-              audio.position = [ "FL" "FR" "FC" "LFE" "SL" "SR" ];
-            };
-            playback.props = {
-              node.name      = "effect_output.dolby_surround";
-              node.passive   = true;
-              audio.channels = 2;
-              audio.position = [ "FL" "FR" ];
-            };
-          };
-        }
-      ];
-    };
   };
 
   systemd.services.greetd = {

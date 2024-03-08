@@ -26,9 +26,8 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    systemdIntegration = true;
+    systemd.enable = true;
     # reloadConfig = true;
-    recommendedEnvironment = true;
     extraConfig = let
       mainMod = "SUPER";
       notifyctl = "${lib.getExe (pkgs.callPackage ../../../pkgs/notifyctl { })}";
@@ -43,7 +42,7 @@
       bind = ${mainMod}, semicolon, exec, ${config.home.sessionVariables.TERM}
       bind = ${mainMod}, b, exec, ${config.home.sessionVariables.BROWSER}
       bind = ${mainMod}, p, exec, ${config.home.sessionVariables.PSWD_MGR}
-      bind = ${mainMod}, d, exec, exec $(${pkgs.coreutils-full}/bin/basename -a $(${pkgs.fd}/bin/fd -Lt x . --maxdepth 1 $(echo $PATH | sed "s/:/ /g" | ${pkgs.coreutils-full}/bin/sort -u)) | ${pkgs.fuzzel}/bin/fuzzel -d)
+      bind = ${mainMod}, d, exec, exec ${pkgs.fuzzel}/bin/fuzzel
       bind = ${mainMod} SHIFT, s, exec, ${pkgs.grimblast}/bin/grimblast --notify copysave area ${config.xdg.userDirs.pictures}/$(date +%Y)/screenshots/$(date +%F_%H%M%S).png
       bind = ${mainMod} SHIFT, return, layoutmsg, swapwithmaster master
       bind = ${mainMod} SHIFT, r, exec, hyprctl reload
@@ -142,10 +141,10 @@
       exec-once = ${lib.getExe pkgs.swaybg} -i "$(find ${config.xdg.userDirs.pictures}/wallpapers/ -type f | shuf -n 1)" -m fill
 
       monitor = eDP-1,preferred,0x0,1
-      monitor = DP-3,preferred,1920x0,1
-      monitor = DP-4,preferred,3840x0,1
-      monitor = DP-5,preferred,1920x0,1
-      monitor = DP-6,preferred,3840x0,1
+      # monitor = DP-3,preferred,1920x0,1
+      # monitor = DP-4,preferred,3840x0,1
+      # monitor = DP-5,preferred,1920x0,1
+      # monitor = DP-6,preferred,3840x0,1
 
       workspace = 1, monitor:eDP-1
       workspace = 2, monitor:DP-3
@@ -247,6 +246,8 @@
       windowrulev2 = opacity 0.9 0.8, class:^(^(Alacritty)$)$
       windowrulev2 = float, class:^(^(blueberry.py)$)$
       windowrulev2 = float, class:^(^(org.keepassxc.KeePassXC)$)$
+      windowrulev2 = float, class:^(^(nm-connection-editor)$)$
+      windowrulev2 = float, class:^(^(org.twosheds.iwgtk)$)$
 
       misc {
         disable_autoreload = true

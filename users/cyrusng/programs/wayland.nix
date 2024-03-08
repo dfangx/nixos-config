@@ -2,6 +2,8 @@
 {
   imports = [
     ./hyprland.nix
+    ./hyprlock.nix
+    ../services/hypridle.nix
   ];
 
   home.sessionVariables = {

@@ -55,6 +55,8 @@
           Total: {bandwidthTotalBytes}
           Upload: {bandwidthUpBytes}
           Download: {bandwidthDownBytes}'';
+        # on-click = "${lib.getExe pkgs.iwgtk}";
+        # on-click = "${lib.getExe' pkgs.networkmanagerapplet "nm-connection-editor"}";
       };
       memory = {
         interval = 2.5;
