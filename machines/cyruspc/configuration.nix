@@ -68,25 +68,7 @@
   networking = {
     hostName = "cyruspc"; # Define your hostname.
     wireless.iwd.enable = true;
-    # wg-quick.interfaces = {
-    #   wg0 = {
-    #     address = [ "10.200.200.5/32" ] ;
-    #     dns = [ "10.200.200.1" ];
-    #     privateKeyFile = config.age.secrets.wgPrivate.path;
-    #     mtu = 1420;
-    #     peers = [
-    #       {
-    #         publicKey = "i2bnqjKWvfdpUDeMDObiivfEvAYoZCTZQfcLjlBDni0=";
-    #         presharedKeyFile = config.age.secrets.wgPsk.path;
-    #         allowedIPs = [ 
-    #           "0.0.0.0/0" 
-    #           "::/0" 
-    #         ];
-    #         endpoint = "slothpi.duckdns.org:51820";
-    #       }
-    #     ];
-    #   };
-    # };
+    firewall.interfaces."wlan0".allowedTCPPorts = [ 63236 ];
   };
 
   # Set your time zone.
@@ -135,7 +117,15 @@
       enable = true;
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     };
-    steam.enable = true;
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      # gamescopeSession.enable = true;
+    };
+    gamescope = {
+      enable = true;
+    };
+    gamemode.enable = true;
     dconf.enable = true;
   };
 
@@ -146,7 +136,7 @@
 
   security = {
     rtkit.enable = true;
-    pam.services.swaylock = { };
+    pam.services.hyprlock = { };
     polkit.enable = true;
   };
 

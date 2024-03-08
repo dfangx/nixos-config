@@ -17,5 +17,4 @@ in
       ExecStart = "${passwordManager}";
     };
   };
-
 }

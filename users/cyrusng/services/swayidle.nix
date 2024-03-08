@@ -41,4 +41,22 @@
       } 
     ];
   };
+
+  systemd = {
+    user.services = {
+      sway-audio-idle-inhibit= {
+        Unit = {
+          Description = "sway-audio-idle-inhibit";
+          Wants = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+        Service = {
+          ExecStart = "${lib.getExe pkgs.sway-audio-idle-inhibit}";
+          Restart = "on-failure";
+          RestartSec = 10;
+        };
+      };
+    };
+  };
 }

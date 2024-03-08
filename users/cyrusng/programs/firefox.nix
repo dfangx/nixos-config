@@ -64,6 +64,8 @@
           user_pref("gfx.webrender.compositor", true);
           user_pref("layers.gpu-process.enabled", true);
           user_pref("media.hardware-video-decoding.enabled", true);
+          user_pref("media.ffmpeg.vaapi.enabled", true);
+          user_pref("media.hardware-video-decoding.force-enabled", true);
           user_pref("gfx.canvas.accelerated", true);
           user_pref("gfx.canvas.accelerated.cache-items", 32768);
           user_pref("gfx.canvas.accelerated.cache-size", 4096);

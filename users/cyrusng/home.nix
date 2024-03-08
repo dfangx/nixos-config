@@ -5,10 +5,8 @@ in
 {
   imports = [
     ./programs/wayland.nix
-    ./programs/waybar.nix
     ./programs/fzf.nix
     ./programs/mako.nix
-    ./programs/swaylock.nix
     ./programs/alacritty.nix
     ./programs/zathura.nix
     ./programs/git.nix
@@ -21,7 +19,6 @@ in
     ./programs/xdg.nix
     ./programs/fonts.nix
     ./programs/nixneovim.nix
-    ./services/swayidle.nix
     ./services/kanshi.nix
     ./services/gammastep.nix
     ./services/password_manager.nix
@@ -35,7 +32,6 @@ in
       EDITOR = "nvim";
       TERM = "${terminal}";
       PROMPT_DIRTRIM = 3;
-      QT_AUTO_SCREEN_SCALE_FACTOR = 1;
     };
     shellAliases = {
       po = "poweroff";
@@ -73,8 +69,21 @@ in
       rpi = "ssh -4 ${username}@slothpi.duckdns.org";
     };
     stateVersion = "22.11";
-    packages = with pkgs; [
+    packages = let
+      feishin = pkgs.callPackage ../../pkgs/feishin { };
+      obsidian = pkgs.obsidian.override {
+          electron = pkgs.electron_25.overrideAttrs (_: {
+            preFixup = "patchelf --add-needed ${pkgs.libglvnd}/lib/libEGL.so.1 $out/bin/electron"; # NixOS/nixpkgs#272912
+            meta.knownVulnerabilities = [ ]; # NixOS/nixpkgs#273611
+          });
+        };
+    in
+    with pkgs; [
+      discord
+      caprine-bin
+      wayvnc
       gnome.adwaita-icon-theme
+      libadwaita
       fd
       bat
       imv
@@ -98,8 +107,21 @@ in
       heroic
       protonup-qt
       wine
-      # obsidian
+      obsidian
+      feishin
     ];
+  };
+
+  xdg.desktopEntries = {
+    feishin = {
+      name = "Feishin";
+      exec = "feishin %u";
+      icon = "feishin";
+      comment = "Full-featured Subsonic/Jellyfin compatible desktop music player";
+      genericName = "Subsonic Client";
+      categories = [ "Audio" "AudioVideo" ];
+      mimeType = [ "x-scheme-handler/feishin" ];
+    };
   };
 
   nix = {
@@ -127,7 +149,7 @@ in
   programs.home-manager.enable = true;
 
   programs.beets = {
-    enable = false;
+    enable = true;
     package = pkgs.beets.override {
       pluginOverrides = {
         chroma.enable = true;
@@ -137,18 +159,27 @@ in
         duplicates.enable = true;
         fetchart.enable = true;
         embedart.enable = true;
+        lastgenre.enable = true;
       };
     };
     settings = {
-      threaded = "no";
+      threaded = "yes";
       directory = config.xdg.userDirs.music;
       library = "${config.xdg.userDirs.music}/.beets.db";
-      plugins = "chroma replaygain edit unimported duplicates embedart fetchart";
+      plugins = "chroma replaygain edit unimported duplicates embedart fetchart lastgenre";
       chroma = {
         auto = "yes";
       };
-      replygain.backend = "ffmpeg";
+      replaygain = {
+        backend = "ffmpeg";
+        r128_targetlevel = 89;
+        threads = 16;
+      };
       unimported.ignore_subdirectories = "tmp";
+      lastgenre = {
+        count = 3;
+        source = "track";
+      };
     };
   };
   
@@ -173,19 +204,6 @@ in
           Restart = "on-failure";
           RestartSec = 1;
           TimeoutStopSec = 10;
-        };
-      };
-
-      wvkbd = {
-        Unit = {
-          Description = "Virtual Keyboard";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
-        Install.WantedBy = [ "graphical-session.target" ];
-        Service = {
-          Type = "simple";
-          ExecStart = "${lib.getExe' pkgs.wvkbd "wvkbd-mobintl"} -L 480 --hidden";
         };
       };
     };
@@ -253,6 +271,21 @@ in
       name = "Nordic";
       package = pkgs.nordic;
     };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "qtct";
+    style.name = "kvantum";
+  };
+
+  xdg.configFile = {
+    "Kvantum/kvantum.kvconfig".text = ''
+      [General]
+      theme=Utterly-Nord
+    '';
+
+    "Kvantum/Utterly-Nord".source = "${pkgs.utterly-nord-plasma}/share/Kvantum/Utterly-Nord";
   };
 }
 

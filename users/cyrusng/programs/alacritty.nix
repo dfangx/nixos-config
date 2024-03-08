@@ -28,8 +28,7 @@
         };
         size = 12.0;
       };
-      draw_bold_text_with_bright_colors = true;
-      key_bindings = [
+      keyboard.bindings = [
         {
           key = "Space";
           mods = "Control";
@@ -44,6 +43,7 @@
         }
       ];
       colors = {
+        draw_bold_text_with_bright_colors = true;
         primary = {
           background = "#2e3440";
           foreground = "#d8dee9";
@@ -65,10 +65,6 @@
           matches = {
             foreground = "CellBackground";
             background = "#88c0d0";
-          };
-          footer_bar = {
-            foreground = "#434c5e";
-            background = "#d8dee9";
           };
         };
         normal = {

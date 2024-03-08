@@ -43,7 +43,7 @@
       bind = ${mainMod}, semicolon, exec, ${config.home.sessionVariables.TERM}
       bind = ${mainMod}, b, exec, ${config.home.sessionVariables.BROWSER}
       bind = ${mainMod}, p, exec, ${config.home.sessionVariables.PSWD_MGR}
-      bind = ${mainMod}, d, exec, exec $(${pkgs.coreutils-full}/bin/basename -a $(${pkgs.fd}/bin/fd -Lt x . --maxdepth 1 $(echo $PATH | sed "s/:/ /g" | ${pkgs.coreutils-full}/bin/sort -u)) | ${pkgs.fuzzel}/bin/fuzzel -d)
+      bind = ${mainMod}, d, exec, ${lib.getExe pkgs.fuzzel}
       bind = ${mainMod} SHIFT, s, exec, ${pkgs.grimblast}/bin/grimblast --notify copysave area ${config.xdg.userDirs.pictures}/$(date +%Y)/screenshots/$(date +%F_%H%M%S).png
       bind = ${mainMod} SHIFT, return, layoutmsg, swapwithmaster master
       bind = ${mainMod} SHIFT, r, exec, hyprctl reload
@@ -122,17 +122,17 @@
 
       env = NIXOS_OZONE_WL,1
       env = XDG_CURRENT_DESKTOP,${config.home.sessionVariables.XDG_CURRENT_DESKTOP}
-      env = XDG_SESSION_TYPE,wayland
+      env = XDG_SESSION_TYPE,${config.home.sessionVariables.XDG_SESSION_TYPE}
       env = XDG_SESSION_DESKTOP,${config.home.sessionVariables.XDG_SESSION_DESKTOP}
-      env = MOZ_ENABLE_WAYLAND,1
-      env = QT_QPA_PLATFORM,wayland
-      # env = SDL_VIDEODRIVER,wayland
-      env = GDK_BACKEND,wayland,x11
-      env = CLUTTER_BACKEND,wayland
-      env = QT_AUTO_SCREEN_SCALE_FACTOR,1
-      env = QT_WAYLAND_DISABLE_WINDOWDECORATION,1
+      env = MOZ_ENABLE_WAYLAND,${toString config.home.sessionVariables.MOZ_ENABLE_WAYLAND}
+      env = QT_QPA_PLATFORM,${config.home.sessionVariables.QT_QPA_PLATFORM}
+      env = GDK_BACKEND,${config.home.sessionVariables.GDK_BACKEND}
+      env = CLUTTER_BACKEND,${config.home.sessionVariables.CLUTTER_BACKEND}
+      env = QT_AUTO_SCREEN_SCALE_FACTOR,${toString config.home.sessionVariables.QT_AUTO_SCREEN_SCALE_FACTOR}
+      env = QT_WAYLAND_DISABLE_WINDOWDECORATION,${toString config.home.sessionVariables.QT_WAYLAND_DISABLE_WINDOWDECORATION}
 
       exec-once = ${lib.getExe pkgs.swaybg} -i "$(find ${config.xdg.userDirs.pictures}/wallpapers/ -type f | shuf -n 1)" -m fill
+      exec-once = ${lib.getExe pkgs.xorg.xrandr} --noprimary
 
       monitor = DP-3,preferred,0x0,1
       monitor = DP-2,preferred,2560x0,1
@@ -175,7 +175,7 @@
         repeat_delay = 250
         repeat_rate = 50
         sensitivity = 0.5
-        scroll_button = 13;
+        scroll_button = 13
 
         touchpad {
           clickfinger_behavior = true
@@ -244,12 +244,12 @@
 
       windowrulev2 = opacity 0.9 0.8, class:^(^(Alacritty)$)$
       windowrulev2 = float, class:^(^(blueberry.py)$)$
-      windowrulev2 = float, class:^(^(org.keepassxc.KeePassXC)$)$
+      windowrulev2 = float, class:^(^(KeePassXC)$)$
 
       misc {
         disable_autoreload = true
         disable_hyprland_logo = true
-        enable_swallow = true
+        enable_swallow = false
         key_press_enables_dpms = true
         mouse_move_enables_dpms = true
         mouse_move_focuses_monitor = false

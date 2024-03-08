@@ -31,6 +31,8 @@
     hyprland-contrib.url = "github:hyprwm/contrib";
     hyprgrass.url = "github:horriblename/hyprgrass";
     hyprland.url = "github:hyprwm/Hyprland";
+    hypridle.url = "github:hyprwm/hypridle";
+    hyprlock.url = "github:hyprwm/hyprlock";
     hyprland-nix.url = "github:spikespaz/hyprland-nix";
     # hyprland-nix.inputs.hyprland.follows = "hyprland-git";
   };
