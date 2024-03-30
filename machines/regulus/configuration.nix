@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, host, ... }:
 
 {
   imports = [
@@ -66,7 +66,7 @@
 
 
   networking = {
-    hostName = "cyruspc"; # Define your hostname.
+    hostName = host; # Define your hostname.
     wireless.iwd.enable = true;
     firewall.interfaces."wlan0".allowedTCPPorts = [ 63236 ];
   };
@@ -97,7 +97,6 @@
     git
     lsof
     usbutils
-    # virt-manager
     htop
     nix-prefetch-github
     alsa-utils
@@ -108,9 +107,19 @@
     home-manager
     lact
     protontricks
+    virtiofsd
  ];
 
-  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      ovmf = {
+        enable = true;
+        packages = [ pkgs.OVMFFull.fd ];
+      };
+      swtpm.enable = true;
+    };
+  };
   programs = {
     virt-manager.enable = true;
     hyprland = {
@@ -145,6 +154,9 @@
   '';
 
   services = {
+    spice-vdagentd.enable = true;
+    qemuGuest.enable = true;
+
     logind = {
       lidSwitch = "suspend-then-hibernate";
       killUserProcesses = true;

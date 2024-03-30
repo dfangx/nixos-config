@@ -16,17 +16,12 @@
       modules-right = [
         "tray"
         "bluetooth"
-        "custom/osk"
         "wireplumber"
         "network"
         "battery"
         "cpu"
         "memory"
       ];
-      "custom/osk" = {
-        on-click = "${lib.getExe' pkgs.procps "pkill"} -SIGRTMIN wvkbd";
-        format = "󰌌";
-      };
       wireplumber = {
         format-icons = [ "󰕿" "󰖀" "󰕾" ];
         format-muted = "󰝟";
@@ -108,7 +103,6 @@
         margin-right: 20px;
       }
 
-      #custom-osk,
       #clock,
       #battery,
       #cpu,

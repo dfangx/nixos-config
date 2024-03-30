@@ -22,17 +22,41 @@
       url = "github:nixneovim/nixneovim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # nixvim = {
-    #   url = "github:nix-community/nixvim";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    nixvim = {
+      url = "github:nix-community/nixvim/ce87283dd6f6660b199af174e60f4a0cec0e2c5b";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nur.url = "github:nix-community/NUR";
-    hyprland-contrib.url = "github:hyprwm/contrib";
-    hyprgrass.url = "github:horriblename/hyprgrass";
-    hyprland.url = "github:hyprwm/Hyprland";
-    hypridle.url = "github:hyprwm/hypridle";
-    hyprlock.url = "github:hyprwm/hyprlock";
+
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprgrass = {
+      url = "github:horriblename/hyprgrass";
+      inputs.hyprland.follows = "hyprland";
+    };
+    hypridle = {
+      url = "github:hyprwm/hypridle";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprlock = {
+      url = "github:hyprwm/hyprlock";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland-contrib = {
+      url = "github:hyprwm/contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprpaper = {
+      url = "github:hyprwm/hyprpaper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland-virtual-desktops = {
+      url = "github:levnikmyskin/hyprland-virtual-desktops";
+      inputs.hyprland.follows = "hyprland";
+    };
     hyprland-nix.url = "github:spikespaz/hyprland-nix";
     # hyprland-nix.inputs.hyprland.follows = "hyprland-git";
   };
@@ -91,13 +115,14 @@
           ./machines/cykrotop-thinkpad/configuration.nix
         ];
       };
-      cyruspc = let
+      regulus = let
         system = "x86_64-linux";
+        host = "regulus";
         pkgs = nixpkgs.legacyPackages.${system};
       in
       nixpkgs.lib.nixosSystem {
         # inherit system;
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs host; };
         modules = [
           {
             nixpkgs.overlays = [
@@ -113,8 +138,7 @@
           }
           inputs.agenix.nixosModules.default
           inputs.hyprland.nixosModules.default
-          # inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-yoga
-          ./machines/cyruspc/configuration.nix
+          ./machines/regulus/configuration.nix
         ];
       };
       slothpi = let

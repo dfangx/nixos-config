@@ -303,6 +303,9 @@
           conceal = true,
         },
       })
+      vim.filetype.add({
+        pattern = { [".*/hypr/.*%.conf"] = "hyprlang" },
+      })
     '';
 
     extraConfigVim = ''

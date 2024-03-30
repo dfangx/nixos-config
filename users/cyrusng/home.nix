@@ -18,7 +18,8 @@ in
     ./programs/fuzzel.nix
     ./programs/xdg.nix
     ./programs/fonts.nix
-    ./programs/nixneovim.nix
+    ./programs/nixvim.nix
+    # ./programs/nixneovim.nix
     ./services/kanshi.nix
     ./services/gammastep.nix
     ./services/password_manager.nix
@@ -88,6 +89,8 @@ in
       bat
       imv
       libreoffice
+      hunspell
+      hunspellDicts.en_CA
       wl-clipboard
       tridactyl-native
       xorg.xeyes
