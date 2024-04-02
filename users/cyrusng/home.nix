@@ -19,7 +19,6 @@ in
     ./programs/xdg.nix
     ./programs/fonts.nix
     ./programs/nixvim.nix
-    # ./programs/nixneovim.nix
     ./services/kanshi.nix
     ./services/gammastep.nix
     ./services/password_manager.nix
@@ -72,12 +71,12 @@ in
     stateVersion = "22.11";
     packages = let
       feishin = pkgs.callPackage ../../pkgs/feishin { };
-      obsidian = pkgs.obsidian.override {
-          electron = pkgs.electron_25.overrideAttrs (_: {
-            preFixup = "patchelf --add-needed ${pkgs.libglvnd}/lib/libEGL.so.1 $out/bin/electron"; # NixOS/nixpkgs#272912
-            meta.knownVulnerabilities = [ ]; # NixOS/nixpkgs#273611
-          });
-        };
+      # obsidian = pkgs.obsidian.override {
+      #     electron = pkgs.electron_25.overrideAttrs (_: {
+      #       preFixup = "patchelf --add-needed ${pkgs.libglvnd}/lib/libEGL.so.1 $out/bin/electron"; # NixOS/nixpkgs#272912
+      #       meta.knownVulnerabilities = [ ]; # NixOS/nixpkgs#273611
+      #     });
+      #   };
     in
     with pkgs; [
       discord
@@ -95,7 +94,6 @@ in
       tridactyl-native
       xorg.xeyes
       runelite
-      # neovim-nix
       wev
       xdg-user-dirs
       zoom-us

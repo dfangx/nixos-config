@@ -4,13 +4,9 @@
     inputs.nixvim.homeManagerModules.nixvim
   ];
 
-  # nixpkgs.overlays = [
-  #   inputs.nixneovim.overlays.default
-  #   inputs.nixneovimplugins.overlays.default
-  # ];
-
   home.packages = with pkgs; [
     nano
+    nerdfonts # For neorg
   ];
 
   programs.nixvim = {
@@ -92,7 +88,7 @@
           "InsertLeave"
         ];
         pattern = "*";
-        callback = "vim.diagnostic.setloclist({open = false})";
+        callback = { __raw =  "function() vim.diagnostic.setloclist({open = false}) end"; };
         group = "lsp";
       }
     ];
@@ -104,146 +100,185 @@
     keymaps = [
       {
         mode = "n";
-        key = "<leader>ff"; 
-        action = if config.programs.nixvim.plugins.telescope.enable then
-          "':Telescope find_files<cr>'"
-          else
-            "':find<cr>'";
-      }
-      {
         key = "S";
-        action = "'a<cr><cr>'";
+        action = "a<cr><cr>";
       }
       {
+        mode = "n";
         key = "<leader>O";
-        action = "'O<esc>'";
+        action = "O<esc>";
       }
       {
+        mode = "n";
         key = "<leader>o";
-        action = "'o<esc>'";
+        action = "o<esc>";
       }
       {
+        mode = "n";
         key = "]b";
-        action = "':bn<cr>'";
+        action = ":bn<cr>";
       }
       {
+        mode = "n";
         key = "[b";
-        action = "':bp<cr>'";
+        action = ":bp<cr>";
       }
       {
-        key = "<leader>bb";
-        action = if config.programs.nixvim.plugins.telescope.enable then
-          "':Telescope buffers<cr>'"
-          else
-            "':ls<cr>:b<cr>'";
-      }
-      {
+        mode = "n";
         key = "<leader>bd";
-        action = "':bd<cr>'";
+        action = ":bd<cr>";
       }
       {
+        mode = "n";
         key = "<leader>h";
-        action = "'<c-w>H'"; 
+        action = "<c-w>H"; 
         options.silent = true; 
       }
       {
+        mode = "n";
         key = "<leader>l";
-        action = "'<c-w>L'"; 
+        action = "<c-w>L"; 
         options.silent = true; 
       }
       {
+        mode = "n";
         key = "<leader>j";
-        action = "'<c-w>J'";
+        action = "<c-w>J";
         options.silent = true;
       }
       {
+        mode = "n";
         key = "<leader>k";
-        action = "'<c-w>K'"; 
+        action = "<c-w>K"; 
         options.silent = true; 
       }
       {
+        mode = "n";
         key = "<leader>s";
-        action = "'<c-w>s'";
+        action = "<c-w>s";
       }
       {
+        mode = "n";
         key = "<leader>v";
-        action = "'<c-w>v'";
+        action = "<c-w>v";
       }
       {
+        mode = "n";
         key = "<leader><";
-        action = "'10<c-w><'"; 
+        action = "10<c-w><"; 
         options.silent = true; 
       }
       {
+        mode = "n";
         key = "<leader>>";
-        action = "'10<c-w>>'";
+        action = "10<c-w>>";
         options.silent = true;
       }
       {
+        mode = "n";
         key = "<leader>+";
-        action = "'10<c-w>+'";
+        action = "10<c-w>+";
         options.silent = true; 
       }
       {
+        mode = "n";
         key = "<leader>-";
-        action = "'10<c-w>-'"; 
+        action = "10<c-w>-"; 
         options.silent = true; 
       }
       {
+        mode = "n";
         key = "<c-j>";
-        action = "'<c-w>j'";
+        action = "<c-w>j";
       }
       {
+        mode = "n";
         key = "<c-k>";
-        action = "'<c-w>k'";
+        action = "<c-w>k";
       }
       {
+        mode = "n";
         key = "<c-l>";
-        action = "'<c-w>l'";
+        action = "<c-w>l";
       }
       {
+        mode = "n";
         key = "<c-h>";
-        action = "'<c-w>h'";
+        action = "<c-w>h";
       }
       {
+        mode = "n";
         key = "<space>";
-        action = "'<noop>'";
+        action = "<noop>";
       }
       {
+        mode = "n";
         key = "<leader>e";
-        action = "'<cmd>Lexplore<cr>'";
+        action = "<cmd>Lexplore<cr>";
+      }
+      {
+        mode = "n"; 
+        key = "<space>q";
+        action = { __raw = "function() vim.diagnostic.setloclist() end"; };
       }
     ];
-        # "<leader>ff" = 
-        #   if fzf.enable then
-        #     ":FzfLua files<cr>"
-        #   else
-        #     ":find";
-        # "<leader>fs" = 
-        #   if fzf.enable then
-        #     ":FzfLua fzf.files({ actions = { [\\\"default\\\"] = fzfActions.file_split } })<cr>"
-        #   else
-        #     ":sfind";
-        # "<leader>fv" = 
-        #   if fzf.enable then
-        #     ":FzfLua fzf.files({ actions = { [\\\"default\\\"] = fzfActions.file_vsplit } })<cr>"
-        #   else
-        #     ":vert :sfind";
-        # "<leader>ft" = 
-        #   if fzf.enable then
-        #     ":FzfLua fzf.files({ actions = { [\\\"default\\\"] = fzfActions.file_tabedit } })<cr>"
-        #   else
-        #     ":tabfind";
-        # "<leader>bb" = 
-        #   if fzf.enable then
-        #     ":FzfLua buffers<cr>"
-        #   else
-        #     ":ls<cr>:b";
-
     plugins = {
+      fzf-lua = {
+        enable = true;
+        settings = {
+          winopts.split = "botright new";
+        };
+        keymaps = {
+          "<leader>ff" = {
+              action = "files";
+          };
+          "<leader>fs" = {
+            action = "files";
+            settings = {
+              actions.default.__raw = "require'fzf-lua.actions'.file_split";
+            };
+          };
+          "<leader>fv" = {
+            action = "files";
+            settings = {
+              actions.default.__raw = "require'fzf-lua.actions'.file_vsplit";
+            };
+          };
+          "<leader>ft" = {
+            action = "files";
+            settings = {
+              actions.default.__raw = "require'fzf-lua.actions'.file_tabedit";
+            };
+          };
+          "<leader>bb" = {
+            action = "buffers";
+          };
+        };
+      };
       cmp = {
         enable = true;
         autoEnableSources = true;
+        cmdline = {
+          "/" = {
+            mapping = { __raw = "cmp.mapping.preset.cmdline()"; };
+            sources = [
+              {
+                name = "buffer";
+              }
+            ];
+          };
+          ":" = {
+            mapping = { __raw = "cmp.mapping.preset.cmdline()"; };
+            sources = [
+              {
+                name = "cmdline";
+              }
+              {
+                name = "cmp-cmdline-history";
+              }
+            ];
+          };
+        };
         settings = {
           mapping = {
             "<TAB>" = "cmp.mapping.select_next_item()";
@@ -260,12 +295,6 @@
             }
             {
               name = "calc";
-            }
-            {
-              name = "cmdline";
-            }
-            {
-              name = "cmp-cmdline-history";
             }
             {
               name = "luasnip";
@@ -310,7 +339,6 @@
             "<leader>E" = "open_float";
             "[d" = "goto_prev";
             "]d" = "goto_next";
-            "<space>q" = "set_loclist";
           };
           lspBuf = {
             "gd" = "definition";
@@ -327,13 +355,18 @@
             "<leader>rn" = "rename";
           };
         };
-        enabledServers = [
-          {
-            name = "nil-ls";
-            extraOptions = {};
-          }
-        ];
-        onAttach = ''
+        servers = {
+          nil_ls.enable = true;
+          lua-ls.enable = true;
+          nixd.enable = true;
+          clangd.enable = true;
+          rust-analyzer = {
+            enable = true;
+            installCargo = true;
+            installRustc = true;
+          };
+        };
+        onAttach = /*lua*/''
           vim.o.omnifunc = 'v:lua.vim.lsp.omnifunc'
   
           -- Set autocommands conditional on server_capabilities
@@ -354,7 +387,7 @@
           local opts = { noremap = true, silent = true }
           vim.api.nvim_buf_set_keymap(0, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
         '';
-        capabilities = ''
+        capabilities = /*lua*/''
           capabilities.textDocument.completion.completionItem.snippetSupport = true
           capabilities.textDocument.completion.completionItem.resolveSupport = {
             properties = {
@@ -378,30 +411,45 @@
         indent = true;
       };
       treesitter-refactor.enable = true;
-      # plenary.enable = true;
-      telescope = {
+      mkdnflow = {
         enable = true;
+        wrap = true;
+        links.conceal = true;
       };
-      mkdnflow.enable = true;
+      neorg = {
+        enable = true;
+        modules = {
+          "core.defaults" = { __empty = null; };
+          "core.dirman" = {
+            config = {
+              workspaces = {
+                notes = "~/notes";
+              };
+            };
+          };
+          "core.esupports.metagen" = {
+            config = {
+              type = "auto";
+            };
+          };
+          "core.concealer" = { __empty = null;  };
+          "core.manoeuvre" = { __empty = null;  };
+          "core.summary" = { __empty = null;  };
+        };
+      };
     };
 
+    filetype.pattern = { 
+      ".*/hypr/.*%.conf" = "hyprlang";
+    };
     extraPlugins = with pkgs; [
       vimPlugins.vim-pencil
     ];
 
     extraConfigLua = ''
-      require('mkdnflow').setup({
-        wrap = true,
-        links = {
-          conceal = true,
-        },
-      })
-      vim.filetype.add({
-        pattern = { [".*/hypr/.*%.conf"] = "hyprlang" },
-      })
     '';
 
-    extraConfigVim = ''
+    extraConfigVim = /*vim*/''
       let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
       augroup pencil
         autocmd!
