@@ -260,8 +260,8 @@
         vrr = 1
       }
 
-      plugin = ${inputs.hyprgrass.packages.${pkgs.system}.default}/lib/libhyprgrass.so
     '';
+      # plugin = ${inputs.hyprgrass.packages.${pkgs.system}.default}/lib/libhyprgrass.so
     # keyBinds = let
     #   mainMod = "SUPER";
     #   notifyctl = "${lib.getExe (pkgs.callPackage ../../../pkgs/notifyctl { })}";

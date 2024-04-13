@@ -199,8 +199,8 @@
         sources = {
           buffer.enable = true;
           calc.enable = true;
-          cmdline.enable = true;
-          cmp-cmdline-history.enable = true;
+          # cmdline.enable = true;
+          # cmp-cmdline-history.enable = true;
           luasnip.enable = true;
           nvim_lsp.enable = true;
           nvim_lsp_document_symbol.enable = true;

@@ -2,7 +2,7 @@
   description = "NixOS Configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/b98a4e1746acceb92c509bc496ef3d0e5ad8d4aa";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgsStable.url = "github:nixos/nixpkgs/nixos-23.05";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -29,12 +29,34 @@
     # };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nur.url = "github:nix-community/NUR";
-    hyprland-contrib.url = "github:hyprwm/contrib";
-    hyprland.url = "github:hyprwm/Hyprland";
-    hypridle.url = "github:hyprwm/hypridle";
-    hyprlock.url = "github:hyprwm/hyprlock";
+
+    hyprland-contrib = {
+       url = "github:hyprwm/contrib";
+       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprland = {
+       url = "github:hyprwm/Hyprland";
+       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hypridle = {
+       url = "github:hyprwm/hypridle";
+       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprlock = {
+       url = "github:hyprwm/hyprlock";
+       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprland-nix.url = "github:spikespaz/hyprland-nix";
-    hyprgrass.url = "github:horriblename/hyprgrass";
+
+    hyprgrass = {
+       url = "github:horriblename/hyprgrass";
+       inputs.hyprland.follows = "hyprland";
+    };
+
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       follows = "nixpkgs";
@@ -70,7 +92,7 @@
           ./machines/cykrotop/configuration.nix
         ];
       };
-      cykrotop-thinkpad = let
+      arcturus = let
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
       in
@@ -93,7 +115,7 @@
           inputs.agenix.nixosModules.default
           inputs.hyprland.nixosModules.default
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-yoga
-          ./machines/cykrotop-thinkpad/configuration.nix
+          ./machines/arcturus/configuration.nix
         ];
       };
       slothpi = let

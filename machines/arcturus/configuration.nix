@@ -65,18 +65,17 @@
   };
 
   networking = {
-    hostName = "cykrotop"; # Define your hostname.
+    hostName = "arcturus"; 
     wireless.iwd.enable = true;
-    networkmanager = {
-      enable = true;
-      wifi.backend = "iwd";
-    };
+    # networkmanager = {
+    #   enable = true;
+    #   wifi.backend = "iwd";
+    # };
     wg-quick.interfaces = {
       wg0 = {
         address = [ "10.200.200.5/32" ] ;
         dns = [ "10.200.200.1" ];
         privateKeyFile = config.age.secrets.wgPrivate.path;
-        mtu = 1420;
         peers = [
           {
             publicKey = "i2bnqjKWvfdpUDeMDObiivfEvAYoZCTZQfcLjlBDni0=";
@@ -194,6 +193,7 @@
       settings = {
         START_CHARGE_THRESH_BAT0 = 85;
         STOP_CHARGE_THRESH_BAT0 = 95;
+        DEVICES_TO_ENABLE_ON_STARTUP="bluetooth wifi";
       };
     };
     pipewire = {
