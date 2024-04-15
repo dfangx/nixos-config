@@ -10,7 +10,11 @@
   ];
 
   boot.resumeDevice = "/dev/disk/by-uuid/a9aa5ab2-ea77-4b71-8986-805313638e97";
-  boot.kernelParams = [ "resume_offset=5081088" ];
+  boot.kernelParams = [ 
+    "resume_offset=5081088" 
+    # "systemd.restore_state=0" 
+    # "rfkill.default_state=1" 
+  ];
 
   nixpkgs.config.allowUnfreePredicate = (pkg: true);
   nix = {

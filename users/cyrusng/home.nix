@@ -100,6 +100,7 @@ in
       pavucontrol
       hunspell
       hunspellDicts.en_CA
+      unityhub
     ];
   };
 
