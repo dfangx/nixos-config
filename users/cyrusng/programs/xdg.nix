@@ -14,6 +14,7 @@
       pictures = "${config.home.homeDirectory}/pics";
       videos = "${config.home.homeDirectory}/vids";
     };
+    portal.xdgOpenUsePortal = true;
   };
 
   home = {

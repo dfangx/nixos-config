@@ -8,6 +8,10 @@
     ../services/hyprpaper.nix
   ];
 
+  home.packages = with pkgs; [
+    wl-clipboard
+  ];
+
   home.sessionVariables = {
     XDG_SESSION_TYPE = "wayland";
     GDK_BACKEND = "wayland,x11";

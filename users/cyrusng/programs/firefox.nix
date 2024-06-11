@@ -1,6 +1,16 @@
 { config, pkgs, lib, ... }:
 {
-  home.sessionVariables.BROWSER = "${lib.getExe' config.programs.firefox.package "firefox"}";
+  home = {
+    sessionVariables.BROWSER = "${lib.getExe' config.programs.firefox.package "firefox"}";
+    packages = with pkgs; [
+      tridactyl-native
+      open-in-mpv
+    ];
+  };
+
+  xdg.mimeApps.associations.added = {
+    "x-scheme-handler/mpv" = [ "open-in-mpv.desktop" ];
+  };
 
   programs.firefox = {
     enable = true;

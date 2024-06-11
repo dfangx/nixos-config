@@ -37,7 +37,7 @@
       notes_home = "~/notes";
     };
 
-    options = {
+    opts = {
       autochdir = true;
       completeopt = "menuone,noinsert,noselect";
       cursorline = true;
@@ -91,10 +91,34 @@
         callback = { __raw =  "function() vim.diagnostic.setloclist({open = false}) end"; };
         group = "lsp";
       }
+      # {
+      #   event = [
+      #     "BufEnter"
+      #   ];
+      #   pattern = [
+      #     "*.md"
+      #     "*.norg"
+      #   ];
+      #   command = "ZenMode";
+      #   group = "zen-mode";
+      # }
+      {
+        event = "FileType";
+        pattern = [
+          "markdown"
+          "mkd"
+          "text"
+          "norg"
+        ];
+        command = "call pencil#init()";
+        group = "pencil";
+      }
     ];
     autoGroups = {
       vimStart.clear = true;
       lsp.clear = true;
+      pencil.clear = true;
+      # zen-mode.clear = true;
     };
 
     keymaps = [
@@ -223,6 +247,9 @@
       }
     ];
     plugins = {
+      zen-mode = {
+        enable = true;
+      };
       fzf-lua = {
         enable = true;
         settings = {
@@ -451,11 +478,6 @@
 
     extraConfigVim = /*vim*/''
       let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
-      augroup pencil
-        autocmd!
-        autocmd FileType markdown,mkd call pencil#init()
-        autocmd FileType text         call pencil#init()
-      augroup END
     '';
   };
 }

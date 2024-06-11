@@ -23,7 +23,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvim = {
-      url = "github:nix-community/nixvim/ce87283dd6f6660b199af174e60f4a0cec0e2c5b";
+      url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -57,8 +57,12 @@
       url = "github:levnikmyskin/hyprland-virtual-desktops";
       inputs.hyprland.follows = "hyprland";
     };
-    hyprland-nix.url = "github:spikespaz/hyprland-nix";
-    # hyprland-nix.inputs.hyprland.follows = "hyprland-git";
+    hyprspace = {
+      url = "github:KZDKM/Hyprspace";
+      inputs.hyprland.follows = "hyprland";
+    };
+
+    ags.url = "github:Aylur/ags";
   };
 
   outputs = { nixpkgs, nixpkgsStable, home-manager, ... }@inputs:

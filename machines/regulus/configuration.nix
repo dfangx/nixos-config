@@ -64,11 +64,41 @@
     bluetooth.enable = true;
   };
 
+  age.secrets = {
+    wgPrivate = {
+      file = ./secrets/wgPrivate.age;
+      mode = "400";
+    };
+    wgPsk = {
+      file = ./secrets/wgPsk.age;
+      mode = "400";
+    };
+  };
 
   networking = {
     hostName = host; # Define your hostname.
     wireless.iwd.enable = true;
-    firewall.interfaces."wlan0".allowedTCPPorts = [ 63236 ];
+    firewall.interfaces = {
+      "wlan0".allowedTCPPorts = [ 63236 ];
+    };
+    # hosts = {
+    #   "10.0.0.116" = [ "slothpi.duckdns.org" ];
+    # };
+    wg-quick.interfaces.wg0 = {
+      address = [ "10.200.200.6/32" ];
+      dns = [ "10.200.200.1" ];
+      privateKeyFile = config.age.secrets.wgPrivate.path;
+      peers = [
+        {
+          publicKey = "i2bnqjKWvfdpUDeMDObiivfEvAYoZCTZQfcLjlBDni0=";
+          presharedKeyFile = config.age.secrets.wgPsk.path;
+          allowedIPs = [ 
+            "0.0.0.0/0" 
+          ];
+          endpoint  = "slothpi.duckdns.org:51820";
+        }
+      ];
+    };
   };
 
   # Set your time zone.
@@ -108,6 +138,7 @@
     lact
     protontricks
     virtiofsd
+    agenix
  ];
 
   virtualisation.libvirtd = {

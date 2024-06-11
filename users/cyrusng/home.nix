@@ -1,9 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   terminal = "${lib.getExe pkgs.alacritty}";
 in
 {
   imports = [
+    inputs.ags.homeManagerModules.default
     ./programs/wayland.nix
     ./programs/fzf.nix
     ./programs/mako.nix
@@ -69,19 +70,8 @@ in
       rpi = "ssh -4 ${username}@slothpi.duckdns.org";
     };
     stateVersion = "22.11";
-    packages = let
-      feishin = pkgs.callPackage ../../pkgs/feishin { };
-      # obsidian = pkgs.obsidian.override {
-      #     electron = pkgs.electron_25.overrideAttrs (_: {
-      #       preFixup = "patchelf --add-needed ${pkgs.libglvnd}/lib/libEGL.so.1 $out/bin/electron"; # NixOS/nixpkgs#272912
-      #       meta.knownVulnerabilities = [ ]; # NixOS/nixpkgs#273611
-      #     });
-      #   };
-    in
-    with pkgs; [
+    packages = with pkgs; [
       discord
-      caprine-bin
-      wayvnc
       gnome.adwaita-icon-theme
       libadwaita
       fd
@@ -90,39 +80,28 @@ in
       libreoffice
       hunspell
       hunspellDicts.en_CA
-      wl-clipboard
-      tridactyl-native
       xorg.xeyes
       runelite
       wev
       xdg-user-dirs
-      zoom-us
       rsgain
       yt-dlp
       unzip
       xournalpp
       picard
-      zettlr
       pavucontrol
       lutris
       heroic
       protonup-qt
-      wine
+      wineWowPackages.full
       obsidian
       feishin
+      (makeAutostartItem {
+        name = "feishin";
+        package = pkgs.feishin;
+      })
+      unityhub
     ];
-  };
-
-  xdg.desktopEntries = {
-    feishin = {
-      name = "Feishin";
-      exec = "feishin %u";
-      icon = "feishin";
-      comment = "Full-featured Subsonic/Jellyfin compatible desktop music player";
-      genericName = "Subsonic Client";
-      categories = [ "Audio" "AudioVideo" ];
-      mimeType = [ "x-scheme-handler/feishin" ];
-    };
   };
 
   nix = {
@@ -148,6 +127,8 @@ in
   nixpkgs.config.allowUnfreePredicate = (pkg: true);
 
   programs.home-manager.enable = true;
+
+  programs.ags.enable = true;
 
   programs.beets = {
     enable = true;
@@ -213,6 +194,14 @@ in
   services.nextcloud-client = {
     enable = true;
     startInBackground = true;
+  };
+  systemd.user.services.nextcloud-client = {
+    Install.WantedBy = lib.mkForce [ "${config.home.sessionVariables.XDG_SESSION_DESKTOP}-session.target" ];
+    Service.ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
+    Unit = {
+      After = lib.mkForce [ "${config.home.sessionVariables.XDG_SESSION_DESKTOP}-session.target" ];
+      PartOf = lib.mkForce [];
+    };
   };
 
   home.file."${config.xdg.configHome}/Nextcloud/sync-exclude.lst".text = ''

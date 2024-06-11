@@ -22,10 +22,14 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = true;
+    systemd = {
+      enable = true;
+      variables = [ "--all" ];
+    };
     xwayland.enable = true;
     plugins = [
-      inputs.hyprland-virtual-desktops.packages.${pkgs.system}.default
+      # inputs.hyprland-virtual-desktops.packages.${pkgs.system}.default
+      inputs.hyprspace.packages.${pkgs.system}.default
     ];
     settings = let
       mainMod = "SUPER";
@@ -35,6 +39,9 @@
     {
       exec-once = [
         "${lib.getExe pkgs.xorg.xrandr} --noprimary"
+        "${lib.getExe pkgs.dex} -a"
+        "${config.home.sessionVariables.TERM} --class term-general"
+        "[workspace 1]${config.home.sessionVariables.BROWSER}"
       ];
 
       dwindle = {
@@ -86,12 +93,15 @@
         rounding = 10;
         shadow_range = 4;
         shadow_render_power = 3;
+        active_opacity = 0.55;
+        inactive_opacity = 0.7;
 
         blur = {
           enabled = true;
           new_optimizations = true;
           passes = 3;
-          size = 8;
+          size = 4;
+          ignore_opacity = true;
         };
       };
 
@@ -142,21 +152,24 @@
         swallow_regex = "^(Alacritty)$";
         allow_session_lock_restore = true;
         new_window_takes_over_fullscreen = 2;
-        # vrr = 1
+        vrr = 1;
       };
 
       plugin = {
-        virtual-desktops = {
-          cycleworkspaces = 0;
-          rememberlayout = "size";
-        };
+        # virtual-desktops = {
+        #   cycleworkspaces = 0;
+        #   rememberlayout = "size";
+        # };
+        overview = {};
       };
 
       windowrulev2 = [ 
-        "opacity 0.8 0.7, class:^(^(Alacritty)$)$"
         "float, class:^(^(blueberry.py)$)$"
-        "float, class:^(^(KeePassXC)$)$"
+        "float, class:^(^(org.keepassxc.KeePassXC)$)$"
         "animation fade 1 100 default, class:^(^(Hyprpaper)$)$"
+        "workspace 2, class:^(^(term-general)$)$"
+        "workspace 6 silent, class:^(^(steam)$)$"
+        "opaque, class:^(^(firefox)$)$"
       ];
 
       bind = let
@@ -209,8 +222,9 @@
         "${mainMod}, mouse_down, workspace, e+1"
         "${mainMod}, mouse_up, workspace, e-1"
 
-        "${mainMod}, TAB, nextdesk"
-        "${mainMod} SHIFT, TAB, prevdesk"
+        "${mainMod}, TAB, overview:toggle"
+        # "${mainMod}, TAB, nextdesk"
+        # "${mainMod} SHIFT, TAB, prevdesk"
       ]
       ++ (
         # workspaces
@@ -252,8 +266,8 @@
       ];
 
       monitor = [
-        "DP-3,highrr,0x0,1"
-        "DP-2,highrr,auto,1"
+        "DP-3,preferred,0x0,1"
+        "DP-2,preferred,auto,1"
       ];
 
       workspace = 
