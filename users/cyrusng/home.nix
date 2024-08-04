@@ -72,7 +72,7 @@ in
     stateVersion = "22.11";
     packages = with pkgs; [
       discord
-      gnome.adwaita-icon-theme
+      adwaita-icon-theme
       libadwaita
       fd
       bat
@@ -100,7 +100,7 @@ in
         name = "feishin";
         package = pkgs.feishin;
       })
-      unityhub
+      # unityhub
     ];
   };
 
@@ -265,7 +265,7 @@ in
 
   qt = {
     enable = true;
-    platformTheme = "qtct";
+    platformTheme.name = "qtct";
     style.name = "kvantum";
   };
 

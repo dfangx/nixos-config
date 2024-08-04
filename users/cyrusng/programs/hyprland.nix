@@ -1,4 +1,8 @@
 { config, pkgs, lib, inputs, ... }:
+let
+  cursorName = "HyprBibataModernClassicSVG";
+  cursorPackage = pkgs.callPackage ../../../pkgs/bibata-hyprcursor { };
+in
 {
   nixpkgs.overlays = [
     inputs.hyprland-contrib.overlays.default
@@ -20,6 +24,17 @@
     XDG_CURRENT_DESKTOP = "hyprland";
   };
 
+  home.pointerCursor = {
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Classic";
+    size = 24;
+    gtk.enable = true;
+    x11.enable = true;
+  };
+
+  home.file.".icons/${cursorName}".source = "${cursorPackage}/share/icons/${cursorName}";
+  xdg.dataFile."icons/${cursorName}".source = "${cursorPackage}/share/icons/${cursorName}";
+
   wayland.windowManager.hyprland = {
     enable = true;
     systemd = {
@@ -29,7 +44,7 @@
     xwayland.enable = true;
     plugins = [
       # inputs.hyprland-virtual-desktops.packages.${pkgs.system}.default
-      inputs.hyprspace.packages.${pkgs.system}.default
+      # inputs.hyprspace.packages.${pkgs.system}.default
     ];
     settings = let
       mainMod = "SUPER";
@@ -42,6 +57,7 @@
         "${lib.getExe pkgs.dex} -a"
         "${config.home.sessionVariables.TERM} --class term-general"
         "[workspace 1]${config.home.sessionVariables.BROWSER}"
+        "hyprctl setcursor ${cursorName} ${toString config.home.pointerCursor.size}"
       ];
 
       dwindle = {
@@ -51,7 +67,7 @@
 
       master = {
         mfact = 0.550000;
-        new_is_master = true;
+        new_status = "master";
         new_on_top = true;
       };
 
@@ -170,6 +186,7 @@
         "workspace 2, class:^(^(term-general)$)$"
         "workspace 6 silent, class:^(^(steam)$)$"
         "opaque, class:^(^(firefox)$)$"
+        "opaque, class:^(^(libreoffice).*$)$"
       ];
 
       bind = let
@@ -222,7 +239,7 @@
         "${mainMod}, mouse_down, workspace, e+1"
         "${mainMod}, mouse_up, workspace, e-1"
 
-        "${mainMod}, TAB, overview:toggle"
+        # "${mainMod}, TAB, overview:toggle"
         # "${mainMod}, TAB, nextdesk"
         # "${mainMod} SHIFT, TAB, prevdesk"
       ]
@@ -263,6 +280,8 @@
         "CLUTTER_BACKEND,${config.home.sessionVariables.CLUTTER_BACKEND}"
         "QT_AUTO_SCREEN_SCALE_FACTOR,${toString config.home.sessionVariables.QT_AUTO_SCREEN_SCALE_FACTOR}"
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,${toString config.home.sessionVariables.QT_WAYLAND_DISABLE_WINDOWDECORATION}"
+        "HYPRCURSOR_THEME,${cursorName}"
+        "HYPRCRSOR_SIZE,${toString config.home.pointerCursor.size}"
       ];
 
       monitor = [

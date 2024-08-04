@@ -47,7 +47,6 @@
       wildmode = "list:full,full";
       showmatch = true;
       showmode = true;
-      pastetoggle = "<F1>";
       hidden = true;
       history = 1000;
       writebackup = true;
@@ -383,7 +382,7 @@
           };
         };
         servers = {
-          nil_ls.enable = true;
+          nil-ls.enable = true;
           lua-ls.enable = true;
           nixd.enable = true;
           clangd.enable = true;
@@ -434,8 +433,10 @@
       treesitter = {
         enable = true;
         folding = true;
-        ensureInstalled = "all";
-        indent = true;
+        settings = {
+          ensure_installed = "all";
+          indent.enable = true;
+        };
       };
       treesitter-refactor.enable = true;
       mkdnflow = {
@@ -444,7 +445,7 @@
         links.conceal = true;
       };
       neorg = {
-        enable = true;
+        enable = false;
         modules = {
           "core.defaults" = { __empty = null; };
           "core.dirman" = {
