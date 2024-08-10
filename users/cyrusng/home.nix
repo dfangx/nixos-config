@@ -23,6 +23,7 @@ in
     ./services/kanshi.nix
     ./services/gammastep.nix
     ./services/password_manager.nix
+    ./services/hydroxide.nix
     # ./services/backup.nix
   ];
 
@@ -101,6 +102,7 @@ in
         package = pkgs.feishin;
       })
       # unityhub
+      thunderbird
     ];
   };
 
@@ -272,10 +274,10 @@ in
   xdg.configFile = {
     "Kvantum/kvantum.kvconfig".text = ''
       [General]
-      theme=Utterly-Nord
+      theme=Nordic
     '';
 
-    "Kvantum/Utterly-Nord".source = "${pkgs.utterly-nord-plasma}/share/Kvantum/Utterly-Nord";
+    "Kvantum/Utterly-Nord".source = "${pkgs.nordic}/share/Kvantum/Nordic";
   };
 }
 

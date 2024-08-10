@@ -58,6 +58,7 @@ in
         "${config.home.sessionVariables.TERM} --class term-general"
         "[workspace 1]${config.home.sessionVariables.BROWSER}"
         "hyprctl setcursor ${cursorName} ${toString config.home.pointerCursor.size}"
+        "${lib.getExe pkgs.hyprdim}"
       ];
 
       dwindle = {
@@ -109,8 +110,6 @@ in
         rounding = 10;
         shadow_range = 4;
         shadow_render_power = 3;
-        active_opacity = 0.55;
-        inactive_opacity = 0.7;
 
         blur = {
           enabled = true;
@@ -181,12 +180,13 @@ in
 
       windowrulev2 = [ 
         "float, class:^(^(blueberry.py)$)$"
+        "opacity 0.55, class:^(^(Alacritty)$)$"
+        "opacity 0.55, class:^(^(term-general)$)$"
         "float, class:^(^(org.keepassxc.KeePassXC)$)$"
-        "animation fade 1 100 default, class:^(^(Hyprpaper)$)$"
+        "center 1, class:^(^(org.keepassxc.KeePassXC)$)$"
+        "size 60%,75%, class:^(^(org.keepassxc.KeePassXC)$)$"
         "workspace 2, class:^(^(term-general)$)$"
         "workspace 6 silent, class:^(^(steam)$)$"
-        "opaque, class:^(^(firefox)$)$"
-        "opaque, class:^(^(libreoffice).*$)$"
       ];
 
       bind = let

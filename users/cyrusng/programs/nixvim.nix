@@ -445,7 +445,7 @@
         links.conceal = true;
       };
       neorg = {
-        enable = false;
+        enable = true;
         modules = {
           "core.defaults" = { __empty = null; };
           "core.dirman" = {
@@ -461,7 +461,6 @@
             };
           };
           "core.concealer" = { __empty = null;  };
-          "core.manoeuvre" = { __empty = null;  };
           "core.summary" = { __empty = null;  };
         };
       };
@@ -472,6 +471,17 @@
     };
     extraPlugins = with pkgs; [
       vimPlugins.vim-pencil
+      (vimUtils.buildVimPlugin {
+        inherit (luaPackages.lua-utils-nvim) pname version src;
+      })
+
+      (vimUtils.buildVimPlugin {
+        inherit (luaPackages.pathlib-nvim) pname version src;
+      })
+
+      (vimUtils.buildVimPlugin {
+        inherit (luaPackages.nvim-nio) pname version src;
+      })
     ];
 
     extraConfigLua = ''
