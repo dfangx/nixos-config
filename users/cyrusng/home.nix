@@ -19,7 +19,8 @@ in
     ./programs/fuzzel.nix
     ./programs/xdg.nix
     ./programs/fonts.nix
-    ./programs/nixneovim.nix
+    # ./programs/nixneovim.nix
+    ./programs/nixvim.nix
     ./services/kanshi.nix
     ./services/gammastep.nix
     ./services/password_manager.nix
@@ -72,7 +73,6 @@ in
     };
     stateVersion = "22.11";
     packages = let 
-      feishin = pkgs.callPackage ../../pkgs/feishin { };
     in
     with pkgs; [
       gnome.adwaita-icon-theme
@@ -104,17 +104,17 @@ in
     ];
   };
 
-  xdg.desktopEntries = {
-    feishin = {
-      name = "Feishin";
-      exec = "feishin %u";
-      icon = "feishin";
-      comment = "Full-featured Subsonic/Jellyfin compatible desktop music player";
-      genericName = "Subsonic Client";
-      categories = [ "Audio" "AudioVideo" ];
-      mimeType = [ "x-scheme-handler/feishin" ];
-    };
-  };
+  # xdg.desktopEntries = {
+  #   feishin = {
+  #     name = "Feishin";
+  #     exec = "feishin %u";
+  #     icon = "feishin";
+  #     comment = "Full-featured Subsonic/Jellyfin compatible desktop music player";
+  #     genericName = "Subsonic Client";
+  #     categories = [ "Audio" "AudioVideo" ];
+  #     mimeType = [ "x-scheme-handler/feishin" ];
+  #   };
+  # };
 
   nix = {
     package = pkgs.nix;
@@ -267,6 +267,21 @@ in
       name = "Nordic";
       package = pkgs.nordic;
     };
+  };
+  
+  qt = {
+    enable = true;
+    platformTheme.name = "qtct";
+    style.name = "kvantum";
+  };
+
+  xdg.configFile = {
+    "Kvantum/kvantum.kvconfig".text = ''
+      [General]
+      theme=Nordic
+    '';
+
+    "Kvantum/Nordic".source = "${pkgs.nordic}/share/Kvantum/Nordic";
   };
 }
 

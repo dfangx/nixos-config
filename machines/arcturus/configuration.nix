@@ -6,87 +6,46 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
+    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-yoga
   ];
 
-  boot.resumeDevice = "/dev/disk/by-uuid/a9aa5ab2-ea77-4b71-8986-805313638e97";
-  boot.kernelParams = [ 
-    "resume_offset=5081088" 
-    # "systemd.restore_state=0" 
-    # "rfkill.default_state=1" 
+  nixpkgs.overlays = [
+    (final: prev: { 
+      nbfc-linux = inputs.nbfc-linux.packages.${pkgs.system}.nbfc;
+    })
   ];
 
-  nixpkgs.config.allowUnfreePredicate = (pkg: true);
-  nix = {
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      min-free = ${toString (1024 * 1024 * 1024)}
-    '';
-    settings = {
-      substituters = [
-        "https://nix-community.cachix.org"
-        "https://hyprland.cachix.org"
-      ];
-      trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      ];
-      auto-optimise-store = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 14d";
-    };
-  };
-
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      intel-compute-runtime
+  boot = {
+    resumeDevice = "/dev/disk/by-uuid/a9aa5ab2-ea77-4b71-8986-805313638e97";
+    kernelParams = [ 
+      "resume_offset=5081088" 
     ];
-    extraPackages32 = with pkgs.driversi686Linux; [
-      intel-media-driver
-    ];
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
-  hardware.bluetooth = {
-    enable = true;
-  };
-
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
-
-  # Use the GRUB 2 boot loader.
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 5;
+  hardware = {
+    graphics = {
+      extraPackages = with pkgs; [
+        intel-media-driver
+        intel-compute-runtime
+      ];
+      extraPackages32 = with pkgs.driversi686Linux; [
+        intel-media-driver
+      ];
     };
-    efi.canTouchEfiVariables = true;
   };
 
   networking = {
-    hostName = "arcturus"; 
     wireless.iwd.enable = true;
-    # networkmanager = {
-    #   enable = true;
-    #   wifi.backend = "iwd";
-    # };
     wg-quick.interfaces = {
       wg0 = {
         address = [ "10.200.200.5/32" ] ;
-        dns = [ "10.200.200.1" ];
-        privateKeyFile = config.age.secrets.wgPrivate.path;
         peers = [
           {
             publicKey = "i2bnqjKWvfdpUDeMDObiivfEvAYoZCTZQfcLjlBDni0=";
             presharedKeyFile = config.age.secrets.wgPsk.path;
             allowedIPs = [ 
               "0.0.0.0/0" 
-              "::/0" 
             ];
             endpoint = "slothpi.duckdns.org:51820";
           }
@@ -102,71 +61,9 @@
     deps = [];
   };
 
-  # Set your time zone.
-  time.timeZone = "America/Toronto";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_CA.UTF-8";
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.cyrusng = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "input" "audio" "libvirtd" ]; 
-    hashedPassword = "$y$j9T$XgXobCeRJMzoHs79Qh/wN1$d/PKmABq92qsGEkNUv7oC9.zgr.SxvgmIkIgkS7nXE7";
-  };
-
-  age.secrets = {
-    wgPsk.file = ./secrets/wgPsk.age;
-    wgPrivate.file = ./secrets/wgPrivate.age;
-  };
-
-  virtualisation.libvirtd.enable = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    git
-    lsof
-    virt-manager
-    home-manager
-    htop
-    nix-prefetch-github
-    alsa-utils
-    wget
-    agenix
-    lm_sensors
-    alacritty
-  ];
-
-  programs = {
-    hyprland = {
-      enable = true;
-      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-    };
-    steam.enable = true;
-    dconf.enable = true;
-  };
-
-  xdg.portal = {
-    enable = true;
-    config.common.default = "*";
-  };
-
-  security = {
-    rtkit.enable = true;
-    pam.services.swaylock = { };
-    pam.services.hyprlock = { };
-    polkit.enable = true;
-  };
-
-  systemd.sleep.extraConfig = ''
-    HibernateDelaySec=2h
-  '';
-
   services = {
     logind = {
       lidSwitch = "suspend-then-hibernate";
-      killUserProcesses = true;
     };
     fwupd.enable = true;
     fprintd = {
@@ -179,18 +76,7 @@
     printing.enable = true;
     avahi = {
       enable = true;
-      nssmdns = true;
-    };
-    sshd.enable = true;
-    geoclue2 = {
-      enable = true;
-      enableDemoAgent = true;
-    };
-    greetd = {
-      enable = true;
-      settings.default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --issue --cmd ${lib.getExe' config.programs.hyprland.package "Hyprland"}";
-      };
+      nssmdns4 = true;
     };
     tlp = {
       enable = true;
@@ -201,11 +87,6 @@
       };
     };
     pipewire = {
-      enable = true;
-      wireplumber.enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
       extraConfig = {
         pipewire = {
           sink-dolby-surround.conf = {
@@ -277,31 +158,7 @@
         };
       };
     };
-    interception-tools = {
-      enable = true;
-      udevmonConfig = ''
-        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
-          DEVICE:
-            EVENTS:
-              EV_KEY [KEY_CAPSLOCK, KEY_ESC]
-      '';
-    };
   };
-
-  environment.etc = let
-    json = pkgs.formats.json {};
-  in {
-  };
-
-  systemd.services.greetd = {
-    unitConfig = {
-      After = lib.mkOverride 0 [ "multi-user.target" ];
-    };
-    serviceConfig = {
-      Type = "idle";
-    };
-  };
-
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

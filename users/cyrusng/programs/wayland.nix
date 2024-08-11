@@ -4,6 +4,7 @@
     ./hyprland.nix
     ./hyprlock.nix
     ../services/hypridle.nix
+    ../services/hyprpaper.nix
   ];
 
   home.sessionVariables = {
