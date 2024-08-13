@@ -1,6 +1,16 @@
 { config, pkgs, lib, ... }:
 {
-  home.sessionVariables.BROWSER = "${lib.getExe' config.programs.firefox.package "firefox"}";
+  home = {
+    sessionVariables.BROWSER = "${lib.getExe' config.programs.firefox.package "firefox"}";
+    packages = with pkgs; [
+      tridactyl-native
+      open-in-mpv
+    ];
+  };
+
+  xdg.mimeApps.associations.added = {
+    "x-scheme-handler/mpv" = [ "open-in-mpv.desktop" ];
+  };
 
   programs.firefox = {
     enable = true;
@@ -64,6 +74,8 @@
           user_pref("gfx.webrender.compositor", true);
           user_pref("layers.gpu-process.enabled", true);
           user_pref("media.hardware-video-decoding.enabled", true);
+          user_pref("media.ffmpeg.vaapi.enabled", true);
+          user_pref("media.hardware-video-decoding.force-enabled", true);
           user_pref("gfx.canvas.accelerated", true);
           user_pref("gfx.canvas.accelerated.cache-items", 32768);
           user_pref("gfx.canvas.accelerated.cache-size", 4096);
@@ -181,7 +193,7 @@
           
           /** MOZILLA ***/
           user_pref("accessibility.force_disabled", 1);
-          user_pref("identity.fxaccounts.enabled", false);
+          user_pref("identity.fxaccounts.enabled", true);
           user_pref("browser.tabs.firefox-view", false);
           user_pref("permissions.default.desktop-notification", 2);
           user_pref("permissions.default.geo", 2);

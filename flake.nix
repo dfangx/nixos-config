@@ -140,41 +140,49 @@
       };
     };
     images.slothpi = nixosConfigurations.slothpi.config.system.build.sdImage;
-    homeConfigurations.cyrusng = let
-      system = "x86_64-linux";
-      # lib = nixpkgs.lib.extend (inputs.spikespaz-lib.lib.overlay);
-      pkgs = nixpkgs.legacyPackages.${system};
-      myOverlay = (final: prev: {
-        freetube = prev.freetube.overrideAttrs (oldAttrs: {
-          nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ prev.makeWrapper ];
+    homeConfigurations = {
+      "cyrusng@arcturus" = let
+        host = "arcturus";
+        system = "x86_64-linux";
+        pkgs = nixpkgs.legacyPackages.${system};
+      in 
+      home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
 
-          postFixup = oldAttrs.postFixup + ''
-          wrapProgram $out/bin/freetube \
-          --add-flags --enable-features=UseOzonePlatform \
-          --add-flags --ozone-platform=wayland
-          '';
-        });
-        pkgsStable = nixpkgsStable.legacyPackages.${prev.system};
-        rsgain = pkgs.callPackage pkgs/rsgain.nix { };
-      });
-    in 
-    home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
+        extraSpecialArgs = { inherit inputs host; };
 
-      extraSpecialArgs = { inherit inputs; };
+        modules = [
+          {
+            nixpkgs.overlays = [
+              (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.overrideAttrs (oldAttrs: { passthru = null; }); })
+              (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
+              inputs.neovim-nix.overlays.${system}.default
+            ];
+          }
+          ./users/cyrusng/home.nix
+        ];
+      };
+      "cyrusng@regulus" = let
+        host = "regulus";
+        system = "x86_64-linux";
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
 
-      modules = [
-        {
-          nixpkgs.overlays = [
-            (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.overrideAttrs (oldAttrs: { passthru = null; }); })
-            (_: prev: { adwaita-icon-theme-without-gnome = prev.gnome.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
-            myOverlay
-            inputs.neovim-nix.overlays.${system}.default
-          ];
-        }
-        inputs.nur.nixosModules.nur
-        ./users/cyrusng/home.nix 
-      ];
+        extraSpecialArgs = { inherit inputs host; };
+
+        modules = [
+          {
+            nixpkgs.overlays = [
+              (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.overrideAttrs (oldAttrs: { passthru = null; }); })
+              (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
+              inputs.neovim-nix.overlays.${system}.default
+            ];
+          }
+          ./users/cyrusng/home.nix
+        ];
+      };
     };
   };
 }

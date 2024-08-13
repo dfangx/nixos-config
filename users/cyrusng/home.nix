@@ -1,30 +1,33 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, host, ... }:
 let
   terminal = "${lib.getExe pkgs.alacritty}";
 in
 {
   imports = [
-    ./programs/wayland.nix
-    ./programs/waybar.nix
-    ./programs/fzf.nix
-    ./programs/mako.nix
+    inputs.nur.nixosModules.nur
+
+    ./${host}
+
+    # Programs
     ./programs/alacritty.nix
-    ./programs/zathura.nix
-    ./programs/git.nix
-    ./programs/mpv.nix
-    ./programs/dircolors.nix
     ./programs/bash.nix
-    ./programs/tmux.nix
+    ./programs/dircolors.nix
     ./programs/firefox.nix
-    ./programs/fuzzel.nix
-    ./programs/xdg.nix
     ./programs/fonts.nix
-    # ./programs/nixneovim.nix
+    ./programs/fuzzel.nix
+    ./programs/fzf.nix
+    ./programs/git.nix
+    ./programs/mako.nix
+    ./programs/mpv.nix
     ./programs/nixvim.nix
-    ./services/kanshi.nix
+    ./programs/tmux.nix
+    ./programs/xdg.nix
+    ./programs/wayland.nix
+    ./programs/zathura.nix
+
+    # Services
     ./services/gammastep.nix
     ./services/password_manager.nix
-    # ./services/backup.nix
   ];
 
   home = rec {
@@ -72,49 +75,31 @@ in
       rpi = "ssh -4 ${username}@slothpi.duckdns.org";
     };
     stateVersion = "22.11";
-    packages = let 
-    in
-    with pkgs; [
-      gnome.adwaita-icon-theme
+    packages = with pkgs; [
+      discord
+      adwaita-icon-theme
+      libadwaita
       fd
       bat
       imv
       libreoffice
+      hunspell
+      hunspellDicts.en_CA
       wl-clipboard
-      tridactyl-native
       xorg.xeyes
       runelite
-      # neovim-nix
       wev
       xdg-user-dirs
       zoom-us
       rsgain
       yt-dlp
       unzip
-      xournalpp
       picard
-      zettlr
-      # wlvncc
       obsidian
       feishin
       pavucontrol
-      hunspell
-      hunspellDicts.en_CA
-      unityhub
     ];
   };
-
-  # xdg.desktopEntries = {
-  #   feishin = {
-  #     name = "Feishin";
-  #     exec = "feishin %u";
-  #     icon = "feishin";
-  #     comment = "Full-featured Subsonic/Jellyfin compatible desktop music player";
-  #     genericName = "Subsonic Client";
-  #     categories = [ "Audio" "AudioVideo" ];
-  #     mimeType = [ "x-scheme-handler/feishin" ];
-  #   };
-  # };
 
   nix = {
     package = pkgs.nix;
@@ -127,21 +112,17 @@ in
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
-        "https://nixpkgs-wayland.cachix.org"
+        # "https://nixpkgs-wayland.cachix.org"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+        # "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
       ];
       auto-optimise-store = true;
     };
   };
   
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-25.9.0"
-  ];
-
   nixpkgs.config.allowUnfreePredicate = (pkg: true);
 
   programs.home-manager.enable = true;
@@ -157,18 +138,27 @@ in
         duplicates.enable = true;
         fetchart.enable = true;
         embedart.enable = true;
+        lastgenre.enable = true;
       };
     };
     settings = {
-      threaded = "no";
+      threaded = "yes";
       directory = config.xdg.userDirs.music;
       library = "${config.xdg.userDirs.music}/.beets.db";
-      plugins = "chroma replaygain edit unimported duplicates embedart fetchart";
+      plugins = "chroma replaygain edit unimported duplicates embedart fetchart lastgenre";
       chroma = {
         auto = "yes";
       };
-      replygain.backend = "ffmpeg";
+      replaygain = {
+        backend = "ffmpeg";
+        r128_targetlevel = 89;
+        threads = 16;
+      };
       unimported.ignore_subdirectories = "tmp";
+      lastgenre = {
+        count = 3;
+        source = "track";
+      };
     };
   };
   
@@ -190,16 +180,12 @@ in
         };
       };
 
-      wvkbd = {
+      nextcloud-client = {
+        Install.WantedBy = lib.mkForce [ "${config.home.sessionVariables.XDG_SESSION_DESKTOP}-session.target" ];
+        Service.ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
         Unit = {
-          Description = "Virtual Keyboard";
-          After = [ "graphical-session-pre.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
-        Install.WantedBy = [ "graphical-session.target" ];
-        Service = {
-          Type = "simple";
-          ExecStart = "${lib.getExe' pkgs.wvkbd "wvkbd-mobintl"} -L 480 --hidden";
+          After = lib.mkForce [ "${config.home.sessionVariables.XDG_SESSION_DESKTOP}-session.target" ];
+          PartOf = lib.mkForce [];
         };
       };
     };

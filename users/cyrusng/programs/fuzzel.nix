@@ -29,6 +29,6 @@
     [key-bindings]
     prev-with-wrap=Control+k
     next-with-wrap=Control+j
-    delete-line=Control+Shift+d
+    delete-line-forward=Control+Shift+d
   '';
 }
