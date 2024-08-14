@@ -2,6 +2,7 @@
 {
   imports = [
     ./programs/waybar.nix
+    ./services/hyprpaper.nix
   ];
 
   home = {

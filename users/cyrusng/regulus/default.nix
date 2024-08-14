@@ -8,6 +8,7 @@ in
 
     ./programs/waybar.nix
     ./services/hydroxide.nix
+    ./services/hyprpaper.nix
   ];
 
   home = {
