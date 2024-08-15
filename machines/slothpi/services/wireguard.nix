@@ -33,12 +33,18 @@ in
       file = ../secrets/wgPskPeer3.age;
       mode = "400";
     };
+
+    # regulus
+    wgPskPeer4 = {
+      file = ../secrets/wgPskPeer4.age;
+      mode = "400";
+    };
   };
 
   networking = {
     nat = {
       enable = true;
-      externalInterface = "end0";
+      externalInterface = "wlan0";
       internalInterfaces = [ "wg0" ];
     };
 
@@ -50,14 +56,14 @@ in
       ips = [ "10.200.200.1/24" ];
       listenPort = 51820;
       postSetup = ''
-        ${pkgs.iptables}/bin/iptables -A FORWARD -i end0 -j ACCEPT;
-        ${pkgs.iptables}/bin/iptables -A FORWARD -o end0 -j ACCEPT;
-        ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -o end0 -j MASQUERADE
+        ${pkgs.iptables}/bin/iptables -A FORWARD -i ${config.networking.nat.externalInterface} -j ACCEPT;
+        ${pkgs.iptables}/bin/iptables -A FORWARD -o ${config.networking.nat.externalInterface} -j ACCEPT;
+        ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -o ${config.networking.nat.externalInterface} -j MASQUERADE
       '';
       postShutdown = ''
-        ${pkgs.iptables}/bin/iptables -D FORWARD -i end0 -j ACCEPT; 
-        ${pkgs.iptables}/bin/iptables -D FORWARD -o end0 -j ACCEPT; 
-        ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o end0 -j MASQUERADE
+        ${pkgs.iptables}/bin/iptables -D FORWARD -i ${config.networking.nat.externalInterface} -j ACCEPT; 
+        ${pkgs.iptables}/bin/iptables -D FORWARD -o ${config.networking.nat.externalInterface} -j ACCEPT; 
+        ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o ${config.networking.nat.externalInterface} -j MASQUERADE
       '';
       generatePrivateKeyFile = true;
       privateKeyFile = config.age.secrets.wireguard.path;
@@ -82,6 +88,11 @@ in
           publicKey = "pEDH9TULaafSfuRKB24pTXRAs99tmR2fAmAxwV2lp3o=";
           presharedKeyFile = config.age.secrets.wgPskPeer3.path;
           allowedIPs = [ "10.200.200.5/32" ];
+        }
+        {
+          publicKey = "Fa0sMrruLzit404InxFu29AKBAswtKesYx3ofp//OCI=";
+          presharedKeyFile = config.age.secrets.wgPskPeer4.path;
+          allowedIPs = [ "10.200.200.6/32" ];
         }
       ];
     };

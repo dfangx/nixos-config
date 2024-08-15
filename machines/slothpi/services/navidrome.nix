@@ -13,6 +13,10 @@ in
         MusicFolder = "/var/lib/music";
         Port = 4533;
         DefaultTheme = "Nord";
+        LastFM = {
+          ApiKey = "a8d8d142450b9342682f5fc5599d2b6a";
+          Secret = "f3d869d8784379d2feccebb8bc629a19";
+        };
       };
     };
 
@@ -26,7 +30,6 @@ in
 
   users = {
     users.navidrome = {
-      group = "music";
       isSystemUser = true;
       extraGroups = [ "music" ];
     };

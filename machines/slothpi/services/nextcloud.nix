@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   inherit (config.networking) domain hostName;
@@ -17,8 +17,21 @@ in
   services = {
     nextcloud = {
       enable = true;
-      package = pkgs.nextcloud27;
+      package = pkgs.nextcloud29;
+      extraApps = with config.services.nextcloud.package.packages.apps; {
+        inherit previewgenerator;
+        # memories = pkgs.fetchNextcloudApp rec {
+        #   url = "https://github.com/pulsejet/memories/releases/download/v6.1.5/memories.tar.gz";
+        #   sha256 = "sha256-VSRQmvfnCkUetOQmGODqPrXK2vlLjiK9hOZvoOO84Oc=";
+        #   license = "agpl3";
+        # };
+      };
       hostName = fqdn;
+      configureRedis = true;
+      caching = {
+        apcu = true;
+        redis = true;
+      };
       config = {
         dbtype = "pgsql";
         dbuser = "nextcloud";
@@ -31,6 +44,26 @@ in
       nginx = {
         recommendedHttpHeaders = true;
       };
+      phpOptions = {
+        "opcache.interned_strings_buffer" = "16";
+        "output_buffering" = "off";
+      };
+      settings = {
+        default_phone_region = "CA";
+        enabledPreviewProviders = [
+          "OC\\Preview\\BMP"
+          "OC\\Preview\\GIF"
+          "OC\\Preview\\JPEG"
+          "OC\\Preview\\Krita"
+          "OC\\Preview\\MarkDown"
+          "OC\\Preview\\MP3"
+          "OC\\Preview\\OpenDocument"
+          "OC\\Preview\\PNG"
+          "OC\\Preview\\TXT"
+          "OC\\Preview\\XBitmap"
+          "OC\\Preview\\HEIC"
+        ];
+      };
     };
 
     postgresql = {
@@ -39,7 +72,8 @@ in
       ensureUsers = [
         {
           name = "nextcloud";
-          ensurePermissions."DATABASE nextcloud" = "ALL PRIVILEGES";
+          ensureDBOwnership = true;
+          # ensurePermissions."DATABASE nextcloud" = "ALL PRIVILEGES";
         }
       ];
     };
@@ -77,11 +111,33 @@ in
         };
         wantedBy = ["multi-user.target"];
       };
+      nextcloud-preview-generator = {
+        unitConfig = {
+          Description = "Auto sync Nextcloud";
+          After = "network-online.target"; 
+        };
+        serviceConfig = {
+          Type = "simple";
+          ExecStart= "${lib.getExe config.services.nextcloud.occ} preview:pre-generate"; 
+          TimeoutStopSec = "180";
+          KillMode = "process";
+          KillSignal = "SIGINT";
+          User = "nextcloud";
+        };
+        wantedBy = ["multi-user.target"];
+      };
     };
-    timers.nextcloud-autosync = {
-      unitConfig.Description = "Automatic sync files with Nextcloud when booted up after 5 minutes then rerun every 60 minutes";
-      timerConfig.OnUnitActiveSec = "60min";
-      wantedBy = ["multi-user.target" "timers.target"];
+    timers = {
+      nextcloud-autosync = {
+        unitConfig.Description = "Automatic sync files with Nextcloud when booted up after 5 minutes then rerun every 60 minutes";
+        timerConfig.OnUnitActiveSec = "60min";
+        wantedBy = ["multi-user.target" "timers.target"];
+      };
+      nextcloud-preview-generator = {
+        unitConfig.Description = "Automatically generate photo previews";
+        timerConfig.OnUnitActiveSec = "10min";
+        wantedBy = ["multi-user.target" "timers.target"];
+      };
     };
   };
 }

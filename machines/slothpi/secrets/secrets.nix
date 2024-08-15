@@ -10,6 +10,7 @@ in
     "wgPskPeer1.age".publicKeys = [ cyrusng system ];
     "wgPskPeer2.age".publicKeys = [ cyrusng system ];
     "wgPskPeer3.age".publicKeys = [ cyrusng system ];
+    "wgPskPeer4.age".publicKeys = [ cyrusng system ];
     "grafanaAdmin.age".publicKeys = [ cyrusng system ];
     "fireflyIII.age".publicKeys = [ cyrusng system ];
     "laravel.age".publicKeys = [ cyrusng system ];

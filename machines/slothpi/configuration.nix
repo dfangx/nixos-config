@@ -21,8 +21,8 @@
     # ./services/nfs.nix
     # ./services/pihole.nix
     # ./services/samba.nix
-    ./services/monica.nix
-    ./services/firefly-iii.nix
+    # ./services/monica.nix
+    # ./services/firefly-iii.nix
     ./services/grafana.nix
     ./services/blocky.nix
     ./services/navidrome.nix
@@ -85,12 +85,13 @@
   };
 
   networking = {
+    wireless.iwd.enable = true;
     firewall = {
       allowedUDPPorts = [ 22 ];
       allowedTCPPorts = [ 22 ];
     };
 
-    defaultGateway = "192.168.0.1";
+    # defaultGateway = "192.168.0.1";
 
     nameservers = [
       "127.0.0.1"
@@ -99,19 +100,33 @@
 
     hostName = "slothpi";
     domain = "duckdns.org";
-    interfaces.end0 = {
-      ipv4.addresses = [ 
-        {
-          address = "192.168.0.116";
-          prefixLength = 24;
-        }
-      ];
-      ipv6.addresses = [ 
-        {
-          address = "2607:9880:24e8:1c:5ece:2fab:e8c1:577d";
-          prefixLength = 64;
-        }
-      ];
+    interfaces = {
+      end0 = {
+        ipv4.addresses = [ 
+          # {
+          #   address = "192.168.0.116";
+          #   prefixLength = 24;
+          # }
+          # {
+          #   address = "10.0.0.116";
+          #   prefixLength = 24;
+          # }
+        ];
+        ipv6.addresses = [ 
+          {
+            address = "2607:9880:24e8:1c:5ece:2fab:e8c1:577d";
+            prefixLength = 64;
+          }
+        ];
+      };
+      wlan0 = {
+        # ipv4.addresses = [ 
+        #   {
+        #     address = "10.0.0.116";
+        #     prefixLength = 24;
+        #   }
+        # ];
+      };
     };
   };
 

@@ -25,6 +25,7 @@ in
         prefetch-key = true;
         serve-expired = true;
         serve-expired-ttl = 86400;
+        serve-expired-client-timeout = 1800;
         cache-min-ttl = 3600;
         cache-max-ttl = 86400;
         edns-buffer-size = 1232;
@@ -47,10 +48,18 @@ in
           "\"${fqdn}\" redirect"
         ];
         local-data = [
-          "\"${fqdn} A 192.168.0.116\""
+          "\"${fqdn} A 10.0.0.116\""
         ];
       };
-      remote-control.control-enable = true;
+      remote-control = {
+        control-enable = true;
+        # control-interface = "127.0.0.1";
+        # control-port = 8953;
+        # server-key-file = "/etc/unbound/unbound_server.key";
+        # server-cert-file = "/etc/unbound/unbound_server.pem";
+        # control-key-file = "/etc/unbound/unbound_control.key";
+        # control-cert-file = "/etc/unbound/unbound_control.pem";
+      };
     };
   };
 

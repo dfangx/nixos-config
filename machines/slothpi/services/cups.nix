@@ -16,7 +16,7 @@ in
         enable = true;
         userServices = true;
       };
-      nssmdns = true;
+      nssmdns4 = true;
     };
 
     printing = {
