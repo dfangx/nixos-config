@@ -284,10 +284,6 @@ in
         "HYPRCURSOR_THEME,${cursorName}"
         "HYPRCRSOR_SIZE,${toString config.home.pointerCursor.size}"
       ];
-
-      monitor = [
-        ",preferred,auto,1"
-      ];
     };
   };
 }

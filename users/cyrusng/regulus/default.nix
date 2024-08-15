@@ -7,6 +7,7 @@ in
     inputs.ags.homeManagerModules.default
 
     ./programs/waybar.nix
+    ./programs/hyprland.nix
     ./services/hydroxide.nix
     ./services/hyprpaper.nix
   ];

@@ -2,6 +2,7 @@
 {
   imports = [
     ./programs/waybar.nix
+    ./programs/hyprland.nix
     ./services/hyprpaper.nix
   ];
 
