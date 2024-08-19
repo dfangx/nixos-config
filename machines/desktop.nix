@@ -26,27 +26,8 @@
     ];
   };
 
-  nix = {
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      min-free = ${toString (1024 * 1024 * 1024)}
-    '';
-    settings = {
-      substituters = [
-        "https://nix-community.cachix.org"
-        "https://hyprland.cachix.org"
-      ];
-      trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      ];
-      auto-optimise-store = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 14d";
-    };
+  users.users.cyrusng = {
+    extraGroups = [ "wheel" "input" "audio" "libvirtd" ]; 
   };
 
   hardware = {
@@ -70,8 +51,6 @@
   };
 
   networking = {
-    hostName = host;
-    wireless.iwd.enable = true;
     wg-quick.interfaces = {
       wg0 = {
         dns = [ "10.200.200.1" ];
@@ -118,17 +97,8 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    git
-    lsof
-    home-manager
-    htop
-    nix-prefetch-github
-    alsa-utils
-    wget
-    agenix
     lm_sensors
     alacritty
-    usbutils
     virtiofsd
   ];
 
@@ -167,10 +137,6 @@
   services = {
     spice-vdagentd.enable = true;
     qemuGuest.enable = true;
-    logind = {
-      killUserProcesses = true;
-    };
-    sshd.enable = true;
     geoclue2 = {
       enable = true;
       enableDemoAgent = true;

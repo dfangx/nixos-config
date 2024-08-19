@@ -7,6 +7,8 @@
 {
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-yoga
+    ../desktop.nix
+    ../common.nix
   ];
 
   nixpkgs.overlays = [
@@ -36,7 +38,6 @@
   };
 
   networking = {
-    wireless.iwd.enable = true;
     wg-quick.interfaces = {
       wg0 = {
         address = [ "10.200.200.5/32" ] ;

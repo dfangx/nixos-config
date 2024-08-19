@@ -98,7 +98,7 @@
       nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs host; };
         modules = [
-          ./machines
+          ./machines/${host}
         ];
       };
       regulus = let
@@ -107,35 +107,26 @@
       nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs host; };
         modules = [
-          ./machines
+          ./machines/${host}
         ];
       };
       slothpi = let
-        system = "aarch64-linux";
-        pkgs = nixpkgs.legacyPackages.${system};
+        host = "slothpi";
       in
       nixpkgs.lib.nixosSystem {
         # inherit system;
+        specialArgs = { inherit inputs host; };
         modules = [
           "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
           {
-            nixpkgs.config.allowUnsupportedSystem = true;
             nixpkgs.overlays = [
-              inputs.neovim-nix.overlays.${system}.default
               (final: super: {
                 makeModulesClosure = x:
                 super.makeModulesClosure (x // { allowMissing = true; });
-                agenix = inputs.agenix.packages.${system}.default;
-                hydroxideNew = final.hydroxide.overrideAttrs(old: {
-                  version = "0.2.27";
-                });
               })
-              inputs.firefly.overlays.default
             ];
           }
-          inputs.agenix.nixosModules.default
-          inputs.firefly.nixosModules.firefly-iii
-          ./machines/slothpi/configuration.nix
+          ./machines/${host}
         ];
       };
     };

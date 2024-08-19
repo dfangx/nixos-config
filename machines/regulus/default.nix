@@ -5,6 +5,11 @@
 { config, pkgs, lib, inputs, host, ... }:
 
 {
+  imports = [
+    ../desktop.nix
+    ../common.nix
+  ];
+
   systemd.tmpfiles.rules = [ 
     "L+ /opt/rocm/hip - - - - ${pkgs.rocmPackages.clr}"
   ];

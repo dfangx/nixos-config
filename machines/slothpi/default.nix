@@ -1,20 +1,12 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, host, ... }:
 
 {
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    substituters = [ 
-      "https://timhae-firefly.cachix.org" 
-    ];
-    trusted-public-keys = [ 
-      "timhae-firefly.cachix.org-1:TMexYUvP5SKkeKG11WDbYUVLh/4dqvCqSE/c028sqis=" 
-    ];
-  };
-
 
   imports = [ 
-    ./hardware-configuration.nix
-    "${fetchTarball "https://github.com/NixOS/nixos-hardware/archive/936e4649098d6a5e0762058cb7687be1b2d90550.tar.gz" }/raspberry-pi/4"
+    # ./hardware-configuration.nix
+    #"${fetchTarball "https://github.com/NixOS/nixos-hardware/archive/936e4649098d6a5e0762058cb7687be1b2d90550.tar.gz" }/raspberry-pi/4"
+    inputs.nixos-hardware.nixosModules.raspberry-pi-4
+    ../common.nix
     # ./services/etebase.nix
     # ./services/auth.nix
     ./services/radicale.nix
@@ -31,42 +23,22 @@
     ./services/unbound.nix
     ./services/wireguard.nix
     ./services/nextcloud.nix
-    ./services/hydroxide.nix
+    # ./services/hydroxide.nix
   ];
-
-  # boot.kernelPackages = lib.mkForce pkgs.linuxPackages_rpi4;
-
-  time.timeZone = "America/Toronto";
 
   users.users = {
     cyrusng = {
-      isNormalUser = true;
-      hashedPassword = "$y$j9T$XgXobCeRJMzoHs79Qh/wN1$d/PKmABq92qsGEkNUv7oC9.zgr.SxvgmIkIgkS7nXE7";
       extraGroups = [ "wheel" "nextcloud" "music" ];
-    };
-  };
-
-  programs.git = {
-    enable = true;
-    config.user = {
-      name = "dfangx";
-      email = "github.oxfrj2ct@bged98.anonaddy.com";
     };
   };
 
   environment = {
     systemPackages = with pkgs; [
-      wget
-      nix-prefetch-git
-      unzip
       bind
-      neovim-nix
-      git
-      htop
       sops
-      agenix
       qrencode
       bc
+      neovim
     ];
 
     variables = {
@@ -80,12 +52,9 @@
 
   services = {
     fail2ban.enable = true;
-    openssh.enable = true;
-    mysql.package = lib.mkForce pkgs.mariadb;
   };
 
   networking = {
-    wireless.iwd.enable = true;
     firewall = {
       allowedUDPPorts = [ 22 ];
       allowedTCPPorts = [ 22 ];
@@ -98,7 +67,7 @@
       "::1"
     ];
 
-    hostName = "slothpi";
+    hostName = host;
     domain = "duckdns.org";
     interfaces = {
       end0 = {
@@ -129,7 +98,4 @@
       };
     };
   };
-
-  nixpkgs.config.allowUnfree = true;
-  system.stateVersion = "23.05";
 }
