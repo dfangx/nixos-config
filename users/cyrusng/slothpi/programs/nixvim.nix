@@ -2,9 +2,8 @@
 {
   programs.nixvim = {
     plugins = {
-      treesitter = {
-        enable = lib.mkForce false;
-      };
+      neorg.enable = lib.mkForce false;
+      treesitter.enable = lib.mkForce false;
       treesitter-refactor.enable = lib.mkForce false;
     };
   };
