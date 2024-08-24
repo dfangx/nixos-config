@@ -1,9 +1,12 @@
 { config, pkgs, lib, inputs, ... }:
 let
   cursorName = "HyprBibataModernClassicSVG";
-  cursorPackage = pkgs.callPackage ../../../pkgs/bibata-hyprcursor { };
 in
 {
+  imports = [
+    ./hyprcursor.nix
+  ];
+
   nixpkgs.overlays = [
     inputs.hyprland-contrib.overlays.default
   ];
@@ -23,17 +26,6 @@ in
     XDG_SESSION_DESKTOP = "hyprland";
     XDG_CURRENT_DESKTOP = "hyprland";
   };
-
-  home.pointerCursor = {
-    package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Classic";
-    size = 24;
-    gtk.enable = true;
-    x11.enable = true;
-  };
-
-  home.file.".icons/${cursorName}".source = "${cursorPackage}/share/icons/${cursorName}";
-  xdg.dataFile."icons/${cursorName}".source = "${cursorPackage}/share/icons/${cursorName}";
 
   wayland.windowManager.hyprland = {
     enable = true;

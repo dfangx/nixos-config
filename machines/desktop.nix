@@ -8,7 +8,6 @@
   imports = [
     inputs.agenix.nixosModules.default
     inputs.hyprland.nixosModules.default
-    ./${host}/configuration.nix
     ./${host}/hardware-configuration.nix
   ];
 
@@ -24,10 +23,6 @@
         agenix = inputs.agenix.packages.${pkgs.system}.default;
       })
     ];
-  };
-
-  users.users.cyrusng = {
-    extraGroups = [ "wheel" "input" "audio" "libvirtd" ]; 
   };
 
   hardware = {
@@ -67,9 +62,7 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cyrusng = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "input" "audio" "libvirtd" ]; 
-    hashedPassword = "$y$j9T$XgXobCeRJMzoHs79Qh/wN1$d/PKmABq92qsGEkNUv7oC9.zgr.SxvgmIkIgkS7nXE7";
+    extraGroups = [ "input" "audio" "libvirtd" ]; 
   };
 
   age.secrets = {

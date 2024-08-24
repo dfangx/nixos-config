@@ -10,6 +10,7 @@ in
 
     # Programs
     ./programs/bash.nix
+    ./programs/beets.nix
     ./programs/dircolors.nix
     ./programs/fonts.nix
     ./programs/fzf.nix
@@ -95,4 +96,3 @@ in
 
   programs.home-manager.enable = true;
 }
-

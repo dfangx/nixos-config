@@ -6,7 +6,7 @@
 
   home.packages = with pkgs; [
     nano
-    nerdfonts # For neorg
+    # nerdfonts # For neorg
   ];
 
   programs.nixvim = {

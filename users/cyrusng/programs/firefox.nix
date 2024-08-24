@@ -25,7 +25,7 @@
           multi-account-containers
           temporary-containers
           enhanced-github
-          # enhancer-for-youtube
+          enhancer-for-youtube
           old-reddit-redirect
           reddit-enhancement-suite
           ublock-origin
