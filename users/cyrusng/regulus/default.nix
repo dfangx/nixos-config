@@ -5,7 +5,7 @@ in
 {
   imports = [
     inputs.ags.homeManagerModules.default
-
+    ../desktop.nix
     ./programs/waybar.nix
     ./programs/hyprland.nix
     ./services/hydroxide.nix

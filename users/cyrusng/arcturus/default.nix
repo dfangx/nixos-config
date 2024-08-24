@@ -1,6 +1,7 @@
 { pkgs, lib, ... }:
 {
   imports = [
+    ../desktop.nix
     ./programs/waybar.nix
     ./programs/hyprland.nix
     ./services/hyprpaper.nix

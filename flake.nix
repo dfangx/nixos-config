@@ -147,7 +147,6 @@
             nixpkgs.overlays = [
               (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.overrideAttrs (oldAttrs: { passthru = null; }); })
               (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
-              inputs.neovim-nix.overlays.${system}.default
             ];
           }
           ./users/cyrusng/home.nix
@@ -168,9 +167,22 @@
             nixpkgs.overlays = [
               (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.overrideAttrs (oldAttrs: { passthru = null; }); })
               (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
-              inputs.neovim-nix.overlays.${system}.default
             ];
           }
+          ./users/cyrusng/home.nix
+        ];
+      };
+      "cyrusng@slothpi" = let
+        host = "slothpi";
+        system = "aarch64-linux";
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+
+        extraSpecialArgs = { inherit inputs host; };
+
+        modules = [
           ./users/cyrusng/home.nix
         ];
       };
