@@ -3,6 +3,61 @@
 let
   inherit (config.networking) domain hostName;
   fqdn = "nextcloud.${hostName}.${domain}";
+  nextcloudExcludes = pkgs.writeText "sync-exclude.lst" ''
+    # This file contains fixed global exclude patterns
+    
+    ~$*
+    .~lock.*
+    ~*.tmp
+    ]*.~*
+    ]Icon\r*
+    ].DS_Store
+    ].ds_store
+    *.textClipping
+    ._*
+    ]Thumbs.db
+    ]photothumb.db
+    System Volume Information
+
+    .*.sw?
+    .*.*sw?
+
+    ].TemporaryItems
+    ].Trashes
+    ].DocumentRevisions-V100
+    ].Trash-*
+    .fseventd
+    .apdisk
+    .Spotlight-V100
+
+    .directory
+
+    *.part
+    *.filepart
+    *.crdownload
+
+    *.kate-swp
+    *.gnucash.tmp-*
+
+    .synkron.*
+    .sync.ffs_db
+    .symform
+    .symform-store
+    .fuse_hidden*
+    *.unison
+    .nfs*
+
+    # (default) metadata files created by Syncthing
+    .stfolder
+    .stignore
+    .stversions
+
+    My Saved Places.
+
+    \#*#
+
+    *.sb-*
+  '';
 in
 {
   age.secrets = {
@@ -101,7 +156,7 @@ in
         };
         serviceConfig = {
           Type = "simple";
-          ExecStart= "${pkgs.bash}/bin/bash -c \"${pkgs.nextcloud-client}/bin/nextcloudcmd -h -u ${config.services.nextcloud.config.adminuser} -p $(cat ${config.services.nextcloud.config.adminpassFile}) --path /music /var/lib/music https://nextcloud.slothpi.duckdns.org\""; 
+          ExecStart= "${pkgs.bash}/bin/bash -c \"${pkgs.nextcloud-client}/bin/nextcloudcmd -h -u ${config.services.nextcloud.config.adminuser} -p $(cat ${config.services.nextcloud.config.adminpassFile}) --exclude ${nextcloudExcludes} --path /music /var/lib/music https://nextcloud.slothpi.duckdns.org\""; 
           TimeoutStopSec = "180";
           KillMode = "process";
           KillSignal = "SIGINT";
@@ -140,4 +195,5 @@ in
       };
     };
   };
+
 }
