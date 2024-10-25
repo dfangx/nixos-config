@@ -72,7 +72,7 @@ in
   services = {
     nextcloud = {
       enable = true;
-      package = pkgs.nextcloud29;
+      package = pkgs.nextcloud30;
       extraApps = with config.services.nextcloud.package.packages.apps; {
         inherit previewgenerator;
         # memories = pkgs.fetchNextcloudApp rec {
@@ -118,6 +118,7 @@ in
           "OC\\Preview\\XBitmap"
           "OC\\Preview\\HEIC"
         ];
+        log_type = "file";
       };
     };
 

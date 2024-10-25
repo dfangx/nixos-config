@@ -382,11 +382,11 @@
           };
         };
         servers = {
-          nil-ls.enable = true;
-          lua-ls.enable = true;
+          nil_ls.enable = true;
+          lua_ls.enable = true;
           nixd.enable = true;
           clangd.enable = true;
-          rust-analyzer = {
+          rust_analyzer = {
             enable = true;
             installCargo = true;
             installRustc = true;
