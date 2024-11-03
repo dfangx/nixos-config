@@ -12,6 +12,10 @@ in
     ./services/hyprpaper.nix
   ];
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "googleearth-pro-7.3.6.9796"
+  ];
+
   home = {
     packages = with pkgs; [
       lutris
@@ -19,6 +23,8 @@ in
       protonup-qt
       wineWowPackages.full
       thunderbird
+      googleearth-pro
+      krita
     ];
   };
 

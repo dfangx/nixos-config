@@ -151,13 +151,13 @@ in
       };
 
       misc = {
+        allow_session_lock_restore = true;
         disable_hyprland_logo = true;
         enable_swallow = false;
         key_press_enables_dpms = true;
         mouse_move_enables_dpms = true;
         mouse_move_focuses_monitor = false;
         swallow_regex = "^(Alacritty)$";
-        allow_session_lock_restore = true;
         new_window_takes_over_fullscreen = 2;
         vrr = 1;
       };

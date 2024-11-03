@@ -19,14 +19,14 @@
           in [
             (
             if (ws == 1)
-            then "${builtins.toString ws}, monitor:DP-3, default:true"
+            then "${builtins.toString ws}, monitor:DP-1, default:true"
             else 
               if (ws == 2)
               then "${builtins.toString ws}, monitor:DP-2, default:true"
               else 
                 if (ws / 2 * 2 == ws)
                 then "${builtins.toString ws}, monitor:DP-2"
-                else "${builtins.toString ws}, monitor:DP-3"
+                else "${builtins.toString ws}, monitor:DP-1"
             )
           ]
         )

@@ -30,6 +30,11 @@
     };
   };
 
+  programs.tuxclocker = {
+    enable = true;
+    enableAMD = true;
+  };
+ 
   networking = {
     wireless.iwd.enable = true;
     firewall.interfaces = {
