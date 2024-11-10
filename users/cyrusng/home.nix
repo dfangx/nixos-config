@@ -78,6 +78,7 @@ in
       min-free = ${toString (1024 * 1024 * 1024)}
     '';
     settings = {
+      trusted-users = [ "cyrusng" ];
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"

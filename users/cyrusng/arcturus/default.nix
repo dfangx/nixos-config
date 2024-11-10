@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, pkgsStable, ... }:
 {
   imports = [
     ../desktop.nix
@@ -8,9 +8,9 @@
   ];
 
   home = {
-    packages = with pkgs; [
-      zoom-us
-      xournalpp
+    packages = [
+      pkgs.zoom-us
+      pkgsStable.xournalpp
     ];
   };
 

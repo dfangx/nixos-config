@@ -38,6 +38,9 @@
   };
 
   networking = {
+    hosts = {
+      "192.168.2.116" = [ "slothpi.duckdns.org" ];
+    };
     wg-quick.interfaces = {
       wg0 = {
         address = [ "10.200.200.5/32" ] ;
@@ -68,7 +71,7 @@
     };
     fwupd.enable = true;
     fprintd = {
-      enable = true;
+      enable = false;
       tod = {
         enable = true;
         driver = pkgs.libfprint-2-tod1-goodix;
