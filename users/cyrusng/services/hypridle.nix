@@ -8,8 +8,9 @@
         ${pkgs.systemd}/bin/systemctl suspend
       fi
     '';
+    uwsmLauncher = "${lib.getExe pkgs.uwsm} app --";
     hyprctl = "${lib.getExe' pkgs.hyprland "hyprctl"}";
-    hyprlock = "${lib.getExe config.programs.hyprlock.package}";
+    hyprlock = "${uwsmLauncher} ${lib.getExe config.programs.hyprlock.package}";
     loginctl = "${lib.getExe' pkgs.systemd "loginctl"}";
     killall = "${lib.getExe pkgs.killall}";
   in
@@ -19,8 +20,8 @@
       general = {
         lock_cmd = "pidof hyprlock || ${hyprlock} -q --immediate";
         unlock_cmd = "${killall} -q -s $SIGUSR1 hyprlock";
-        before_sleep_cmd = "${loginctl} lock-session";
-        after_sleep_cmd = "${hyprctl} dispatch dpms on";
+        before_sleep_cmd = "${lib.getExe' pkgs.util-linux "rfkill"} block bluetooth; ${loginctl} lock-session"; 
+        after_sleep_cmd = "${hyprctl} dispatch dpms on; ${lib.getExe' pkgs.util-linux "rfkill"} unblock bluetooth";
         ignore_dbus_inhibit = false;
       };
       listener = [
@@ -41,4 +42,6 @@
       ];
     };
   };
+  
+  systemd.user.services.hypridle.Unit.After = lib.mkForce "graphical-session.target";
 }

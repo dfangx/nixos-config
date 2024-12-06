@@ -93,12 +93,15 @@
     lm_sensors
     alacritty
     virtiofsd
+    libimobiledevice
+    ifuse
   ];
 
   programs = {
     virt-manager.enable = true;
     hyprland = {
       enable = true;
+      withUWSM = true;
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     };
     steam = {
@@ -137,7 +140,7 @@
     greetd = {
       enable = true;
       settings.default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --issue --cmd ${lib.getExe' config.programs.hyprland.package "Hyprland"}";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --issue --remember --remember-session";
       };
     };
     pipewire = {
@@ -156,6 +159,7 @@
               EV_KEY [KEY_CAPSLOCK, KEY_ESC]
       '';
     };
+    usbmuxd.enable = true;
   };
 
   systemd.services.greetd = {

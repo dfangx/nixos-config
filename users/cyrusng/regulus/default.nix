@@ -21,7 +21,7 @@ in
       lutris
       heroic
       protonup-qt
-      wineWowPackages.full
+      wineWowPackages.unstable
       thunderbird
       googleearth-pro
       krita

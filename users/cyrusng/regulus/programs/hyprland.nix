@@ -3,8 +3,9 @@
   wayland.windowManager.hyprland = {
     settings = {
       monitor = [
-        "DP-3,preferred,0x0,1"
-        "DP-2,preferred,auto,1"
+        "DP-1,preferred,0x0,1"
+        "DP-3,preferred,auto-right,1"
+        "desc:Technical Concepts Ltd Beyond TV 0x00010000,highres,auto-right,2.6666667"
       ];
 
       workspace = 
@@ -22,7 +23,7 @@
             then "${builtins.toString ws}, monitor:DP-1, default:true"
             else 
               if (ws == 2)
-              then "${builtins.toString ws}, monitor:DP-2, default:true"
+              then "${builtins.toString ws}, monitor:DP-3, default:true"
               else 
                 if (ws / 2 * 2 == ws)
                 then "${builtins.toString ws}, monitor:DP-2"

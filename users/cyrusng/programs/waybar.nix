@@ -28,6 +28,7 @@
       network = {
         interval = 5;
         format = "{icon}";
+        format-ethernet= "󰌘";
         format-icons = [ "󰤯" "󰤟" "󰤢" "󰤥" "󰤨" ];
         tooltip-format = ''
           Interface: {ifname}
@@ -77,7 +78,8 @@
     };
     systemd = {
       enable = true;
-      target = "${config.home.sessionVariables.XDG_SESSION_DESKTOP}-session.target";
     };
   };
+
+  systemd.user.services.waybar.Unit.After = lib.mkForce "graphical-session.target";
 }

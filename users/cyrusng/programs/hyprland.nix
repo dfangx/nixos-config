@@ -22,15 +22,35 @@ in
     };
   };
 
-  home.sessionVariables = {
-    XDG_SESSION_DESKTOP = "hyprland";
-    XDG_CURRENT_DESKTOP = "hyprland";
+  home = {
+    sessionVariables = {
+      XDG_SESSION_DESKTOP = "Hyprland";
+      XDG_CURRENT_DESKTOP = "Hyprland";
+    };
+    file = {
+      "${config.xdg.configHome}/uwsm/env".text = ''
+        export NIXOS_OZONE_WL = 1
+        export XDG_CURRENT_DESKTOP = ${config.home.sessionVariables.XDG_CURRENT_DESKTOP}
+        export XDG_SESSION_TYPE = ${config.home.sessionVariables.XDG_SESSION_TYPE}
+        export XDG_SESSION_DESKTOP = ${config.home.sessionVariables.XDG_SESSION_DESKTOP}
+        export MOZ_ENABLE_WAYLAND = ${toString config.home.sessionVariables.MOZ_ENABLE_WAYLAND}
+        export GDK_BACKEND = ${config.home.sessionVariables.GDK_BACKEND}
+        export CLUTTER_BACKEND = ${config.home.sessionVariables.CLUTTER_BACKEND}
+        export QT_AUTO_SCREEN_SCALE_FACTOR = ${toString config.home.sessionVariables.QT_AUTO_SCREEN_SCALE_FACTOR}
+        export QT_QPA_PLATFORM = ${config.home.sessionVariables.QT_QPA_PLATFORM}
+        export QT_WAYLAND_DISABLE_WINDOWDECORATION = ${toString config.home.sessionVariables.QT_WAYLAND_DISABLE_WINDOWDECORATION}
+        export QT_QPA_PLATFORM_THEME = qt5ct
+      '';
+      "${config.xdg.configHome}/uwsm/env-hyprland".text = ''
+        export HYPRCURSOR_THEME = ${cursorName}"
+        export HYPRCRSOR_SIZE = ${toString config.home.pointerCursor.size}"
+      '';
+    };
   };
-
   wayland.windowManager.hyprland = {
     enable = true;
     systemd = {
-      enable = true;
+      enable = false;
       variables = [ "--all" ];
     };
     xwayland.enable = true;
@@ -42,15 +62,16 @@ in
       mainMod = "SUPER";
       wpctl = "${lib.getExe' pkgs.wireplumber "wpctl"}";
       notifyctl = "${lib.getExe (pkgs.callPackage ../../../pkgs/notifyctl { })}";
+      uwsm = lib.getExe pkgs.uwsm;
+      uwsmLaunch = "${uwsm} app --";
     in
     {
       exec-once = [
-        "${lib.getExe pkgs.xorg.xrandr} --noprimary"
-        "${lib.getExe pkgs.dex} -a"
-        "${config.home.sessionVariables.TERM} --class term-general"
-        "[workspace 1]${config.home.sessionVariables.BROWSER}"
+        "${uwsmLaunch} ${lib.getExe pkgs.xorg.xrandr} --noprimary"
+        "${uwsmLaunch} ${config.home.sessionVariables.TERM} --class term-general"
+        "[workspace 1]${uwsmLaunch} ${config.home.sessionVariables.BROWSER}"
         "hyprctl setcursor ${cursorName} ${toString config.home.pointerCursor.size}"
-        "${lib.getExe pkgs.hyprdim}"
+        "${uwsmLaunch} ${lib.getExe pkgs.hyprdim}"
       ];
 
       dwindle = {
@@ -181,7 +202,6 @@ in
         "center 1, class:^(^(org.keepassxc.KeePassXC)$)$"
         "size 60%,75%, class:^(^(org.keepassxc.KeePassXC)$)$"
         "workspace 2, class:^(^(term-general)$)$"
-        "workspace 6 silent, class:^(^(steam)$)$"
       ];
 
       bind = let
@@ -190,13 +210,13 @@ in
       in
       [
         "${mainMod} SHIFT, q, killactive"
-        "${mainMod} SHIFT, e, exit "
+        "${mainMod} SHIFT, e, exec, ${uwsmLaunch} ${lib.getExe pkgs.wlogout}"
         "${mainMod}, space, togglefloating"
-        "${mainMod}, semicolon, exec, ${config.home.sessionVariables.TERM}"
-        "${mainMod}, b, exec, ${config.home.sessionVariables.BROWSER}"
-        "${mainMod}, p, exec, ${config.home.sessionVariables.PSWD_MGR}"
+        "${mainMod}, semicolon, exec, ${uwsmLaunch} ${config.home.sessionVariables.TERM}"
+        "${mainMod}, b, exec, ${uwsmLaunch} ${config.home.sessionVariables.BROWSER}"
+        "${mainMod}, p, exec, ${uwsmLaunch} ${config.home.sessionVariables.PSWD_MGR}"
         "${mainMod}, d, exec, ${lib.getExe pkgs.fuzzel}"
-        "${mainMod} SHIFT, s, exec, ${pkgs.grimblast}/bin/grimblast --notify copysave area ${config.xdg.userDirs.pictures}/$(date +%Y)/screenshots/$(date +%F_%H%M%S).png"
+        "${mainMod} SHIFT, s, exec, ${uwsmLaunch}  ${lib.getExe pkgs.grimblast} --notify copysave area ${config.xdg.userDirs.pictures}/$(date +%Y)/screenshots/$(date +%F_%H%M%S).png"
         "${mainMod} SHIFT, return, layoutmsg, swapwithmaster master"
         "${mainMod} SHIFT, r, exec, hyprctl reload"
 
@@ -210,16 +230,16 @@ in
         "${mainMod} ALT, s, moveintogroup, d"
         "${mainMod} ALT, d, moveintogroup, r"
         "${mainMod} ALT, g, moveoutofgroup, "
-        ", xF86AudioMute, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle && ${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl} audio"
-        ", xF86MonBrightnessUp, exec, ${brightnessctl} -m s +2% | cut -d, -f4 | ${notifyctl} backlight"
-        ", xF86MonBrightnessdown, exec, ${brightnessctl} -m s 2%- | cut -d, -f4 | ${notifyctl} backlight"
-        ", xF86AudioPlay, exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-        ", xF86AudioNext, exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-        ", xF86AudioPrev, exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-        ", xF86AudioStop, exec, ${playerctl} stop && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-        "${mainMod}, xF86AudioMute, exec, ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-        "${mainMod}, xF86AudioRaiseVolume, exec, ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-        "${mainMod}, xF86AudioLowerVolume, exec, ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
+        ", xF86AudioMute, exec, ${uwsmLaunch} ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle && ${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl} audio"
+        ", xF86MonBrightnessUp, exec, ${uwsmLaunch} ${brightnessctl} -m s +2% | cut -d, -f4 | ${notifyctl} backlight"
+        ", xF86MonBrightnessdown, exec, ${uwsmLaunch} ${brightnessctl} -m s 2%- | cut -d, -f4 | ${notifyctl} backlight"
+        ", xF86AudioPlay, exec, ${uwsmLaunch} ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
+        ", xF86AudioNext, exec, ${uwsmLaunch} ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
+        ", xF86AudioPrev, exec, ${uwsmLaunch} ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
+        ", xF86AudioStop, exec, ${uwsmLaunch} ${playerctl} stop && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
+        "${mainMod}, xF86AudioMute, exec, ${uwsmLaunch} ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
+        "${mainMod}, xF86AudioRaiseVolume, exec, ${uwsmLaunch} ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
+        "${mainMod}, xF86AudioLowerVolume, exec, ${uwsmLaunch} ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
 
         "${mainMod}, h, movefocus, l"
         "${mainMod}, l, movefocus, r"
@@ -256,8 +276,8 @@ in
       );
 
       bindel = [
-        ", xF86AudioRaiseVolume, exec, ${wpctl} set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%+ && printf \"%.0f\" $(${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl} audio"
-        ", xF86AudioLowerVolume, exec, ${wpctl} set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%- && printf \"%.0f\" $(${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl} audio"
+        ", xF86AudioRaiseVolume, exec, ${uwsmLaunch} ${wpctl} set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%+ && printf \"%.0f\" $(${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl} audio"
+        ", xF86AudioLowerVolume, exec, ${uwsmLaunch} ${wpctl} set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 3.0%- && printf \"%.0f\" $(${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100/150*100 \" \" $3}') | ${notifyctl} audio"
       ];
 
       bindm = [
@@ -266,18 +286,18 @@ in
       ];
 
       env = [
-        "NIXOS_OZONE_WL,1"
-        "XDG_CURRENT_DESKTOP,${config.home.sessionVariables.XDG_CURRENT_DESKTOP}"
-        "XDG_SESSION_TYPE,${config.home.sessionVariables.XDG_SESSION_TYPE}"
-        "XDG_SESSION_DESKTOP,${config.home.sessionVariables.XDG_SESSION_DESKTOP}"
-        "MOZ_ENABLE_WAYLAND,${toString config.home.sessionVariables.MOZ_ENABLE_WAYLAND}"
-        "QT_QPA_PLATFORM,${config.home.sessionVariables.QT_QPA_PLATFORM}"
-        "GDK_BACKEND,${config.home.sessionVariables.GDK_BACKEND}"
-        "CLUTTER_BACKEND,${config.home.sessionVariables.CLUTTER_BACKEND}"
-        "QT_AUTO_SCREEN_SCALE_FACTOR,${toString config.home.sessionVariables.QT_AUTO_SCREEN_SCALE_FACTOR}"
-        "QT_WAYLAND_DISABLE_WINDOWDECORATION,${toString config.home.sessionVariables.QT_WAYLAND_DISABLE_WINDOWDECORATION}"
-        "HYPRCURSOR_THEME,${cursorName}"
-        "HYPRCRSOR_SIZE,${toString config.home.pointerCursor.size}"
+                # "NIXOS_OZONE_WL,1"
+                # "XDG_CURRENT_DESKTOP,${config.home.sessionVariables.XDG_CURRENT_DESKTOP}"
+                # "XDG_SESSION_TYPE,${config.home.sessionVariables.XDG_SESSION_TYPE}"
+                # "XDG_SESSION_DESKTOP,${config.home.sessionVariables.XDG_SESSION_DESKTOP}"
+                # "MOZ_ENABLE_WAYLAND,${toString config.home.sessionVariables.MOZ_ENABLE_WAYLAND}"
+                # "QT_QPA_PLATFORM,${config.home.sessionVariables.QT_QPA_PLATFORM}"
+                # "GDK_BACKEND,${config.home.sessionVariables.GDK_BACKEND}"
+                # "CLUTTER_BACKEND,${config.home.sessionVariables.CLUTTER_BACKEND}"
+                # "QT_AUTO_SCREEN_SCALE_FACTOR,${toString config.home.sessionVariables.QT_AUTO_SCREEN_SCALE_FACTOR}"
+                # "QT_WAYLAND_DISABLE_WINDOWDECORATION,${toString config.home.sessionVariables.QT_WAYLAND_DISABLE_WINDOWDECORATION}"
+                # "HYPRCURSOR_THEME,${cursorName}"
+                # "HYPRCRSOR_SIZE,${toString config.home.pointerCursor.size}"
       ];
     };
   };

@@ -40,9 +40,9 @@
     firewall.interfaces = {
       "wlan0".allowedTCPPorts = [ 63236 ];
     };
-    # hosts = {
-    #   "10.0.0.116" = [ "slothpi.duckdns.org" ];
-    # };
+    hosts = {
+      "192.168.2.116" = [ "slothpi.duckdns.org" ];
+    };
     wg-quick.interfaces.wg0 = {
       address = [ "10.200.200.6/32" ];
       peers = [

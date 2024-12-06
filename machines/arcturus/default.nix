@@ -39,7 +39,7 @@
 
   networking = {
     hosts = {
-      "192.168.2.116" = [ "slothpi.duckdns.org" ];
+      "192.168.2.10" = [ "slothpi.duckdns.org" ];
     };
     wg-quick.interfaces = {
       wg0 = {

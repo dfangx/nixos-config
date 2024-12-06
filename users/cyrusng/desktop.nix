@@ -47,16 +47,16 @@ in
 
   systemd = {
     user.services = {
-      polkit-gnome-authentication-agent-1 = {
+      hyprpolkitagent = {
         Unit = {
-          Description = "polkit-gnome-authentication-agent-1";
+          Description = "hyprpolkitagent";
           Wants = [ "graphical-session.target" ];
           After = [ "graphical-session.target" ];
         };
         Install.WantedBy = [ "graphical-session.target" ];
         Service = {
           Type = "simple";
-          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
           Restart = "on-failure";
           RestartSec = 1;
           TimeoutStopSec = 10;
@@ -64,10 +64,10 @@ in
       };
 
       nextcloud-client = {
-        Install.WantedBy = lib.mkForce [ "${config.home.sessionVariables.XDG_SESSION_DESKTOP}-session.target" ];
+        Install.WantedBy = lib.mkForce [ "graphical-session.target" ];
         Service.ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
         Unit = {
-          After = lib.mkForce [ "${config.home.sessionVariables.XDG_SESSION_DESKTOP}-session.target" ];
+          After = lib.mkForce [ "graphical-session.target" ];
           PartOf = lib.mkForce [];
         };
       };
