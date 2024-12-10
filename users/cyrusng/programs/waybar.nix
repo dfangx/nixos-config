@@ -27,8 +27,8 @@
       };
       network = {
         interval = 5;
-        format = "{icon}";
         format-ethernet= "󰌘";
+        format-wifi = "{icon}";
         format-icons = [ "󰤯" "󰤟" "󰤢" "󰤥" "󰤨" ];
         tooltip-format = ''
           Interface: {ifname}
