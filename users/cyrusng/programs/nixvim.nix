@@ -446,7 +446,7 @@
       };
       neorg = {
         enable = true;
-        modules = {
+        settings.load = {
           "core.defaults" = { __empty = null; };
           "core.dirman" = {
             config = {
@@ -475,9 +475,9 @@
         inherit (luaPackages.lua-utils-nvim) pname version src;
       })
 
-      (vimUtils.buildVimPlugin {
-        inherit (luaPackages.pathlib-nvim) pname version src;
-      })
+            # (vimUtils.buildVimPlugin {
+            #   inherit (luaPackages.pathlib-nvim) pname version src;
+            # })
 
       (vimUtils.buildVimPlugin {
         inherit (luaPackages.nvim-nio) pname version src;
