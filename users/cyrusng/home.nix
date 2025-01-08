@@ -4,7 +4,7 @@ let
 in
 {
   imports = [
-    inputs.nur.nixosModules.nur
+    inputs.nur.modules.homeManager.default
 
     ./${host}
 

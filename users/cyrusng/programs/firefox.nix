@@ -17,7 +17,7 @@
     package = pkgs.firefox-wayland;
     profiles = {
       default = {
-        extensions = with config.nur.repos.rycee.firefox-addons; [
+        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
           tridactyl
           keepassxc-browser
           cookie-autodelete
