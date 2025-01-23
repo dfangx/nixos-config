@@ -64,8 +64,12 @@ in
       notifyctl = "${lib.getExe (pkgs.callPackage ../../../pkgs/notifyctl { })}";
       uwsm = lib.getExe pkgs.uwsm;
       uwsmLaunch = "${uwsm} app --";
+      loginctl = "${lib.getExe' pkgs.systemd "loginctl"}";
     in
     {
+      source = [
+        "${config.xdg.configHome}/hypr/colors-hyprland.conf"
+      ];
       exec-once = [
         "${uwsmLaunch} ${lib.getExe pkgs.xorg.xrandr} --noprimary"
         "${uwsmLaunch} ${config.home.sessionVariables.TERM} --class term-general"
@@ -87,10 +91,8 @@ in
 
       general = {
         border_size = 4;
-        "col.active_border" = "rgba(88c0d0ee)";
-        "col.inactive_border" = "rgba(2e3440aa)";
         gaps_in = 5;
-        gaps_out = 20;
+        gaps_out = 10;
         layout = "master";
       };
 
@@ -197,11 +199,14 @@ in
       windowrulev2 = [ 
         "float, class:^(^(blueberry.py)$)$"
         "opacity 0.55, class:^(^(Alacritty)$)$"
+        "opacity 0.55, class:^(^(foot)$)$"
         "opacity 0.55, class:^(^(term-general)$)$"
         "float, class:^(^(org.keepassxc.KeePassXC)$)$"
         "center 1, class:^(^(org.keepassxc.KeePassXC)$)$"
         "size 60%,75%, class:^(^(org.keepassxc.KeePassXC)$)$"
         "workspace 2, class:^(^(term-general)$)$"
+        "float, class:^(^(org.pulseaudio.pavucontrol)$)$"
+        "size 60%,75%, class:^(^(org.pulseaudio.pavucontrol)$)$"
       ];
 
       bind = let
@@ -210,7 +215,7 @@ in
       in
       [
         "${mainMod} SHIFT, q, killactive"
-        "${mainMod} SHIFT, e, exec, ${uwsmLaunch} ${lib.getExe pkgs.wlogout}"
+        "${mainMod} SHIFT, e, exec, ${loginctl} terminate-user \"\""
         "${mainMod}, space, togglefloating"
         "${mainMod}, semicolon, exec, ${uwsmLaunch} ${config.home.sessionVariables.TERM}"
         "${mainMod}, b, exec, ${uwsmLaunch} ${config.home.sessionVariables.BROWSER}"

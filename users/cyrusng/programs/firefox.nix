@@ -4,7 +4,7 @@
     sessionVariables.BROWSER = "${lib.getExe' config.programs.firefox.package "firefox"}";
     packages = with pkgs; [
       tridactyl-native
-      open-in-mpv
+      pywalfox-native
     ];
   };
 
@@ -31,6 +31,7 @@
           ublock-origin
           decentraleyes
           sponsorblock
+          pywalfox
         ];
         isDefault = true;
         id = 0;

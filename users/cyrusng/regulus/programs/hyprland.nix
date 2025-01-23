@@ -4,11 +4,18 @@
     settings = {
       monitor = [
         "DP-1,preferred,0x0,1"
-        "DP-3,preferred,auto-right,1"
+        "DP-3,preferred,2560x0,1"
         "desc:Technical Concepts Ltd Beyond TV 0x00010000,highres,auto-right,2.6666667"
       ];
 
-      workspace = 
+      windowrulev2 = [
+        "fullscreen, onworkspace:10"
+      ];
+
+      workspace = [
+        "10,monitor:desc:Technical Concepts Ltd Beyond TV 0x00010000,default:true"
+      ]
+      ++
       (
         # workspaces
         builtins.concatLists (builtins.genList (
@@ -26,7 +33,7 @@
               then "${builtins.toString ws}, monitor:DP-3, default:true"
               else 
                 if (ws / 2 * 2 == ws)
-                then "${builtins.toString ws}, monitor:DP-2"
+                then "${builtins.toString ws}, monitor:DP-3"
                 else "${builtins.toString ws}, monitor:DP-1"
             )
           ]

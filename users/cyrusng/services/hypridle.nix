@@ -1,13 +1,6 @@
 { config, inputs, pkgs, lib, ... }:
 {
   services.hypridle = let
-    suspendScript = pkgs.writeShellScript "suspend-script" ''
-      ${pkgs.gnugrep}/bin/grep -q RUNNING /proc/asound/card*/*p/*/status
-      # only suspend if audio isn't running
-      if [ $? == 1 ]; then
-        ${pkgs.systemd}/bin/systemctl suspend
-      fi
-    '';
     uwsmLauncher = "${lib.getExe pkgs.uwsm} app --";
     hyprctl = "${lib.getExe' pkgs.hyprland "hyprctl"}";
     hyprlock = "${uwsmLauncher} ${lib.getExe config.programs.hyprlock.package}";
@@ -18,7 +11,7 @@
     enable = true;
     settings = {
       general = {
-        lock_cmd = "pidof hyprlock || sleep 3 && ${hyprlock} -q --immediate";
+        lock_cmd = "${hyprlock} -q --immediate; sleep 2";
         unlock_cmd = "${killall} -q -s $SIGUSR1 hyprlock";
         before_sleep_cmd = "${lib.getExe' pkgs.util-linux "rfkill"} block bluetooth; ${loginctl} lock-session"; 
         after_sleep_cmd = "${hyprctl} dispatch dpms on; ${lib.getExe' pkgs.util-linux "rfkill"} unblock bluetooth";
@@ -36,7 +29,7 @@
         } 
         { 
           timeout = 1200; 
-          on-timeout = suspendScript.outPath;
+          on-timeout = "${pkgs.systemd}/bin/systemctl suspend";
           on-resume = "${hyprctl} dispatch dpms on";
         } 
       ];

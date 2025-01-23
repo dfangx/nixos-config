@@ -11,6 +11,7 @@ in
     ./programs/mako.nix
     ./programs/mpv.nix
     ./programs/wayland.nix
+    ./programs/wallust.nix
     ./programs/zathura.nix
 
     # Services
@@ -18,7 +19,7 @@ in
     ./services/password_manager.nix
   ];
 
-  home = rec {
+  home = {
     sessionVariables = {
       TERM = "${terminal}";
       QT_AUTO_SCREEN_SCALE_FACTOR = 1;
@@ -42,6 +43,7 @@ in
       obsidian
       feishin
       pavucontrol
+      wallust
     ];
   };
 
@@ -151,6 +153,21 @@ in
     '';
 
     "Kvantum/Nordic".source = "${pkgs.nordic}/share/Kvantum/Nordic";
+  };
+
+  programs.foot = {
+    enable = true;  
+    settings = {
+      main = {
+        term = "xterm-256color";
+        font = "Source Code Pro for Powerline:size=12";
+        bold-text-in-bright = true;
+        locked-title = false;
+        include = "${config.xdg.configHome}/foot/colors-foot.ini";
+        pad = "10x10";
+        box-drawings-uses-font-glyphs = true;
+      };
+    };
   };
 }
 

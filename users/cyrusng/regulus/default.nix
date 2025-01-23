@@ -25,6 +25,7 @@ in
       thunderbird
       googleearth-pro
       krita
+      razergenie
     ];
   };
 
