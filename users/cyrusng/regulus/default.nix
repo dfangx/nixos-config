@@ -29,7 +29,7 @@ in
     ];
   };
 
-  programs.ags.enable = true;
+  programs.ags.enable = false;
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
