@@ -110,6 +110,7 @@
     };
     gamescope = {
       enable = true;
+      capSysNice = true;
     };
     gamemode.enable = true;
     dconf.enable = true;
@@ -136,6 +137,10 @@
     geoclue2 = {
       enable = true;
       enableDemoAgent = true;
+    };
+    kmscon = {
+      enable = false;
+      hwRender = true;
     };
     greetd = {
       enable = true;

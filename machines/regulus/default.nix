@@ -10,9 +10,9 @@
     ../common.nix
   ];
 
-  systemd.tmpfiles.rules = [ 
-    "L+ /opt/rocm/hip - - - - ${pkgs.rocmPackages.clr}"
-  ];
+  # systemd.tmpfiles.rules = [ 
+  #   "L+ /opt/rocm/hip - - - - ${pkgs.rocmPackages.clr}"
+  # ];
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
@@ -21,7 +21,7 @@
   hardware = {
     graphics = {
       extraPackages = with pkgs; [
-        rocmPackages.clr.icd
+        # rocmPackages.clr.icd
         # amdvlk
       ];
       extraPackages32 = with pkgs.driversi686Linux; [
@@ -40,11 +40,9 @@
     firewall.interfaces = {
       "wlan0".allowedTCPPorts = [ 63236 ];
     };
-    hosts = {
-      "192.168.2.116" = [ "slothpi.duckdns.org" ];
-    };
     wg-quick.interfaces.wg0 = {
       address = [ "10.200.200.6/32" ];
+      autostart = false;
       peers = [
         {
           publicKey = "i2bnqjKWvfdpUDeMDObiivfEvAYoZCTZQfcLjlBDni0=";
@@ -55,6 +53,20 @@
           endpoint = "slothpi.duckdns.org:51820";
         }
       ];
+    };
+  };
+
+  services = {
+    printing = {
+      enable = true;
+      drivers = with pkgs; [ 
+        cnijfilter2
+      ];
+    };
+    avahi = {
+        enable = true;
+        nssmdns4 = true;
+        openFirewall = true;
     };
   };
 
