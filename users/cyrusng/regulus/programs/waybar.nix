@@ -3,6 +3,7 @@
   programs.waybar = {
     settings.bar = {
       modules-right = [
+        "mpris"
         "tray"
         "bluetooth"
         "privacy"

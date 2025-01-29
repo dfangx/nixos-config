@@ -42,7 +42,7 @@ in
       picard
       obsidian
       pavucontrol
-      wallust
+      godot_4
     ];
   };
 
@@ -167,6 +167,10 @@ in
         box-drawings-uses-font-glyphs = true;
       };
     };
+  };
+
+  programs.mangohud = {
+    enable = true;
   };
 }
 

@@ -11,7 +11,7 @@
     enable = true;
     settings = {
       general = {
-        lock_cmd = "${hyprlock} -q --immediate; sleep 2";
+        lock_cmd = "${hyprlock} -q --immediate";
         unlock_cmd = "${killall} -q -s $SIGUSR1 hyprlock";
         before_sleep_cmd = "${lib.getExe' pkgs.util-linux "rfkill"} block bluetooth; ${loginctl} lock-session"; 
         after_sleep_cmd = "${hyprctl} dispatch dpms on; ${lib.getExe' pkgs.util-linux "rfkill"} unblock bluetooth";

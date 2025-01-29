@@ -184,7 +184,7 @@ in
         mouse_move_enables_dpms = true;
         mouse_move_focuses_monitor = false;
         swallow_regex = "^(Alacritty)$";
-        new_window_takes_over_fullscreen = 2;
+        new_window_takes_over_fullscreen = 1;
         vrr = 1;
       };
 

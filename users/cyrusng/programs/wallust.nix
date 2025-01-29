@@ -119,8 +119,11 @@
       bright6={{color14 | strip}}
       bright7={{color15 | strip}}
     '';
+    "${templateDir}/colors-fzf.sh".text = ''
+      export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=bg+:{{background}},spinner:{{color5}},hl:{{color8}},fg:{{foreground}},header:{{color8}},info:{{color4}},pointer:{{color2}},marker:{{color2}},fg+:{{color1}},prompt:{{color4}},hl+:{{color8}}"
+    '';
     "wallust/wallust.toml".text = ''
-      backend = "wal"
+      backend = "full"
       palette = "dark16"
       color_space = "lchmixed"
 
@@ -139,7 +142,11 @@
 
       foot.template = 'colors-foot.ini'
       foot.target = '${config.xdg.configHome}/foot/colors-foot.ini'
+
+      fzf.template = 'colors-fzf.sh'
+      fzf.target = '\$FZF_DEFAULT_OPTS ${config.xdg.configHome}/fzf/colors-fzf.sh'
     '';
   };
 
+  programs.bash.bashrcExtra=''. ${config.xdg.configHome}/fzf/colors-fzf.sh'';
 }

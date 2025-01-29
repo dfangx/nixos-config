@@ -7,12 +7,21 @@
       reload_style_on_change = true;
       modules-left = [
         "hyprland/workspaces"
-        "wlr/taskbar"
         "hyprland/window"
       ];
       modules-center = [
         "clock"
       ];
+
+      mpris = {
+        max-length = 24;
+        format = "{status_icon} {dynamic}";
+        status-icons = { 
+          paused = "󰐊"; 
+          playing = "󰏤";
+          stopped = "󰓛"; 
+        };
+      };
       wireplumber = {
         format-icons = [ "󰕿" "󰖀" "󰕾" ];
         format-muted = "󰝟";
@@ -90,9 +99,6 @@
         on-click = "${lib.getExe' pkgs.util-linux "rfkill"} unblock bluetooth && ${lib.getExe' pkgs.blueberry "blueberry"}";
         on-right-click = "${lib.getExe' pkgs.util-linux "rfkill"} block bluetooth";
       };
-      "river/window" = {
-        max-length = 80;
-      };
       "hyprland/workspaces" = {
         format = "{name}";
         disable-scroll = true;
@@ -131,6 +137,7 @@
           "temperature"
           "memory"
           "disk"
+          "disk#disk2" 
         ];
       };
       "group/group-hub" = {
@@ -149,12 +156,17 @@
         ];
       };
       disk = {
-        format = "󰋊 {percentage_used}%";
+        format = "󰋊 / {percentage_used}%";
+        path = "/";
+      };
+      "disk#disk2" = {
+        format = "/home {percentage_used}%";
         path = "/home";
       };
       temperature = {
-        format = "󰔏: {temperatureC}°C";
-        thermal-zone = 1;
+        termal-zone = -1;
+        format = "󰔏 {temperatureC}°C";
+        hwmon-path = "/sys/class/hwmon/hwmon3/temp1_input";
       };
       "custom/hardware" = {
         format = "󰟀";
@@ -206,6 +218,7 @@
         padding-bottom: 3px;
       }
 
+      #mpris,
       #custom-osk,
       #window,
       #taskbar,
@@ -225,6 +238,7 @@
       #temperature,
       #load,
       #disk,
+      disk.disk2,
       #tray,
       #bluetooth,
       #wireplumber,
@@ -238,6 +252,7 @@
         border-bottom-left-radius: ${border-radius};
         border-top-left-radius: ${border-radius};
         padding-left: 15px;
+        margin-left: ${margin};
       }
 
       #network {
@@ -255,6 +270,7 @@
         background-color: @background;
       }
 
+      #mpris,
       #window,
       #group-hardware,
       #group-hub,
@@ -264,6 +280,7 @@
         border-radius: ${border-radius};
       }
 
+      #mpris,
       #clock,
       #taskbar,
       #workspaces {
@@ -278,7 +295,6 @@
       #taskbar {
         margin-left: ${margin};
       }
-
 
 
       #workspaces button,
@@ -347,6 +363,11 @@
       #workspaces button.urgent,
       #tags button.urgent {
         background-color: @color9;
+      }
+
+      #taskbar.empty,
+      window#waybar.empty #window {
+        background: transparent;
       }
     '';
     systemd = {

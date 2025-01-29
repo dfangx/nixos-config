@@ -62,7 +62,7 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cyrusng = {
-    extraGroups = [ "input" "audio" "libvirtd" ]; 
+    extraGroups = [ "input" "audio" "libvirtd" "gamemode" ]; 
   };
 
   age.secrets = {
@@ -106,11 +106,18 @@
     };
     steam = {
       enable = true;
+      protontricks.enable = true;
+      gamescopeSession.enable = true;
       remotePlay.openFirewall = true;
     };
     gamescope = {
       enable = true;
-      capSysNice = true;
+      capSysNice = false;
+      args = [
+        "--rt"
+        "--hdr-enabled"
+        "--adaptive-sync"
+      ];
     };
     gamemode.enable = true;
     dconf.enable = true;
@@ -132,6 +139,17 @@
   '';
 
   services = {
+    ananicy = {
+      enable = true;
+      package = pkgs.ananicy-cpp;
+      rulesProvider = pkgs.ananicy-cpp;
+      extraRules = [
+        {
+          "name" = "gamescope";
+          "nice" = -20;
+        }
+      ];
+    };
     spice-vdagentd.enable = true;
     qemuGuest.enable = true;
     geoclue2 = {
