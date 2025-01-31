@@ -123,9 +123,9 @@
       export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=bg+:{{background}},spinner:{{color5}},hl:{{color8}},fg:{{foreground}},header:{{color8}},info:{{color4}},pointer:{{color2}},marker:{{color2}},fg+:{{color1}},prompt:{{color4}},hl+:{{color8}}"
     '';
     "wallust/wallust.toml".text = ''
-      backend = "full"
+      backend = "wal"
       palette = "dark16"
-      color_space = "lchmixed"
+      color_space = "lch"
 
       [templates]
       waybar.template = 'colors-waybar.css'
@@ -144,7 +144,7 @@
       foot.target = '${config.xdg.configHome}/foot/colors-foot.ini'
 
       fzf.template = 'colors-fzf.sh'
-      fzf.target = '\$FZF_DEFAULT_OPTS ${config.xdg.configHome}/fzf/colors-fzf.sh'
+      fzf.target = '${config.xdg.configHome}/fzf/colors-fzf.sh'
     '';
   };
 

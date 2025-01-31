@@ -7,6 +7,7 @@
       reload_style_on_change = true;
       modules-left = [
         "hyprland/workspaces"
+        "wlr/taskbar"
         "hyprland/window"
       ];
       modules-center = [
