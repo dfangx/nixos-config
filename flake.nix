@@ -93,7 +93,7 @@
           }
           inputs.agenix.nixosModules.default
           inputs.hyprland.nixosModules.default
-          ./machines/cykrotop/configuration.nix
+          ./hosts/cykrotop/configuration.nix
         ];
       };
       arcturus = let
@@ -102,7 +102,7 @@
       nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs host; };
         modules = [
-          ./machines/${host}
+          ./hosts/${host}
         ];
       };
       regulus = let
@@ -111,7 +111,7 @@
       nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs host; };
         modules = [
-          ./machines/${host}
+          ./hosts/${host}
         ];
       };
       slothpi = let
@@ -130,7 +130,7 @@
               })
             ];
           }
-          ./machines/${host}
+          ./hosts/${host}
         ];
       };
     };

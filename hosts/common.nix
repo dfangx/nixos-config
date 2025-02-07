@@ -24,30 +24,6 @@
     ];
   };
 
-  nix = {
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      min-free = ${toString (1024 * 1024 * 1024)}
-    '';
-    settings = {
-      substituters = [
-        "https://nix-community.cachix.org"
-        "https://hyprland.cachix.org"
-      ];
-      trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      ];
-      auto-optimise-store = true;
-      trusted-users = [ "cyrusng" ];
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 14d";
-    };
-  };
-
   networking = {
     hostName = host;
     wireless.iwd.enable = true;
@@ -58,13 +34,6 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.cyrusng = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; 
-    hashedPassword = "$y$j9T$XgXobCeRJMzoHs79Qh/wN1$d/PKmABq92qsGEkNUv7oC9.zgr.SxvgmIkIgkS7nXE7";
-  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -80,14 +49,6 @@
     agenix
     usbutils
   ];
-
-  programs.git = {
-    enable = true;
-    config.user = {
-      name = "dfangx";
-      email = "github.oxfrj2ct@bged98.anonaddy.com";
-    };
-  };
 
   services = {
     logind = {
