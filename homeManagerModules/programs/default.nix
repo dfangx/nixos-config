@@ -7,7 +7,6 @@
     ./mpv.nix
     ./xdg.nix
     ./bash.nix
-    ./mako.nix
     ./tmux.nix
     ./beets.nix
     ./fonts.nix
