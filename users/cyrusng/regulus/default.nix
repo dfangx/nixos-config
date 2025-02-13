@@ -13,7 +13,7 @@ in
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
-    "googleearth-pro-7.3.6.9796"
+    "googleearth-pro-7.3.6.10201"
   ];
 
   home = {
@@ -23,9 +23,7 @@ in
       protonup-qt
       wineWowPackages.waylandFull
       thunderbird
-      googleearth-pro
       krita
-      razergenie
     ];
   };
 

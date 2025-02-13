@@ -1,0 +1,7 @@
+{ lib, ... }:
+{
+  imports = [
+    ./programs
+    ./services
+  ];
+}

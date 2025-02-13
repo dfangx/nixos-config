@@ -8,6 +8,7 @@
   imports = [
     inputs.agenix.nixosModules.default
     inputs.hyprland.nixosModules.default
+    inputs.nix-gaming.nixosModules.platformOptimizations
     ./${host}/hardware-configuration.nix
   ];
 
@@ -109,6 +110,7 @@
       protontricks.enable = true;
       gamescopeSession.enable = true;
       remotePlay.openFirewall = true;
+      platformOptimizations.enable = true;
     };
     gamescope = {
       enable = true;

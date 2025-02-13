@@ -3,8 +3,8 @@
   wayland.windowManager.hyprland = {
     settings = {
       monitor = [
-        "DP-1,preferred,0x0,1"
-        "DP-3,preferred,2560x0,1"
+        "DP-1,2560x1440@170.02Hz,0x0,1"
+        "DP-3,2560x1440@170.02Hz,2560x0,1"
         "desc:Technical Concepts Ltd Beyond TV 0x00010000,highres,auto-right,2.6666667"
       ];
 

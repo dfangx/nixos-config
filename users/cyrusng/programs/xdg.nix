@@ -15,6 +15,7 @@
       videos = "${config.home.homeDirectory}/vids";
     };
     portal.xdgOpenUsePortal = true;
+    portal.config.common.default = "*";
   };
 
   home = {

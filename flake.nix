@@ -9,6 +9,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-gaming.url = "github:fufexan/nix-gaming";
     neovim-nix.url = "github:dfangx/nvim-flake";
     nbfc-linux.url = "github:nbfc-linux/nbfc-linux";
     agenix.url = "github:ryantm/agenix";

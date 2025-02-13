@@ -49,6 +49,7 @@ in
   };
   wayland.windowManager.hyprland = {
     enable = true;
+    package = null;
     systemd = {
       enable = false;
       variables = [ "--all" ];
@@ -207,6 +208,8 @@ in
         "workspace 2, class:^(^(term-general)$)$"
         "float, class:^(^(org.pulseaudio.pavucontrol)$)$"
         "size 60%,75%, class:^(^(org.pulseaudio.pavucontrol)$)$"
+        "suppressevent maximize,title:^(^(Steam Big Picture Mode)$)$"
+        "fullscreen,title:^(^(Steam Big Picture Mode)$)$"
       ];
 
       bind = let
@@ -224,6 +227,7 @@ in
         "${mainMod} SHIFT, s, exec, ${uwsmLaunch}  ${lib.getExe pkgs.grimblast} --notify copysave area ${config.xdg.userDirs.pictures}/$(date +%Y)/screenshots/$(date +%F_%H%M%S).png"
         "${mainMod} SHIFT, return, layoutmsg, swapwithmaster master"
         "${mainMod} SHIFT, r, exec, hyprctl reload"
+        "${mainMod}, f, fullscreen, 0"
 
         "${mainMod} SHIFT, p, pseudo # dwindle"
         "${mainMod}, s, togglesplit,  # dwindle"
