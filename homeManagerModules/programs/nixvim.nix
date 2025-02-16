@@ -1,11 +1,12 @@
 { inputs, config, lib, pkgs, ... }:
 {
-  options.nixvim.enable = lib.mkEnableOption "Enable nixvim";
-  config = lib.mkIf config.nixvim.enable {
-    imports = [
-      inputs.nixvim.homeManagerModules.nixvim
-    ];
+  imports = [
+    inputs.nixvim.homeManagerModules.nixvim
+  ];
 
+  options.nixvim.enable = lib.mkEnableOption "Enable nixvim";
+
+  config = lib.mkIf config.nixvim.enable {
     home.packages = with pkgs; [
       nano
       # nerdfonts # For neorg

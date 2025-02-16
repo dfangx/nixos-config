@@ -2,11 +2,11 @@
 {
   options.fuzzel.enable = lib.mkEnableOption "Enable fuzzel";
   config = lib.mkIf config.fuzzel.enable {
-    config.home.packages = with pkgs; [
+    home.packages = with pkgs; [
       fuzzel
     ];
 
-    config.xdg.configFile."fuzzel/fuzzel.ini".text = ''
+    xdg.configFile."fuzzel/fuzzel.ini".text = ''
       terminal=${config.home.sessionVariables.TERM} -e
       font=Source Code Pro for Powerline:size=12
       icons-enabled = false

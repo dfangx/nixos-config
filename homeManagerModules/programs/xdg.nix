@@ -1,7 +1,7 @@
 { config, lib, ... }:
 {
-  options.xdg.enable = lib.mkEnableOption "Enable xdg";
-  config = lib.mkIf config.xdg.enable {
+  options.xdgCfg.enable = lib.mkEnableOption "Enable xdg";
+  config = lib.mkIf config.xdgCfg.enable {
     xdg = {
       enable = true;
       cacheHome = "${config.home.homeDirectory}/.cache";

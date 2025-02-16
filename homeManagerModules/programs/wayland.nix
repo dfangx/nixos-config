@@ -1,14 +1,21 @@
 { config, pkgs, lib, ... }:
 {
+  imports = [
+    ./hyprland.nix
+    ./hyprlock.nix
+    ./waybar.nix
+    ../services/hypridle.nix
+    ../services/hyprpaper.nix
+  ];
+
   options.wayland.enable = lib.mkEnableOption "Enable wayland";
+
   config = lib.mkIf config.wayland.enable {
-    imports = [
-      ./hyprland.nix
-      ./hyprlock.nix
-      ./waybar.nix
-      ../services/hypridle.nix
-      ../services/hyprpaper.nix
-    ];
+    hyprland.enable = lib.mkDefault true;
+    hyprlock.enable = lib.mkDefault true;
+    waybar.enable = lib.mkDefault true;
+    hypridle.enable = lib.mkDefault true;
+    hyprpaper.enable = lib.mkDefault true;
 
     home.sessionVariables = {
       XDG_SESSION_TYPE = "wayland";

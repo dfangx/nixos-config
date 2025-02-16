@@ -1,176 +1,188 @@
-{ config, pkgs, lib, inputs, host, ... }:
+{ config, pkgs, lib, ... }:
 let
   terminal = "${lib.getExe pkgs.alacritty}";
 in
 {
   imports = [
     # Programs
-    ./programs/alacritty.nix
     ./programs/firefox.nix
     ./programs/fuzzel.nix
-    ./programs/mako.nix
     ./programs/mpv.nix
     ./programs/wayland.nix
     ./programs/wallust.nix
     ./programs/zathura.nix
 
     # Services
+    ./services/mako.nix
     ./services/gammastep.nix
     ./services/password_manager.nix
   ];
 
-  home = {
-    sessionVariables = {
-      TERM = "${terminal}";
-      QT_AUTO_SCREEN_SCALE_FACTOR = 1;
-    };
-    packages = with pkgs; [
-      discord
-      adwaita-icon-theme
-      libadwaita
-      imv
-      libreoffice
-      hunspell
-      hunspellDicts.en_CA
-      wl-clipboard
-      xorg.xeyes
-      runelite
-      wev
-      zoom-us
-      rsgain
-      yt-dlp
-      picard
-      obsidian
-      pavucontrol
-      godot_4
-    ];
-  };
+  options.desktop.enable = lib.mkEnableOption "Enable desktop settings";
+    
+  config = lib.mkIf config.desktop.enable {
+    firefox.enable = lib.mkDefault true;
+    fuzzel.enable = lib.mkDefault true;
+    mpv.enable = lib.mkDefault true;
+    wayland.enable = lib.mkDefault true;
+    wallust.enable = lib.mkDefault true;
+    zathura.enable = lib.mkDefault true;
+    mako.enable = lib.mkDefault true;
+    gammastep.enable = lib.mkDefault true;
+    password_mgr.enable = lib.mkDefault true;
 
-  systemd = {
-    user.services = {
-      hyprpolkitagent = {
-        Unit = {
-          Description = "hyprpolkitagent";
-          Wants = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+    home = {
+      sessionVariables = {
+        TERM = "${terminal}";
+        QT_AUTO_SCREEN_SCALE_FACTOR = 1;
+      };
+      packages = with pkgs; [
+        discord
+        adwaita-icon-theme
+        libadwaita
+        imv
+        libreoffice
+        hunspell
+        hunspellDicts.en_CA
+        wl-clipboard
+        xorg.xeyes
+        runelite
+        wev
+        zoom-us
+        rsgain
+        yt-dlp
+        picard
+        obsidian
+        pavucontrol
+        godot_4
+      ];
+    };
+
+    systemd = {
+      user.services = {
+        hyprpolkitagent = {
+          Unit = {
+            Description = "hyprpolkitagent";
+            Wants = [ "graphical-session.target" ];
+            After = [ "graphical-session.target" ];
+          };
+          Install.WantedBy = [ "graphical-session.target" ];
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
+            Restart = "on-failure";
+            RestartSec = 1;
+            TimeoutStopSec = 10;
+          };
         };
-        Install.WantedBy = [ "graphical-session.target" ];
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
-          Restart = "on-failure";
-          RestartSec = 1;
-          TimeoutStopSec = 10;
+
+        nextcloud-client = {
+          Install.WantedBy = lib.mkForce [ "graphical-session.target" ];
+          Service.ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
+          Unit = {
+            After = lib.mkForce [ "graphical-session.target" ];
+            PartOf = lib.mkForce [];
+          };
         };
       };
-
-      nextcloud-client = {
-        Install.WantedBy = lib.mkForce [ "graphical-session.target" ];
-        Service.ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
-        Unit = {
-          After = lib.mkForce [ "graphical-session.target" ];
-          PartOf = lib.mkForce [];
-        };
-      };
     };
-  };
 
-  services.nextcloud-client = {
-    enable = true;
-    startInBackground = true;
-  };
-
-  home.file."${config.xdg.configHome}/Nextcloud/sync-exclude.lst".text = ''
-    # This file contains fixed global exclude patterns
-    
-    ~$*
-    .~lock.*
-    ~*.tmp
-    ]*.~*
-    ]Icon\r*
-    ].DS_Store
-    ].ds_store
-    *.textClipping
-    ._*
-    ]Thumbs.db
-    ]photothumb.db
-    System Volume Information
-    
-    .*.sw?
-    .*.*sw?
-    
-    ].TemporaryItems
-    ].Trashes
-    ].DocumentRevisions-V100
-    ].Trash-*
-    .fseventd
-    .apdisk
-    .Spotlight-V100
-    
-    .directory
-    
-    *.part
-    *.filepart
-    *.crdownload
-    
-    *.kate-swp
-    *.gnucash.tmp-*
-    
-    .synkron.*
-    .sync.ffs_db
-    .symform
-    .symform-store
-    .fuse_hidden*
-    *.unison
-    .nfs*
-    
-    My Saved Places.
-    
-    \#*#
-    
-    *.sb-*
-  '';
-
-  gtk = {
-    enable = true;
-    theme = {
-      name = "Nordic";
-      package = pkgs.nordic;
+    services.nextcloud-client = {
+      enable = true;
+      startInBackground = true;
     };
-  };
-  
-  qt = {
-    enable = true;
-    platformTheme.name = "qtct";
-    style.name = "kvantum";
-  };
 
-  xdg.configFile = {
-    "Kvantum/kvantum.kvconfig".text = ''
-      [General]
-      theme=Nordic
+    home.file."${config.xdg.configHome}/Nextcloud/sync-exclude.lst".text = ''
+      # This file contains fixed global exclude patterns
+      
+      ~$*
+      .~lock.*
+      ~*.tmp
+      ]*.~*
+      ]Icon\r*
+      ].DS_Store
+      ].ds_store
+      *.textClipping
+      ._*
+      ]Thumbs.db
+      ]photothumb.db
+      System Volume Information
+      
+      .*.sw?
+      .*.*sw?
+      
+      ].TemporaryItems
+      ].Trashes
+      ].DocumentRevisions-V100
+      ].Trash-*
+      .fseventd
+      .apdisk
+      .Spotlight-V100
+      
+      .directory
+      
+      *.part
+      *.filepart
+      *.crdownload
+      
+      *.kate-swp
+      *.gnucash.tmp-*
+      
+      .synkron.*
+      .sync.ffs_db
+      .symform
+      .symform-store
+      .fuse_hidden*
+      *.unison
+      .nfs*
+      
+      My Saved Places.
+      
+      \#*#
+      
+      *.sb-*
     '';
 
-    "Kvantum/Nordic".source = "${pkgs.nordic}/share/Kvantum/Nordic";
-  };
-
-  programs.foot = {
-    enable = false;  
-    settings = {
-      main = {
-        term = "xterm-256color";
-        font = "Source Code Pro for Powerline:size=12";
-        bold-text-in-bright = true;
-        locked-title = false;
-        include = "${config.xdg.configHome}/foot/colors-foot.ini";
-        pad = "10x10";
-        box-drawings-uses-font-glyphs = true;
+    gtk = {
+      enable = true;
+      theme = {
+        name = "Nordic";
+        package = pkgs.nordic;
       };
     };
-  };
+    
+    qt = {
+      enable = true;
+      platformTheme.name = "qtct";
+      style.name = "kvantum";
+    };
 
-  programs.mangohud = {
-    enable = true;
+    xdg.configFile = {
+      "Kvantum/kvantum.kvconfig".text = ''
+        [General]
+        theme=Nordic
+      '';
+
+      "Kvantum/Nordic".source = "${pkgs.nordic}/share/Kvantum/Nordic";
+    };
+
+    programs.foot = {
+      enable = false;  
+      settings = {
+        main = {
+          term = "xterm-256color";
+          font = "Source Code Pro for Powerline:size=12";
+          bold-text-in-bright = true;
+          locked-title = false;
+          include = "${config.xdg.configHome}/foot/colors-foot.ini";
+          pad = "10x10";
+          box-drawings-uses-font-glyphs = true;
+        };
+      };
+    };
+
+    programs.mangohud = {
+      enable = true;
+    };
   };
 }
-

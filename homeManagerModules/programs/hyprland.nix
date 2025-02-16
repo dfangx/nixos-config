@@ -3,11 +3,14 @@ let
   cursorName = "HyprBibataModernClassicSVG";
 in
 {
+  imports = [
+    ./hyprcursor.nix
+  ];
+
   options.hyprland.enable = lib.mkEnableOption "Enable hyprland";
+
   config = lib.mkIf config.hyprland.enable {
-    imports = [
-      ./hyprcursor.nix
-    ];
+    hyprcursor.enable = lib.mkDefault true;
 
     nixpkgs.overlays = [
       inputs.hyprland-contrib.overlays.default
@@ -64,7 +67,7 @@ in
       settings = let
         mainMod = "SUPER";
         wpctl = "${lib.getExe' pkgs.wireplumber "wpctl"}";
-        notifyctl = "${lib.getExe (pkgs.callPackage ../../../pkgs/notifyctl { })}";
+        notifyctl = "${lib.getExe (pkgs.callPackage ../../pkgs/notifyctl { })}";
         uwsm = lib.getExe pkgs.uwsm;
         uwsmLaunch = "${uwsm} app --";
         loginctl = "${lib.getExe' pkgs.systemd "loginctl"}";

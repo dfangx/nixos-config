@@ -1,4 +1,4 @@
-{ ... }:
+{ host, ... }:
 {
   imports = [
     ./alacritty.nix
@@ -24,5 +24,6 @@
     ./swaylock.nix
     ./dircolors.nix
     ./nixneovim.nix
+    ./${host}
   ];
 }

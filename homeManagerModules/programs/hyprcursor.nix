@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   cursorName = "HyprBibataModernClassicSVG";
-  cursorPackage = pkgs.callPackage ../../../pkgs/bibata-hyprcursor { };
+  cursorPackage = pkgs.callPackage ../../pkgs/bibata-hyprcursor { };
 in
 {
   options.hyprcursor.enable = lib.mkEnableOption "Enable hyprcursor";

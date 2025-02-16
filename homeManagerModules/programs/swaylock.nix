@@ -1,6 +1,4 @@
 { config, lib, pkgs, ... }:
-let
-in
 {
   options.swaylock.enable = lib.mkEnableOption "Enable swaylock";
   config = lib.mkIf config.swaylock.enable {

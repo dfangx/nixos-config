@@ -1,4 +1,4 @@
-{ ... }:
+{ host, ... }:
 {
   imports = [
     ./mako.nix
@@ -9,6 +9,7 @@
     ./gammastep.nix
     ./hyprpaper.nix
     ./password_manager.nix
+    ./${host}
   ];
 }
 

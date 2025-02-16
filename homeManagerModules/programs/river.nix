@@ -6,11 +6,11 @@ in
 {
   options.river.enable = lib.mkEnableOption "Enable river";
   config = lib.mkIf config.river.enable {
-    config.home.packages = with pkgs; [
+    home.packages = with pkgs; [
       river
     ];
 
-    config.xdg.configFile."river/init" = {
+    xdg.configFile."river/init" = {
       text = ''
         #!/bin/sh
 

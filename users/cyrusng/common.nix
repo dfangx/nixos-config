@@ -6,19 +6,19 @@ in
   imports = [
     inputs.nur.modules.homeManager.default
 
-    ./${host}
-
     # Programs
-    ./programs/bash.nix
-    ./programs/beets.nix
-    ./programs/dircolors.nix
-    ./programs/fonts.nix
-    ./programs/fzf.nix
-    ./programs/git.nix
-    ./programs/nixvim.nix
-    ./programs/tmux.nix
-    ./programs/xdg.nix
+    ../../homeManagerModules
   ];
+
+  bash.enable = true;
+  beets.enable = true;
+  dircolors.enable = true;
+  fonts.enable = true;
+  fzf.enable = true;
+  git.enable = true;
+  nixvim.enable = true;
+  tmux.enable = true;
+  xdgCfg.enable = true;
 
   home = rec {
     username = "cyrusng";

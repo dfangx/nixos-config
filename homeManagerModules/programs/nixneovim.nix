@@ -1,11 +1,12 @@
 { inputs, config, lib, pkgs, ... }:
 {
-  options.nixneovim.enable = lib.mkEnableOption "Enable nixneovim";
-  config = lib.mkIf config.nixneovim.enable {
-    imports = [
-      inputs.nixneovim.nixosModules.default
-    ];
+  imports = [
+    inputs.nixneovim.nixosModules.default
+  ];
 
+  options.nixneovim.enable = lib.mkEnableOption "Enable nixneovim";
+
+  config = lib.mkIf config.nixneovim.enable {
     nixpkgs.overlays = [
       inputs.nixneovim.overlays.default
       inputs.nixneovimplugins.overlays.default

@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgsStable.url = "github:nixos/nixpkgs/nixos-23.05";
+    nixpkgsStable.url = "github:nixos/nixpkgs/nixos-24.11";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -141,11 +141,12 @@
         host = "arcturus";
         system = "x86_64-linux";
         pkgs = nixpkgs.legacyPackages.${system};
+        pkgsStable = nixpkgsStable.legacyPackages.${system};
       in 
       home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
-        extraSpecialArgs = { inherit inputs host; };
+        extraSpecialArgs = { inherit inputs host pkgsStable; };
 
         modules = [
           {
@@ -154,7 +155,7 @@
               (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
             ];
           }
-          ./users/cyrusng/home.nix
+          ./users/cyrusng/${host}.nix
         ];
       };
       "cyrusng@regulus" = let
