@@ -175,7 +175,7 @@
               (_: prev: { adwaita-icon-theme-without-gnome = prev.adwaita-icon-theme.override      { gnome = null; gtk3 = null; }; })
             ];
           }
-          ./users/cyrusng/home.nix
+          ./users/cyrusng/${host}.nix
         ];
       };
       "cyrusng@slothpi" = let
