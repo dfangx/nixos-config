@@ -191,6 +191,7 @@ in
           mouse_move_focuses_monitor = false;
           swallow_regex = "^(Alacritty)$";
           new_window_takes_over_fullscreen = 1;
+          exit_window_retains_fullscreen = true;
           vrr = 1;
         };
 

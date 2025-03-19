@@ -19,7 +19,7 @@
       package = pkgs.firefox-wayland;
       profiles = {
         default = {
-          extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
             tridactyl
             keepassxc-browser
             cookie-autodelete
@@ -316,6 +316,26 @@
         unlocked = {
           isDefault = false;
           id = 1;
+        };
+        kiosk = {
+          isDefault = false;
+          extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
+            tridactyl
+            keepassxc-browser
+            cookie-autodelete
+            facebook-container
+            multi-account-containers
+            temporary-containers
+            enhanced-github
+            enhancer-for-youtube
+            old-reddit-redirect
+            reddit-enhancement-suite
+            ublock-origin
+            decentraleyes
+            sponsorblock
+            pywalfox
+          ];
+          id = 2;
         };
       };
     };

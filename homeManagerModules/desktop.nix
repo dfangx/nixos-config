@@ -5,6 +5,7 @@ in
 {
   imports = [
     # Programs
+    ./programs/alacritty.nix
     ./programs/firefox.nix
     ./programs/fuzzel.nix
     ./programs/mpv.nix
@@ -21,6 +22,7 @@ in
   options.desktop.enable = lib.mkEnableOption "Enable desktop settings";
     
   config = lib.mkIf config.desktop.enable {
+    alacritty.enable = lib.mkDefault true;
     firefox.enable = lib.mkDefault true;
     fuzzel.enable = lib.mkDefault true;
     mpv.enable = lib.mkDefault true;
