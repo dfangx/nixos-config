@@ -38,7 +38,7 @@
           isDefault = true;
           id = 0;
           search = {
-            default = "DuckDuckGo";
+            default = "ddg";
           };
           extraConfig = ''
             user_pref("extensions.autoDisableScopes", 0);
@@ -316,26 +316,6 @@
         unlocked = {
           isDefault = false;
           id = 1;
-        };
-        kiosk = {
-          isDefault = false;
-          extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-            tridactyl
-            keepassxc-browser
-            cookie-autodelete
-            facebook-container
-            multi-account-containers
-            temporary-containers
-            enhanced-github
-            enhancer-for-youtube
-            old-reddit-redirect
-            reddit-enhancement-suite
-            ublock-origin
-            decentraleyes
-            sponsorblock
-            pywalfox
-          ];
-          id = 2;
         };
       };
     };

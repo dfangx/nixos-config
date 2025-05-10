@@ -115,11 +115,20 @@
           command = "call pencil#init()";
           group = "pencil";
         }
+        {
+          event = "FileType";
+          pattern = [
+            "nix"
+          ];
+          command = "set softtabstop=2 | set shiftwidth=2";
+          group = "nix";
+        }
       ];
       autoGroups = {
         vimStart.clear = true;
         lsp.clear = true;
         pencil.clear = true;
+        nix.clear = true;
         # zen-mode.clear = true;
       };
 

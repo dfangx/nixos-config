@@ -81,7 +81,7 @@ in
           "${uwsmLaunch} ${config.home.sessionVariables.TERM} --class term-general"
           "[workspace 1]${uwsmLaunch} ${config.home.sessionVariables.BROWSER}"
           "hyprctl setcursor ${cursorName} ${toString config.home.pointerCursor.size}"
-          "${uwsmLaunch} ${lib.getExe pkgs.hyprdim}"
+          # "${uwsmLaunch} ${lib.getExe pkgs.hyprdim}"
         ];
 
         dwindle = {
