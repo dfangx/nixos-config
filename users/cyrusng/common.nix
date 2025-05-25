@@ -60,6 +60,7 @@ in
       gcl = "git clone";
       grb = "git rebase";
       gsmu = "git submodule foreach git pull";
+      rpi = "ssh ${config.home.username}@slothpi.duckdns.org";
     };
     stateVersion = "22.11";
     packages = with pkgs; [
@@ -68,6 +69,7 @@ in
       xdg-user-dirs
       unzip
       keepassxc
+      hledger
     ];
   };
 
