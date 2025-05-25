@@ -221,6 +221,9 @@ in
         bind = let
           playerctl = "${lib.getExe pkgs.playerctl}";
           brightnessctl = "${lib.getExe pkgs.brightnessctl}";
+          playerctlScript = pkgs.writeShellScriptBin "playerctlScript" ''
+            ${playerctl} metadata -f '{{title}},{{artist}}'
+          '';
         in
         [
           "${mainMod} SHIFT, q, killactive"
@@ -248,13 +251,13 @@ in
           ", xF86AudioMute, exec, ${uwsmLaunch} ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle && ${wpctl} get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100 \" \" $3}' | ${notifyctl} audio"
           ", xF86MonBrightnessUp, exec, ${uwsmLaunch} ${brightnessctl} -m s +2% | cut -d, -f4 | ${notifyctl} backlight"
           ", xF86MonBrightnessdown, exec, ${uwsmLaunch} ${brightnessctl} -m s 2%- | cut -d, -f4 | ${notifyctl} backlight"
-          ", xF86AudioPlay, exec, ${uwsmLaunch} ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-          ", xF86AudioNext, exec, ${uwsmLaunch} ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-          ", xF86AudioPrev, exec, ${uwsmLaunch} ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-          ", xF86AudioStop, exec, ${uwsmLaunch} ${playerctl} stop && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-          "${mainMod}, xF86AudioMute, exec, ${uwsmLaunch} ${playerctl} play-pause && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-          "${mainMod}, xF86AudioRaiseVolume, exec, ${uwsmLaunch} ${playerctl} next && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
-          "${mainMod}, xF86AudioLowerVolume, exec, ${uwsmLaunch} ${playerctl} previous && ${playerctl} metadata -f '{{title}},{{artist}}' | ${notifyctl} mpris"
+          ", xF86AudioPlay, exec, ${uwsmLaunch} ${playerctl} play-pause && ${playerctlScript} | ${notifyctl} mpris"
+          ", xF86AudioNext, exec, ${uwsmLaunch} ${playerctl} next && ${playerctlScript} | ${notifyctl} mpris"
+          ", xF86AudioPrev, exec, ${uwsmLaunch} ${playerctl} previous && ${playerctlScript} | ${notifyctl} mpris"
+          ", xF86AudioStop, exec, ${uwsmLaunch} ${playerctl} stop && ${playerctlScript} | ${notifyctl} mpris"
+          "${mainMod}, xF86AudioMute, exec, ${uwsmLaunch} ${playerctl} play-pause && ${playerctlScript} | ${notifyctl} mpris"
+          "${mainMod}, xF86AudioRaiseVolume, exec, ${uwsmLaunch} ${playerctl} next && ${playerctlScript} | ${notifyctl} mpris"
+          "${mainMod}, xF86AudioLowerVolume, exec, ${uwsmLaunch} ${playerctl} previous && ${playerctlScript} | ${notifyctl} mpris"
 
           "${mainMod}, h, movefocus, l"
           "${mainMod}, l, movefocus, r"

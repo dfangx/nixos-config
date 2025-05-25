@@ -54,6 +54,9 @@
         }
       ];
     };
+    hosts = {
+      "192.168.2.11" = [ "slothpi.duckdns.org" ];
+    };
   };
 
   services = {

@@ -34,6 +34,7 @@
             decentraleyes
             sponsorblock
             pywalfox
+            bitwarden
           ];
           isDefault = true;
           id = 0;
