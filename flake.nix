@@ -189,7 +189,7 @@
         extraSpecialArgs = { inherit inputs host; };
 
         modules = [
-          ./users/cyrusng/home.nix
+          ./users/cyrusng/slothpi.nix
         ];
       };
     };
