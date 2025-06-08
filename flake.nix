@@ -193,5 +193,19 @@
         ];
       };
     };
+
+    packages."x86_64-linux" = let
+      config = {
+        imports = [ 
+          ./homeManagerModules/programs/nixvim-config.nix
+        ];
+      };
+      nixvim' = inputs.nixvim.legacyPackages."x86_64-linux";
+      nvim = nixvim'.makeNixvim config;
+    in
+    {
+      inherit nvim;
+      default = nvim;
+    };
   };
 }

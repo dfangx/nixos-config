@@ -66,6 +66,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ]; 
     hashedPassword = "$y$j9T$XgXobCeRJMzoHs79Qh/wN1$d/PKmABq92qsGEkNUv7oC9.zgr.SxvgmIkIgkS7nXE7";
+    uid = 1000;
   };
 
   # List packages installed in system profile. To search, run:
@@ -81,6 +82,7 @@
     wget
     agenix
     usbutils
+    cifs-utils
   ];
 
   programs.git = {
@@ -98,6 +100,56 @@
     };
     sshd.enable = true;
   };
+
+  # For mount.cifs, required unless domain name resolution is not needed.
+  fileSystems = let
+    mountOpts = let
+      automount_opts = [ 
+        "x-systemd.automount"
+        "noauto"
+        "x-systemd.idle-timeout=60"
+        "x-systemd.device-timeout=5s"
+        "x-systemd.mount-timeout=5s"
+      ];
+    in
+    automount_opts
+    ++
+    [ 
+      "credentials=${config.age.secrets.samba.path}"
+      "uid=${toString config.users.users.cyrusng.uid}"
+      "gid=${toString config.users.groups.users.gid}"
+    ];
+  in
+  {
+    "/home/cyrusng/music" = {
+      device = "//slothpi.duckdns.org/music";
+      fsType = "cifs";
+      options = mountOpts;
+    };
+    "/home/cyrusng/shared" = {
+      device = "//slothpi.duckdns.org/data";
+      fsType = "cifs";
+      options = mountOpts;
+    };
+    "/home/cyrusng/data" = {
+      device = "//slothpi.duckdns.org/cyrusng";
+      fsType = "cifs";
+      options = mountOpts;
+    };
+    "/home/cyrusng/pics" = {
+      device = "//slothpi.duckdns.org/pics";
+      fsType = "cifs";
+      options = mountOpts;
+    };
+  };
+
+  security.wrappers."mount.cifs" = {
+      program = "mount.cifs";
+      source = "${lib.getBin pkgs.cifs-utils}/bin/mount.cifs";
+      owner = "root";
+      group = "root";
+      setuid = true;
+    };
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

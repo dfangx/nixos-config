@@ -5,4 +5,5 @@ in
   {
     "wgPrivate.age".publicKeys = [ cyrusng system ];
     "wgPsk.age".publicKeys = [ cyrusng system ];
+    "samba.age".publicKeys = [ cyrusng system ];
   }

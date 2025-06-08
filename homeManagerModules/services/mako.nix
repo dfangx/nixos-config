@@ -11,9 +11,9 @@
       layer = "overlay";
       progressColor = "source #4c566aff";
       defaultTimeout = 3000;
-      extraConfig = ''
-        history=1
-      '';
+      settings = {
+        history = 1;
+      };
     };
   };
 }

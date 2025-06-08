@@ -32,6 +32,8 @@
       enable32Bit = true;
     };
     bluetooth.enable = true;
+    xpadneo.enable = true;
+    steam-hardware.enable = true;
   };
 
 
@@ -75,8 +77,13 @@
       file = ./${host}/secrets/wgPsk.age;
       mode = "400";
     };
+    samba  = {
+      file = ./${host}/secrets/samba.age;
+      mode = "400";
+    };
   };
 
+  virtualisation.spiceUSBRedirection.enable = true;
   virtualisation.libvirtd = {
     enable = true;
     qemu = {
