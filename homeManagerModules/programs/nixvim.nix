@@ -12,6 +12,10 @@
       # nerdfonts # For neorg
     ];
 
-    programs.nixvim = ./nixvim-config.nix;
+    programs.nixvim = {
+      imports = [ ./nixvim ];
+      enable = true;
+      defaultEditor = true;
+    };
   };
 }

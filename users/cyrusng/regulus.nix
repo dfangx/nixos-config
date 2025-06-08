@@ -18,6 +18,7 @@
       wineWowPackages.waylandFull
       thunderbird
       krita
+      immich-machine-learning
     ];
   };
 

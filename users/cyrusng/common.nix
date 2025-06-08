@@ -70,6 +70,7 @@ in
       unzip
       keepassxc
       hledger
+      immich-cli
     ];
   };
 

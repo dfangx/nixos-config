@@ -185,6 +185,7 @@ in
         misc = {
           allow_session_lock_restore = true;
           disable_hyprland_logo = true;
+          disable_splash_rendering = true;
           enable_swallow = false;
           key_press_enables_dpms = true;
           mouse_move_enables_dpms = true;
@@ -193,6 +194,12 @@ in
           new_window_takes_over_fullscreen = 1;
           exit_window_retains_fullscreen = true;
           vrr = 1;
+          initial_workspace_tracking = true;
+        };
+
+        ecosystem = {
+          no_update_news = true;
+          no_donation_nag = true;
         };
 
         plugin = {

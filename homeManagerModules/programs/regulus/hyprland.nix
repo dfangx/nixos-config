@@ -6,7 +6,7 @@
         monitor = [
           "DP-1,2560x1440@170.02Hz,0x0,1"
           "DP-3,2560x1440@170.02Hz,2560x0,1"
-          "desc:Technical Concepts Ltd Beyond TV 0x00010000,3840x2160@60.0Hz,auto-right,2.6666667"
+          "desc:Technical Concepts Ltd Beyond TV 0x00010000,3840x2160@60.0Hz,auto-right,2.6666667,vrr,0"
         ];
 
         windowrulev2 = [

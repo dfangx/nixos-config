@@ -10,7 +10,15 @@
     inputs.hyprland.nixosModules.default
     inputs.nix-gaming.nixosModules.platformOptimizations
     ./${host}/hardware-configuration.nix
+    ./hardware.nix
+    ./qemu.nix
+    ./steam.nix
   ];
+
+  options.desktop.enable = lib.mkEnableOption "Enable desktop configuration";
+  desktopHardware.enable = true;
+  qemu.enable = true;
+  steam.enable = true;
 
   nixpkgs = {
     config.allowUnfreePredicate = (pkg: true);
@@ -24,28 +32,6 @@
         agenix = inputs.agenix.packages.${pkgs.system}.default;
       })
     ];
-  };
-
-  hardware = {
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
-    bluetooth.enable = true;
-    xpadneo.enable = true;
-    steam-hardware.enable = true;
-  };
-
-
-  # Use the GRUB 2 boot loader.
-  boot = {
-    loader = {
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 5;
-      };
-      efi.canTouchEfiVariables = true;
-    };
   };
 
   networking = {
@@ -63,11 +49,6 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.cyrusng = {
-    extraGroups = [ "input" "audio" "libvirtd" "gamemode" ]; 
-  };
-
   age.secrets = {
     wgPrivate = {
       file = ./${host}/secrets/wgPrivate.age;
@@ -76,22 +57,6 @@
     wgPsk = {
       file = ./${host}/secrets/wgPsk.age;
       mode = "400";
-    };
-    samba  = {
-      file = ./${host}/secrets/samba.age;
-      mode = "400";
-    };
-  };
-
-  virtualisation.spiceUSBRedirection.enable = true;
-  virtualisation.libvirtd = {
-    enable = true;
-    qemu = {
-      ovmf = {
-        enable = true;
-        packages = [ pkgs.OVMFFull.fd ];
-      };
-      swtpm.enable = true;
     };
   };
 
@@ -106,29 +71,11 @@
   ];
 
   programs = {
-    virt-manager.enable = true;
     hyprland = {
       enable = true;
       withUWSM = true;
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     };
-    steam = {
-      enable = true;
-      protontricks.enable = true;
-      gamescopeSession.enable = true;
-      remotePlay.openFirewall = true;
-      platformOptimizations.enable = true;
-    };
-    gamescope = {
-      enable = true;
-      capSysNice = false;
-      args = [
-        "--rt"
-        "--hdr-enabled"
-        "--adaptive-sync"
-      ];
-    };
-    gamemode.enable = true;
     dconf.enable = true;
   };
 
@@ -148,19 +95,6 @@
   '';
 
   services = {
-    ananicy = {
-      enable = true;
-      package = pkgs.ananicy-cpp;
-      rulesProvider = pkgs.ananicy-cpp;
-      extraRules = [
-        {
-          "name" = "gamescope";
-          "nice" = -20;
-        }
-      ];
-    };
-    spice-vdagentd.enable = true;
-    qemuGuest.enable = true;
     geoclue2 = {
       enable = true;
       enableDemoAgent = true;
@@ -201,61 +135,6 @@
     serviceConfig = {
       Type = "idle";
     };
-  };
-
-  # For mount.cifs, required unless domain name resolution is not needed.
-  fileSystems = let
-    mountOpts = let
-      automount_opts = [ 
-        "x-systemd.automount"
-        "noauto"
-        "x-systemd.idle-timeout=60"
-        "x-systemd.device-timeout=5s"
-        "x-systemd.mount-timeout=5s"
-      ];
-    in
-    automount_opts
-    ++
-    [ 
-      "credentials=${config.age.secrets.samba.path}"
-      "uid=${toString config.users.users.cyrusng.uid}"
-      "gid=${toString config.users.groups.users.gid}"
-    ];
-  in
-  {
-    "/home/cyrusng/music" = {
-      device = "//slothpi.duckdns.org/music";
-      fsType = "cifs";
-      options = mountOpts;
-    };
-    "/home/cyrusng/shared" = {
-      device = "//slothpi.duckdns.org/data";
-      fsType = "cifs";
-      options = mountOpts;
-    };
-    "/home/cyrusng/data" = {
-      device = "//slothpi.duckdns.org/cyrusng";
-      fsType = "cifs";
-      options = mountOpts;
-    };
-    "/home/cyrusng/pics" = {
-      device = "//slothpi.duckdns.org/pics";
-      fsType = "cifs";
-      options = mountOpts;
-    };
-    "/home/cyrusng/vids" = {
-      device = "//slothpi.duckdns.org/vids";
-      fsType = "cifs";
-      options = mountOpts;
-    };
-  };
-
-  security.wrappers."mount.cifs" = {
-      program = "mount.cifs";
-      source = "${lib.getBin pkgs.cifs-utils}/bin/mount.cifs";
-      owner = "root";
-      group = "root";
-      setuid = true;
   };
 
 

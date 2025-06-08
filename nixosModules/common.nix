@@ -8,7 +8,22 @@
   imports = [
     inputs.agenix.nixosModules.default
     ./${host}/hardware-configuration.nix
+    ./nix.nix
+    ./networking.nix
+    ./logind.nix
+    ./users.nix
+    ./git.nix
+    ./sshd.nix
+    ./boot.nix
   ];
+
+  nix.enable = true;
+  networking.enable = true;
+  logind.enable = true;
+  users.enable = true;
+  git.enable = true;
+  sshd.enable = true;
+  bootOpts.enable = true;
 
   nixpkgs = {
     config.allowUnfreePredicate = (pkg: true);
@@ -22,11 +37,6 @@
         agenix = inputs.agenix.packages.${pkgs.system}.default;
       })
     ];
-  };
-
-  networking = {
-    hostName = host;
-    wireless.iwd.enable = true;
   };
 
   # Set your time zone.
@@ -50,13 +60,6 @@
     usbutils
   ];
 
-  services = {
-    logind = {
-      killUserProcesses = true;
-      powerKey = "suspend";
-    };
-    sshd.enable = true;
-  };
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
@@ -71,4 +74,3 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
 }
-

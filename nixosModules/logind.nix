@@ -1,15 +1,12 @@
 { config, lib, ... }:
 {
-  options.logind.enable = lib.mkEnableOption "Enable common users";
-  config = lib.mkIf config.logind.enable {
-    # Define a user account. Don't forget to set a password with ‘passwd’.
+  options.logind.enable = lib.mkEnableOption "Enable logind";
+  config = lib.mkIf config.nix.enable {
     services = {
       logind = {
         killUserProcesses = true;
         powerKey = "suspend";
       };
-      sshd.enable = true;
     };
   };
 }
-

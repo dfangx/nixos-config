@@ -4,7 +4,8 @@
   inputs = {
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgsStable.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgsStable.url = "github:nixos/nixpkgs/nixos-25.05";
+    systems.url = "github:nix-systems/default";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -70,7 +71,10 @@
     ags.url = "github:Aylur/ags";
   };
 
-  outputs = { nixpkgs, nixpkgsStable, home-manager, ... }@inputs:
+  outputs = { systems, nixvim, nixpkgs, nixpkgsStable, home-manager, self, ... }@inputs:
+  let
+    eachSystem = nixpkgs.lib.genAttrs (import systems);
+  in
   rec {
     nixosConfigurations = {
       cykrotop = let
@@ -194,18 +198,22 @@
       };
     };
 
-    packages."x86_64-linux" = let
-      config = {
-        imports = [ 
-          ./homeManagerModules/programs/nixvim-config.nix
-        ];
-      };
-      nixvim' = inputs.nixvim.legacyPackages."x86_64-linux";
-      nvim = nixvim'.makeNixvim config;
-    in
-    {
-      inherit nvim;
-      default = nvim;
-    };
+    packages = eachSystem (system: 
+      let 
+        config = {
+          imports = [ 
+            ./homeManagerModules/programs/nixvim
+          ];
+        };
+        nvimBase = nixvim.legacyPackages.${system}.makeNixvimWithModule {
+          module = ./homeManagerModules/programs/nixvim;
+        };
+      in
+      {
+        default = nvimBase;
+        nvimC = nvimBase.extend {
+          plugins.lsp.servers.clangd.enable = true;
+        };
+    });
   };
 }
