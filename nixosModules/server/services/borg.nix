@@ -1,0 +1,6 @@
+{ ... }:
+{
+  services.borgbackup.jobs = {
+    paths = "";
+  };
+}

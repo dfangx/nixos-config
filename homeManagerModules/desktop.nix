@@ -57,6 +57,7 @@ in
         obsidian
         pavucontrol
         godot_4
+        keepassxc
       ];
     };
 

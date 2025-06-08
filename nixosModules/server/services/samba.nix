@@ -16,9 +16,9 @@
       samba = {
         enable = true;
         openFirewall = true;
-        securityType = "user";
         settings = {
           global = {
+            security = "user";
             workgroup = "FAMILY";
             "server string" = "slothpi";
             "hosts allow" = [

@@ -48,6 +48,12 @@
       options = [ "bind" ];
     };
 
+  fileSystems."/srv" =
+    { device = "/mnt/data/srv";
+      fsType = "none";
+      options = [ "bind" ];
+    };
+
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
