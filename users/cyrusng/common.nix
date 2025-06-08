@@ -67,7 +67,6 @@ in
       bat
       xdg-user-dirs
       unzip
-      keepassxc
     ];
   };
 

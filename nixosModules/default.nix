@@ -1,7 +1,6 @@
 { lib, ... }:
 {
   imports = [
-    ./programs
-    ./services
+    ./server
   ];
 }
