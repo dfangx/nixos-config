@@ -213,9 +213,6 @@
       in
       {
         default = nvimBase;
-        nvimC = nvimBase.extend {
-          plugins.lsp.servers.clangd.enable = true;
-        };
     });
   };
 }

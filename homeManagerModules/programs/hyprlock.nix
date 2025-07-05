@@ -13,6 +13,7 @@ in
           grace = 180;
           hide_cursor = true;
           no_fade_in = true;
+          inhibit_sleep = 3;
         };
         input-field = [
           {
