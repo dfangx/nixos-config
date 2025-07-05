@@ -69,6 +69,8 @@
     };
 
     ags.url = "github:Aylur/ags";
+
+    authentik.url = "github:nix-community/authentik-nix";
   };
 
   outputs = { systems, nixvim, nixpkgs, nixpkgsStable, home-manager, self, ... }@inputs:

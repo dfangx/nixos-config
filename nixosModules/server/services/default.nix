@@ -22,5 +22,10 @@
     ./wireguard.nix
     # ./firefly-iii.nix
     ./vaultwarden.nix
+    ./keycloak.nix
+    ./authentik.nix
+    ./homepage.nix
+    ./glances.nix
+    ./baikal.nix
   ];
 }

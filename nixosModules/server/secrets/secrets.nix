@@ -17,4 +17,7 @@ in
     "monica.age".publicKeys = [ cyrusng system ];
     "radicale.age".publicKeys = [ cyrusng system ];
     "restic.age".publicKeys = [ cyrusng system ];
+    "keycloak.age".publicKeys = [ cyrusng system ];
+    "authentik.age".publicKeys = [ cyrusng system ];
+    "authentik-ldap.age".publicKeys = [ cyrusng system ];
   }

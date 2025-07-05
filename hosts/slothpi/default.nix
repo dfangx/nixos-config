@@ -36,6 +36,10 @@
   vaultwarden.enable = true;
   immich.enable = true;
   restic.enable = true;
+  authentik.enable = true;
+  homepage-dashboard.enable = true;
+  glances.enable = true;
+  baikal.enable = false;
 
   users.users = {
     cyrusng = {

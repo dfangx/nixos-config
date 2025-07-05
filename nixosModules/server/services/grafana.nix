@@ -33,6 +33,7 @@ in
           server = {
             http_port = 3000;
             http_addr = "127.0.0.1";
+            root_url = "https://${fqdn}";
           };
           security = {
             admin_user = "cyrusng";
