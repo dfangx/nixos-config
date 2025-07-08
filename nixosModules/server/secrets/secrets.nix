@@ -20,4 +20,7 @@ in
     "keycloak.age".publicKeys = [ cyrusng system ];
     "authentik.age".publicKeys = [ cyrusng system ];
     "authentik-ldap.age".publicKeys = [ cyrusng system ];
+    "ldap-bind.age".publicKeys = [ cyrusng system ];
+    "bitwarden-client-id.age".publicKeys = [ cyrusng system ];
+    "bitwarden-client-secret.age".publicKeys = [ cyrusng system ];
   }

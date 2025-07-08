@@ -27,5 +27,6 @@
     ./homepage.nix
     ./glances.nix
     ./baikal.nix
+    ./jellyfin.nix
   ];
 }

@@ -39,7 +39,7 @@
   authentik.enable = true;
   homepage-dashboard.enable = true;
   glances.enable = true;
-  baikal.enable = false;
+  jellyfin.enable = true;
 
   users.users = {
     cyrusng = {
