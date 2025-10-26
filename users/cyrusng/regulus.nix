@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   imports = [
     ./common.nix
@@ -11,7 +11,12 @@
   ];
 
   home = {
-    packages = with pkgs; [
+    packages = let
+      qS = inputs.quickshell.packages.x86_64-linux.default.override {
+        withX11 = false;
+      };
+    in
+    with pkgs; [
       lutris
       heroic
       protonup-qt
@@ -19,6 +24,8 @@
       thunderbird
       krita
       immich-machine-learning
+      hexchat
+      qS
     ];
   };
 
@@ -28,4 +35,6 @@
       uris = ["qemu:///system"];
     };
   };
+
+xdg.configFile."quickshell/shell.qml".source = ./quickshell/shell.qml;
 }

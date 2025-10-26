@@ -9,10 +9,6 @@
           "desc:Technical Concepts Ltd Beyond TV 0x00010000,3840x2160@60.0Hz,auto-right,2.6666667,vrr,0"
         ];
 
-        windowrulev2 = [
-          "fullscreen, onworkspace:10"
-        ];
-
         workspace = [
           "10,monitor:desc:Technical Concepts Ltd Beyond TV 0x00010000,default:true"
         ]

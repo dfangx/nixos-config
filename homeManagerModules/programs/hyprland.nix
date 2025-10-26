@@ -121,7 +121,7 @@ in
         };
 
         gestures = {
-          workspace_swipe = true;
+          # workspace_swipe = true;
           workspace_swipe_cancel_ratio = 0.150000;
         };
 
@@ -192,7 +192,7 @@ in
           mouse_move_focuses_monitor = false;
           swallow_regex = "^(Alacritty)$";
           new_window_takes_over_fullscreen = 1;
-          exit_window_retains_fullscreen = true;
+          exit_window_retains_fullscreen = false;
           vrr = 1;
           initial_workspace_tracking = true;
         };
@@ -217,10 +217,10 @@ in
           "opacity 0.55, class:^(^(term-general)$)$"
           "float, class:^(^(org.keepassxc.KeePassXC)$)$"
           "center 1, class:^(^(org.keepassxc.KeePassXC)$)$"
-          "size 60%,75%, class:^(^(org.keepassxc.KeePassXC)$)$"
+          "size 60% 75%, class:^(^(org.keepassxc.KeePassXC)$)$"
           "workspace 2, class:^(^(term-general)$)$"
           "float, class:^(^(org.pulseaudio.pavucontrol)$)$"
-          "size 60%,75%, class:^(^(org.pulseaudio.pavucontrol)$)$"
+          "size 60% 75%, class:^(^(org.pulseaudio.pavucontrol)$)$"
           "suppressevent maximize,title:^(^(Steam Big Picture Mode)$)$"
           "fullscreen,title:^(^(Steam Big Picture Mode)$)$"
         ];
@@ -238,7 +238,7 @@ in
           "${mainMod}, space, togglefloating"
           "${mainMod}, semicolon, exec, ${uwsmLaunch} ${config.home.sessionVariables.TERM}"
           "${mainMod}, b, exec, ${uwsmLaunch} ${config.home.sessionVariables.BROWSER}"
-          "${mainMod}, p, exec, ${uwsmLaunch} ${config.home.sessionVariables.PSWD_MGR}"
+          # "${mainMod}, p, exec, ${uwsmLaunch} ${config.home.sessionVariables.PSWD_MGR}"
           "${mainMod}, d, exec, ${lib.getExe pkgs.fuzzel}"
           "${mainMod} SHIFT, s, exec, ${uwsmLaunch}  ${lib.getExe pkgs.grimblast} --notify copysave area ${config.xdg.userDirs.pictures}/$(date +%Y)/screenshots/$(date +%F_%H%M%S).png"
           "${mainMod} SHIFT, return, layoutmsg, swapwithmaster master"

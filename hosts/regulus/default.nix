@@ -55,7 +55,7 @@
       ];
     };
     hosts = {
-      "192.168.2.11" = [ "slothpi.duckdns.org" ];
+      "192.168.2.2" = [ "slothpi.duckdns.org" ];
     };
   };
 
@@ -70,6 +70,15 @@
         enable = true;
         nssmdns4 = true;
         openFirewall = true;
+    };
+  };
+
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true;
     };
   };
 

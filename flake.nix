@@ -71,6 +71,10 @@
     ags.url = "github:Aylur/ags";
 
     authentik.url = "github:nix-community/authentik-nix";
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { systems, nixvim, nixpkgs, nixpkgsStable, home-manager, self, ... }@inputs:
