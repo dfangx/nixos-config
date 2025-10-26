@@ -43,60 +43,44 @@ in
       };
     };
 
-    networking = {
-      nat = {
+    services = {
+      wg-access-server = {
         enable = true;
-        externalInterface = "end0";
-        internalInterfaces = [ "wg0" ];
+        secretsFile = config.age.secrets.wireguard.path;
+        settings = {
+          httpHost = "127.0.0.1";
+          externalHost = fqdn;
+          port = 8000;
+          auth.oidc = {
+            name = "Authentik";
+            issuer = "https://auth.slothpi.duckdns.org/application/o/wireguard/";
+            redirectURL = "https://vpn.slothpi.duckdns.org/callback";
+            clientID = "DLSe0D2zWq8Ws0CowlMVSapWWikTFXJMM8acpHc2";
+            scopes = [
+              "openid"
+            ];
+            "wireguard.port" = 51820;
+            # claimMapping.admin = "'authentik Admins' in groups";
+          };
+        };
       };
 
+      nginx = {
+        virtualHosts."${fqdn}" = {
+          useACMEHost = "${hostName}.${domain}";
+          forceSSL = true;
+          locations = {
+            "/" = {
+              proxyPass = "http://localhost:${toString config.services.wg-access-server.settings.port}/";
+            };
+          };
+        };
+      };
+    };
+
+    networking = {
       firewall = {
-        allowedUDPPorts = [ config.networking.wireguard.interfaces.wg0.listenPort ];
-      };
-
-      wireguard.interfaces.wg0 = {
-        ips = [ "10.200.200.1/24" ];
-        listenPort = 51820;
-        postSetup = ''
-          ${pkgs.iptables}/bin/iptables -A FORWARD -i ${config.networking.nat.externalInterface} -j ACCEPT;
-          ${pkgs.iptables}/bin/iptables -A FORWARD -o ${config.networking.nat.externalInterface} -j ACCEPT;
-          ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -o ${config.networking.nat.externalInterface} -j MASQUERADE
-        '';
-        postShutdown = ''
-          ${pkgs.iptables}/bin/iptables -D FORWARD -i ${config.networking.nat.externalInterface} -j ACCEPT; 
-          ${pkgs.iptables}/bin/iptables -D FORWARD -o ${config.networking.nat.externalInterface} -j ACCEPT; 
-          ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o ${config.networking.nat.externalInterface} -j MASQUERADE
-        '';
-        generatePrivateKeyFile = true;
-        privateKeyFile = config.age.secrets.wireguard.path;
-
-        peers = [
-          {
-            publicKey = "7J5JPNT4BlZjDrrbclVMhmYcm87TF6Qn5JW8LWCOPgc=";
-            presharedKeyFile = config.age.secrets.wgPskPeer0.path;
-            allowedIPs = [ "10.200.200.2/32" ];
-          }
-          {
-            publicKey = "KVkRx9Uv1uY7VQhVpHuOeYvcrVedyaGD+WnWIxr9Png=";
-            presharedKeyFile = config.age.secrets.wgPskPeer1.path;
-            allowedIPs = [ "10.200.200.3/32" ];
-          }
-          {
-            publicKey = "oyz7gkKth2WJwQWoNcqRoJge/bzwisgxkmUwtomt1GQ=";
-            presharedKeyFile = config.age.secrets.wgPskPeer2.path;
-            allowedIPs = [ "10.200.200.4/32" ];
-          }
-          {
-            publicKey = "pEDH9TULaafSfuRKB24pTXRAs99tmR2fAmAxwV2lp3o=";
-            presharedKeyFile = config.age.secrets.wgPskPeer3.path;
-            allowedIPs = [ "10.200.200.5/32" ];
-          }
-          {
-            publicKey = "Fa0sMrruLzit404InxFu29AKBAswtKesYx3ofp//OCI=";
-            presharedKeyFile = config.age.secrets.wgPskPeer4.path;
-            allowedIPs = [ "10.200.200.6/32" ];
-          }
-        ];
+        allowedUDPPorts = [ config.services.wg-access-server.settings."wireguard.port" ];
       };
     };
   };

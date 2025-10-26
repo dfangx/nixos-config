@@ -53,8 +53,7 @@ in
             "\"${fqdn}\" redirect"
           ];
           local-data = [
-            "\"${fqdn} A 192.168.2.11\""
-            # "\"${fqdn} A 192.168.2.119\""
+            "\"${fqdn} A 192.168.2.2\""
           ];
         };
         remote-control = {

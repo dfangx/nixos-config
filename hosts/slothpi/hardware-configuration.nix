@@ -13,15 +13,15 @@
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
-  # fileSystems."/" =
-  #   { device = "/dev/disk/by-uuid/44444444-4444-4444-8888-888888888888";
-  #     fsType = "ext4";
-  #   };
-
   fileSystems."/mnt/data" =
-    { device = "/dev/disk/by-uuid/cdd79833-57ee-4191-8600-5c92e3e08a5d";
+    { device = "/dev/disk/by-uuid/3e5d1003-9b5a-4b0a-8606-1d77290bd3d9";
       fsType = "ext4";
       neededForBoot = true;
+    };
+
+  fileSystems."/mnt/backup" =
+    { device = "/dev/disk/by-uuid/9ead65f5-db1a-4bfa-8a6a-b5cf1d4b6df4";
+      fsType = "ext4";
     };
 
   fileSystems."/var/lib" =

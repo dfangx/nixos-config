@@ -9,7 +9,7 @@ in
     services = {
       homepage-dashboard = {
         enable = true;
-        allowedHosts = "${fqdn},localhost,127.0.0.1:${toString config.services.homepage-dashboard.listenPort},192:168.2.11:${toString config.services.homepage-dashboard.listenPort}";
+        allowedHosts = "${fqdn},localhost,127.0.0.1:${toString config.services.homepage-dashboard.listenPort},192:168.2.2:${toString config.services.homepage-dashboard.listenPort}";
         listenPort = 34651;
         openFirewall = true;
         services = [
