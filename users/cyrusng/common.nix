@@ -68,9 +68,11 @@ in
       bat
       xdg-user-dirs
       unzip
-      keepassxc
+      # keepassxc
       hledger
       immich-cli
+      immich-go
+      feishin
     ];
   };
 

@@ -64,7 +64,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cyrusng = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; 
+    extraGroups = [ "wheel" "video" ]; 
     hashedPassword = "$y$j9T$XgXobCeRJMzoHs79Qh/wN1$d/PKmABq92qsGEkNUv7oC9.zgr.SxvgmIkIgkS7nXE7";
     uid = 1000;
   };

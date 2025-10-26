@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   terminal = "${lib.getExe pkgs.alacritty}";
 in
@@ -37,6 +37,7 @@ in
       sessionVariables = {
         TERM = "${terminal}";
         QT_AUTO_SCREEN_SCALE_FACTOR = 1;
+        QML2_IMPORT_PATH = "${pkgs.kdePackages.qtdeclarative}/lib/qt-6/qml:${inputs.quickshell.packages.${pkgs.system}.default}/lib/qt-6/qml";
       };
       packages = with pkgs; [
         discord
@@ -58,6 +59,7 @@ in
         pavucontrol
         godot_4
         keepassxc
+        whatsapp-for-linux
       ];
     };
 
@@ -79,80 +81,80 @@ in
           };
         };
 
-        nextcloud-client = {
-          Install.WantedBy = lib.mkForce [ "graphical-session.target" ];
-          Service.ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
-          Unit = {
-            After = lib.mkForce [ "graphical-session.target" ];
-            PartOf = lib.mkForce [];
-          };
+        # nextcloud-client = {
+        #   Install.WantedBy = lib.mkForce [ "graphical-session.target" ];
+        #   Service.ExecStartPre = "${pkgs.coreutils}/bin/sleep 1";
+        #   Unit = {
+        #     After = lib.mkForce [ "graphical-session.target" ];
+        #     PartOf = lib.mkForce [];
+        #   };
+        # };
+      };
+    };
+
+    # services.nextcloud-client = {
+    #   enable = true;
+    #   startInBackground = true;
+    # };
+
+      # home.file."${config.xdg.configHome}/Nextcloud/sync-exclude.lst".text = ''
+      #   # This file contains fixed global exclude patterns
+      #   
+      #   ~$*
+      #   .~lock.*
+      #   ~*.tmp
+      #   ]*.~*
+      #   ]Icon\r*
+      #   ].DS_Store
+      #   ].ds_store
+      #   *.textClipping
+      #   ._*
+      #   ]Thumbs.db
+      #   ]photothumb.db
+      #   System Volume Information
+      #   
+      #   .*.sw?
+      #   .*.*sw?
+      #   
+      #   ].TemporaryItems
+      #   ].Trashes
+      #   ].DocumentRevisions-V100
+      #   ].Trash-*
+      #   .fseventd
+      #   .apdisk
+      #   .Spotlight-V100
+      #   
+      #   .directory
+      #   
+      #   *.part
+      #   *.filepart
+      #   *.crdownload
+      #   
+      #   *.kate-swp
+      #   *.gnucash.tmp-*
+      #   
+      #   .synkron.*
+      #   .sync.ffs_db
+      #   .symform
+      #   .symform-store
+      #   .fuse_hidden*
+      #   *.unison
+      #   .nfs*
+      #   
+      #   My Saved Places.
+      #   
+      #   \#*#
+      #   
+      #   *.sb-*
+      # '';
+
+      gtk = {
+        enable = true;
+        theme = {
+          name = "Nordic";
+          package = pkgs.nordic;
         };
       };
-    };
-
-    services.nextcloud-client = {
-      enable = true;
-      startInBackground = true;
-    };
-
-    home.file."${config.xdg.configHome}/Nextcloud/sync-exclude.lst".text = ''
-      # This file contains fixed global exclude patterns
-      
-      ~$*
-      .~lock.*
-      ~*.tmp
-      ]*.~*
-      ]Icon\r*
-      ].DS_Store
-      ].ds_store
-      *.textClipping
-      ._*
-      ]Thumbs.db
-      ]photothumb.db
-      System Volume Information
-      
-      .*.sw?
-      .*.*sw?
-      
-      ].TemporaryItems
-      ].Trashes
-      ].DocumentRevisions-V100
-      ].Trash-*
-      .fseventd
-      .apdisk
-      .Spotlight-V100
-      
-      .directory
-      
-      *.part
-      *.filepart
-      *.crdownload
-      
-      *.kate-swp
-      *.gnucash.tmp-*
-      
-      .synkron.*
-      .sync.ffs_db
-      .symform
-      .symform-store
-      .fuse_hidden*
-      *.unison
-      .nfs*
-      
-      My Saved Places.
-      
-      \#*#
-      
-      *.sb-*
-    '';
-
-    gtk = {
-      enable = true;
-      theme = {
-        name = "Nordic";
-        package = pkgs.nordic;
-      };
-    };
     
     qt = {
       enable = true;
