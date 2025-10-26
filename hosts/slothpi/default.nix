@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, host, ... }:
+{ config, pkgs, lib, inputs, host, pkgsStable, ... }:
 
 {
 
@@ -31,7 +31,7 @@
   cups.enable = true;
   unbound.enable = true;
   wireguard.enable = true;
-  nextcloud.enable = true;
+  nextcloud.enable = false;
   samba.enable = true;
   vaultwarden.enable = true;
   immich.enable = true;
@@ -94,7 +94,7 @@
       end0 = {
         ipv4.addresses = [ 
           {
-            address = "192.168.2.11";
+            address = "192.168.2.2";
             prefixLength = 24;
           }
         ];
@@ -115,7 +115,7 @@
       bind-dynamic = true;
       domain-needed = true;
       bogus-priv = true;
-      dhcp-option = [ "6,192.168.2.11" "3,192.168.2.1" ];
+      dhcp-option = [ "6,192.168.2.2" "3,192.168.2.1" ];
       dhcp-range = "192.168.2.12,192.168.2.254,255.255.255.0,12h";
       # dhcp-host = [
       #   "e4:5f:01:ac:62:51,slothpi.duckdns.org,192.168.2.11,infinite"
@@ -127,8 +127,8 @@
   systemd.timers.duckdns = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "daily";
-      Unit = "duckdns.server";
+      OnCalendar = "hourly";
+      Unit = "duckdns.service";
     };
   };
 

@@ -12,6 +12,8 @@ in
         port = 23456;
         accelerationDevices = [ "/dev/dri/renderD128" ];
         machine-learning.enable = false;
+        host = "0.0.0.0";
+        openFirewall = true;
       };
       nginx.virtualHosts."${fqdn}" = {
         # enableACME = true;

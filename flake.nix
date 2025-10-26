@@ -127,10 +127,12 @@
       };
       slothpi = let
         host = "slothpi";
+        system = "aarch64-linux";
+        pkgsStable = nixpkgsStable.legacyPackages.${system};
       in
       nixpkgs.lib.nixosSystem {
         # inherit system;
-        specialArgs = { inherit inputs host; };
+        specialArgs = { inherit inputs host pkgsStable; };
         modules = [
           "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
           {

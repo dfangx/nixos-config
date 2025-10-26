@@ -12,7 +12,7 @@
       };
     };
 
-    services.restic.backups.local = {
+    services.restic.backups.slothpi = {
       initialize = true;
       passwordFile = config.age.secrets.restic.path;
       timerConfig = {
@@ -24,10 +24,28 @@
       paths = [ 
         "/srv" 
         "/home"
-        "/var/lib/navidrome"
+        "/var/lib/acme"
+        "/var/lib/authentik"
+        "/var/lib/bitwarden_rs"
+        "/var/lib/blocky"
+        "/var/lib/dhcpcd"
+        "/var/lib/dnsmasq"
+        "/var/lib/grafana"
+        "/var/lib/homepage-dashboard"
         "/var/lib/immich"
+        "/var/lib/jellyfin"
+        "/var/lib/mysql"
+        "/var/lib/navidrome"
+        "/var/lib/postgresql"
+        "/var/lib/private"
+        "/var/lib/prometheus2"
+        "/var/lib/radicale"
+        "/var/lib/redis-immich"
+        "/var/lib/redis-authentik"
+        "/var/lib/unbound"
+        "/var/lib/wg-access-server"
       ];
-      repository = "/mnt/data/restic";
+      repository = "/mnt/backup/slothpi";
       pruneOpts = [
         "--keep-daily 7"
         "--keep-weekly 5"

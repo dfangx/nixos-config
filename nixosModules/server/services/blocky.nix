@@ -40,10 +40,24 @@
             dns = 53;
             http = "127.0.0.1:4000";
           };
-          log.level = "warn";
-          upstreams.groups.default = [
-            "${config.services.unbound.settings.server.interface}:${toString config.services.unbound.settings.server.port}"
-          ];
+          log.level = "info";
+          upstreams.groups = {
+            default = [
+              "${config.services.unbound.settings.server.interface}:${toString config.services.unbound.settings.server.port}"
+            ];
+            TV= [
+              "207.164.234.193"
+              "207.164.234.129"
+            ];
+          };
+          clientLookup = {
+            clients = {
+              TV = [
+                "192.168.2.219" 
+                "192.168.2.114" 
+              ];
+            };
+          };
           caching = {
             minTime = "1h";
             maxTime = "24h";
@@ -92,6 +106,13 @@
                 "https://raw.githubusercontent.com/FadeMind/hosts.extras/master/UncheckyAds/hosts"
                 "https://raw.githubusercontent.com/bigdargon/hostsVN/master/hosts"
               ];
+              hoyoverse = [ 
+                ''
+                  |
+                  *.hoyoverse.com
+                '' 
+              ];
+              bypass = [];
               # regex = [
               #   "/^ad([sxv]?[0-9]*|system)[_.-]([^.[:space:]]+\.){1,}|[_.-]ad([sxv]?[0-9]*|system)[_.-]/"
               #   "/^(.+[_.-])?adse?rv(er?|ice)?s?[0-9]*[_.-]/"
@@ -109,13 +130,25 @@
               #   "/^stat(s|istics)?[0-9]*[_.-]/"
               # ];
             };
-            clientGroupsBlock.default = [
-              "ads"
-              "other"
-              "malicious"
-              "suspicious"
-              "tracking"
-            ];
+            allowlists = {
+              hoyoverse = [ 
+                ''
+                  |
+                  *.hoyoverse.com
+                '' 
+              ];
+            };
+            clientGroupsBlock = {
+              default = [
+                "ads"
+                "other"
+                "malicious"
+                "suspicious"
+                "tracking"
+                "hoyoverse"
+              ];
+              TV = [ "bypass" ];
+            };
           };
         };
       };
