@@ -51,6 +51,7 @@ in
           httpHost = "127.0.0.1";
           externalHost = fqdn;
           port = 8000;
+          "wireguard.port" = 51820;
           auth.oidc = {
             name = "Authentik";
             issuer = "https://auth.slothpi.duckdns.org/application/o/wireguard/";
@@ -59,7 +60,6 @@ in
             scopes = [
               "openid"
             ];
-            "wireguard.port" = 51820;
             # claimMapping.admin = "'authentik Admins' in groups";
           };
         };
