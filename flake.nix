@@ -12,7 +12,7 @@
     };
     nix-gaming.url = "github:fufexan/nix-gaming";
     neovim-nix.url = "github:dfangx/nvim-flake";
-    nbfc-linux.url = "github:nbfc-linux/nbfc-linux";
+    nbfc-linux.url = "github:nbfc-linux/nbfc-linux?dir=pkgbuilds/nix";
     agenix.url = "github:ryantm/agenix";
     firefly = {
       url = "github:timhae/firefly";
