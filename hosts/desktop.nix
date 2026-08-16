@@ -87,10 +87,6 @@
   virtualisation.libvirtd = {
     enable = true;
     qemu = {
-      ovmf = {
-        enable = true;
-        packages = [ pkgs.OVMFFull.fd ];
-      };
       swtpm.enable = true;
     };
   };
@@ -115,7 +111,16 @@
     steam = {
       enable = true;
       protontricks.enable = true;
-      gamescopeSession.enable = true;
+      gamescopeSession = {
+        enable = true;
+        args = [
+          "--rt"
+          "--hdr-enabled"
+          "--adaptive-sync"
+          "-W $(${pkgs.hyprland}/bin/hyprctl monitors -j | ${pkgs.jq}/bin/jq -r '.[] | select( .focused==true) | .width')"
+          "-H $(${pkgs.hyprland}/bin/hyprctl monitors -j | ${pkgs.jq}/bin/jq -r '.[] | select( .focused==true) | .height')"
+        ];
+      };
       remotePlay.openFirewall = true;
       platformOptimizations.enable = true;
     };
@@ -126,6 +131,8 @@
         "--rt"
         "--hdr-enabled"
         "--adaptive-sync"
+        # "-W $(${pkgs.hyprland}/bin/hyprctl monitors -j | jq -r '.[] | select( .focused==true) | .width')"
+        # "-H $(${pkgs.hyprland}/bin/hyprctl monitors -j | jq -r '.[] | select( .focused==true) | .height')"
       ];
     };
     gamemode.enable = true;

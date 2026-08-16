@@ -52,9 +52,9 @@
           {
             name = "buffer";
           }
-          {
-            name = "calc";
-          }
+          # {
+          #   name = "calc";
+          # }
           {
             name = "luasnip";
           }

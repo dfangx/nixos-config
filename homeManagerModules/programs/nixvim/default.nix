@@ -66,8 +66,18 @@
     };
     mkdnflow = {
       enable = true;
-      wrap = true;
-      links.conceal = true;
+      settings.wrap = true;
+      settings.links.conceal = true;
+    };
+    ledger = {
+      enable = true;
+      settings = {
+        align_at = 72;
+        default_commodity = "CAD";
+        max_width = 80;
+        fillstring = "     ";
+        date_format = "%Y-%m-%d";
+      };
     };
   };
 
